@@ -1,0 +1,36 @@
+[Global]
+IconName=lliurex-onedrive
+Comment=Lliurex-OneDrive
+Comment[ca@valencia]=Lliurex-OneDrive
+Comment[es]=Lliurex-OneDrive
+
+
+[Event/ErrorStatus]
+Name=OneDrive return an error
+Name[ca@valencia]=OneDrive ha notificat un error
+Name[es]=OneDrive ha notificado un error
+
+Comment=OneDrive return an error
+Comment[ca@valencia]=OneDrive ha notificat un error
+Comment[es]=OneDrive ha notificado un error
+Action=Popup
+
+[Event/ErrorStart]
+Name=Unable to start synchronization
+Name[ca@valencia]=No és possible iniciar la sincronització
+Name[es]=No es posible iniciar la sincronización
+
+Comment=Unable to start synchronization
+Comment[ca@valencia]=No és possible iniciar la sincronització
+Comment[es]=No es posible iniciar la sincronización
+Action=Popup
+
+[Event/ErrorStop]
+Name=Unable to stop synchronization
+Name[ca@valencia]=No és possible parar la sincronització
+Name[es]=No es posible parar la sincronización
+
+Comment=Unable to stop synchronization
+Comment[ca@valencia]=No és possible parar la sincronització
+Comment[es]=No es posible parar la sincronización
+Action=Popup
