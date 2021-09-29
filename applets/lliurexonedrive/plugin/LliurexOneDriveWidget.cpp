@@ -39,9 +39,7 @@ void LliurexOneDriveWidget::initPlasmoid(){
     
 }
 
-
 void LliurexOneDriveWidget::worker(){
-
 
     if (!is_working){
         if (LliurexOneDriveWidget::TARGET_FILE.exists() ) {
@@ -52,14 +50,25 @@ void LliurexOneDriveWidget::worker(){
            setStatus(ActiveStatus); 
 
            if (isrunning){
+               if ((!previousError) & (!warning)){
+                    QString subtooltip(i18n("Starting the synchronization"));
+                    updateWidget(subtooltip,"onedrive");
+               }
                checkStatus();
            }else{
                QString subtooltip(i18n("Synchronization is stopped"));
                updateWidget(subtooltip,"onedrive-stop");
+               previousError=false;
+               previousErrorCode="";
+               warning=false;
            }
 
         }else{
-            setStatus(PassiveStatus); 
+            setStatus(PassiveStatus);
+            previousError=false;
+            previousErrorCode="";
+            warning=false;
+
         }
         
     }
@@ -77,7 +86,6 @@ void LliurexOneDriveWidget::checkStatus(){
        
     }
 }    
-
 
 QStringList LliurexOneDriveWidget::runCheckAccount(){
 
@@ -101,12 +109,14 @@ void LliurexOneDriveWidget::dbusDone(QStringList result){
     errorCode<<m_utils->GENERAL_ERROR<<m_utils->ZERO_SPACE_AVAILABLE<<m_utils->UNAUTHORIZED_ERROR<<m_utils->NETWORK_CONNECT_ERROR;
     
     if (warningCode.contains(result[0])){
+        warning=true;
         QString subtooltip(i18n("Changes pending of synchronization"));
         updateWidget(subtooltip,"onedrive-pending");
         previousError=false;
         previousErrorCode="";
 
     }else if (errorCode.contains(result[0])){
+        warning=false;
         QString subtooltip(i18n("OneDrive client return an error.\nOpen Lliurex OneDrive for more information"));
         updateWidget(subtooltip,"onedrive-error");
 
@@ -131,6 +141,7 @@ void LliurexOneDriveWidget::dbusDone(QStringList result){
     }else{
         QString subtooltip(i18n("All remote changes are synchronized"));
         updateWidget(subtooltip,"onedrive");
+        warning=false;
         previousError=false;
         previousErrorCode="";
     }
