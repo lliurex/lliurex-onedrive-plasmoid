@@ -6,7 +6,6 @@
 #include <KLocalizedString>
 #include <KFormat>
 #include <KNotification>
-#include <KRun>
 #include <KIO/CommandLauncherJob>
 #include <QTimer>
 #include <QStandardPaths>
