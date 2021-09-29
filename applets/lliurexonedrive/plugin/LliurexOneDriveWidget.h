@@ -102,6 +102,8 @@ private:
     QFile TARGET_FILE;
     bool is_working=false;
     int last_check=90;
+    bool previousError=false;
+    QString previousErrorCode="";
     LliurexOneDriveWidgetUtils* m_utils;
     QPointer<KNotification> m_errorNotification;
 

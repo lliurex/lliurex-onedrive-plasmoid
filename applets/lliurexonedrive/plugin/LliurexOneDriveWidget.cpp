@@ -88,6 +88,7 @@ QStringList LliurexOneDriveWidget::runCheckAccount(){
 void LliurexOneDriveWidget::dbusDone(QStringList result){
 
     is_working=false;
+    bool showNotification=false;
         
     adbus->exit(0);
     if (adbus->wait()){
@@ -102,18 +103,36 @@ void LliurexOneDriveWidget::dbusDone(QStringList result){
     if (warningCode.contains(result[0])){
         QString subtooltip(i18n("Changes pending of synchronization"));
         updateWidget(subtooltip,"onedrive-pending");
+        previousError=false;
+        previousErrorCode="";
+
     }else if (errorCode.contains(result[0])){
         QString subtooltip(i18n("OneDrive client return an error.\nOpen Lliurex OneDrive for more information"));
         updateWidget(subtooltip,"onedrive-error");
-        m_errorNotification = KNotification::event(QStringLiteral("ErrorStatus"), subtooltip, {}, "lliurex-onedrive", nullptr, KNotification::CloseOnTimeout , QStringLiteral("llxonedrive"));
-        QString name = i18n("Open Lliurex OneDrive");
-        m_errorNotification->setDefaultAction(name);
-        m_errorNotification->setActions({name});
-        connect(m_errorNotification, QOverload<unsigned int>::of(&KNotification::activated), this, &LliurexOneDriveWidget::launchOneDrive);
 
+        if (previousError){
+            if (previousErrorCode!=result[0]){
+                showNotification=true;
+                previousErrorCode=result[0];
+            }
+        }else{
+            previousError=true;
+            previousErrorCode=result[0];
+            showNotification=true;
+        }
+        if (showNotification){
+            m_errorNotification = KNotification::event(QStringLiteral("ErrorStatus"), subtooltip, {}, "lliurex-onedrive", nullptr, KNotification::CloseOnTimeout , QStringLiteral("llxonedrive"));
+            QString name = i18n("Open Lliurex OneDrive");
+            m_errorNotification->setDefaultAction(name);
+            m_errorNotification->setActions({name});
+            connect(m_errorNotification, QOverload<unsigned int>::of(&KNotification::activated), this, &LliurexOneDriveWidget::launchOneDrive);
+        }
+    
     }else{
         QString subtooltip(i18n("All remote changes are synchronized"));
         updateWidget(subtooltip,"onedrive");
+        previousError=false;
+        previousErrorCode="";
     }
    
     setFreeSpace(result[1]);
