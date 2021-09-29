@@ -104,6 +104,7 @@ private:
     int last_check=90;
     bool previousError=false;
     bool warning=false;
+    bool checkExecuted=false;
     QString previousErrorCode="";
     LliurexOneDriveWidgetUtils* m_utils;
     QPointer<KNotification> m_errorNotification;

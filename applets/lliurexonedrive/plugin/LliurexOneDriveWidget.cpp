@@ -50,7 +50,8 @@ void LliurexOneDriveWidget::worker(){
            setStatus(ActiveStatus); 
 
            if (isrunning){
-               if ((!previousError) & (!warning)){
+               
+               if ((!previousError) & (!warning) & (!checkExecuted)){
                     QString subtooltip(i18n("Starting the synchronization"));
                     updateWidget(subtooltip,"onedrive");
                }
@@ -61,6 +62,7 @@ void LliurexOneDriveWidget::worker(){
                previousError=false;
                previousErrorCode="";
                warning=false;
+               checkExecuted=false;
            }
 
         }else{
@@ -68,7 +70,7 @@ void LliurexOneDriveWidget::worker(){
             previousError=false;
             previousErrorCode="";
             warning=false;
-
+            checkExecuted=false;
         }
         
     }
@@ -97,6 +99,7 @@ void LliurexOneDriveWidget::dbusDone(QStringList result){
 
     is_working=false;
     bool showNotification=false;
+    checkExecuted=true;
         
     adbus->exit(0);
     if (adbus->wait()){
