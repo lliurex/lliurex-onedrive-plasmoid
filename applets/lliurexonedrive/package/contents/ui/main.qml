@@ -41,21 +41,7 @@ Item {
         plasmoid.setAction("launchOneDrive", i18n("OneDrive Settings"), "configure"); 
     }
 
-    Plasmoid.preferredRepresentation: Plasmoid.compactRepresentation
-    Plasmoid.compactRepresentation: PlasmaCore.IconItem {
-        source: plasmoid.icon
-        MouseArea {
-            property bool wasExpanded: false
-            anchors.fill: parent
-
-            onClicked: {
-                if (mouse.button == Qt.LeftButton) {
-                    plasmoid.expanded = !wasExpanded;
-                }
-            }
-        }
-    }
-
+    Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation
     Plasmoid.fullRepresentation: Item{
         id:root
         Layout.fillWidth:true
