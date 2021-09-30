@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="48"
+   height="48"
+   viewBox="0 0 12.7 12.7"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1 (1:1.1+202105261517+ce6663b3b7)"
+   sodipodi:docname="onedrive.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     units="px"
+     width="22px"
+     inkscape:zoom="9.4074072"
+     inkscape:cx="25.405512"
+     inkscape:cy="38.852363"
+     inkscape:window-width="1920"
+     inkscape:window-height="879"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="onedrive" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Capa 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="onedrive"
+       transform="matrix(2.9999978,0,0,2.9999978,-2.3812436,-2.9842971)"
+       inkscape:label="#onedrive">
+      <g
+         id="STYLE_COLOR_1_"
+         transform="matrix(0.00410987,0,0,0.00410987,0.79374901,1.5543203)">
+        <path
+           fill="#0364b8"
+           d="M 622.292,445.338 834.905,242.011 C 790.741,69.804 615.338,-33.996 443.13,10.168 365.58,30.056 298.224,78.13 254.209,145.005 257.5,144.922 622.292,445.338 622.292,445.338 Z"
+           id="path922" />
+        <path
+           fill="#0078d4"
+           d="m 392.776,183.283 -0.01,0.035 c -40.626,-25.162 -87.479,-38.462 -135.267,-38.397 -1.104,0 -2.189,0.07 -3.291,0.083 C 112.064,146.765 -1.74,263.423 0.02,405.567 0.658,457.129 16.769,507.31 46.264,549.607 L 364.792,509.713 609.001,312.798 Z"
+           id="path924" />
+        <path
+           fill="#1490df"
+           d="m 834.905,242.012 c -4.674,-0.312 -9.371,-0.528 -14.123,-0.528 -28.523,-0.028 -56.749,5.798 -82.93,17.117 l -0.006,-0.022 -128.844,54.22 142.041,175.456 253.934,61.728 c 54.799,-101.732 16.752,-228.625 -84.98,-283.424 -26.287,-14.16 -55.301,-22.529 -85.091,-24.546 v -0.001 z"
+           id="path926" />
+        <path
+           fill="#28a8ea"
+           d="M 46.264,549.607 C 94.359,618.756 173.27,659.966 257.5,659.922 h 563.281 c 76.946,0.022 147.691,-42.202 184.195,-109.937 L 609.001,312.798 Z"
+           id="path928" />
+      </g>
+    </g>
+  </g>
+</svg>
