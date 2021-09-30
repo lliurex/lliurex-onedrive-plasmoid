@@ -30,7 +30,15 @@ target_link_libraries(lliurexonedriveplugin
 install(FILES plugin/qmldir DESTINATION ${QML_INSTALL_DIR}/org/kde/plasma/private/lliurexonedrive)
 install(TARGETS lliurexonedriveplugin DESTINATION ${QML_INSTALL_DIR}/org/kde/plasma/private/lliurexonedrive)
 
-install(FILES "icons/onedrive.svg"
-        DESTINATION ${DATAROOTDIR}/usr/share/plasma/desktoptheme/default/icons/)
+install(FILES "icons/onedrive-running.svg"
+        DESTINATION ${DATAROOTDIR}/usr/share/icons/hicolor/scalable/apps/)
+install(FILES "icons/onedrive-pause.svg"
+        DESTINATION ${DATAROOTDIR}/usr/share/icons/hicolor/scalable/apps/)
+install(FILES "icons/onedrive-waiting.svg"
+        DESTINATION ${DATAROOTDIR}/usr/share/icons/hicolor/scalable/apps/)
+install(FILES "icons/onedrive-error.svg"
+        DESTINATION ${DATAROOTDIR}/usr/share/icons/hicolor/scalable/apps/)
+install(FILES "icons/onedrive-starting.svg"
+        DESTINATION ${DATAROOTDIR}/usr/share/icons/hicolor/scalable/apps/)
 install(FILES "knotifications5/llxonedrive.notifyrc"
         DESTINATION ${DATAROOTDIR}/usr/share/knotifications5/)        
