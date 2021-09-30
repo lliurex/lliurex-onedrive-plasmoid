@@ -6,13 +6,13 @@ Comment[es]=Lliurex-OneDrive
 
 
 [Event/ErrorStatus]
-Name=OneDrive return an error
+Name=OneDrive has reported an error
 Name[ca@valencia]=OneDrive ha notificat un error
 Name[es]=OneDrive ha notificado un error
 
-Comment=OneDrive return an error
-Comment[ca@valencia]=OneDrive ha notificat un error
-Comment[es]=OneDrive ha notificado un error
+Comment=Occurs when the OneDrive health check detects an error 
+Comment[ca@valencia]=Ocorre quan la comprovació de l'estat de OneDrive detecta un error
+Comment[es]=Ocurre cuando la comprobación del estado de OneDrive detecta un error
 Action=Popup
 
 [Event/ErrorStart]
@@ -20,15 +20,15 @@ Name=Unable to start synchronization
 Name[ca@valencia]=No és possible iniciar la sincronització
 Name[es]=No es posible iniciar la sincronización
 
-Comment=Unable to start synchronization
-Comment[ca@valencia]=No és possible iniciar la sincronització
-Comment[es]=No es posible iniciar la sincronización
+Comment=Occurs when synchronization cannot be started 
+Comment[ca@valencia]=Ocorre quan no és possible iniciar la sincronització
+Comment[es]=Ocurre cuando no es posible iniciar la sincronización
 Action=Popup
 
 [Event/ErrorStop]
-Name=Unable to stop synchronization
-Name[ca@valencia]=No és possible parar la sincronització
-Name[es]=No es posible parar la sincronización
+Name=Occurs when synchronization cannot be stopped 
+Name[ca@valencia]=Ocorre quan no és possible parar la sincronització
+Name[es]=Ocurre cuando no es posible parar la sincronización
 
 Comment=Unable to stop synchronization
 Comment[ca@valencia]=No és possible parar la sincronització
