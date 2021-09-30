@@ -21,7 +21,6 @@ public:
     QString getUserHome();
     bool isRunning();
     void manageSync();
-    bool isSystemdActive();
 
     QStringList getAccountStatus(int exitCode,QString poutProces,QString perrProcess);
 
@@ -36,6 +35,7 @@ public:
 
 private:
 
+    bool isSystemdActive();
     QString formatFreeSpace(QString freeSpace);
     QFile SYSTEMDTOKEN;
      
