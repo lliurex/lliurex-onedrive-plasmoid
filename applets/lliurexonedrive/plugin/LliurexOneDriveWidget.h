@@ -7,13 +7,12 @@
 #include <KNotification>
 #include <QDir>
 #include <QFile>
-#include <QThread>
+#include <KIO/CommandLauncherJob>
 
 #include "LliurexOneDriveWidgetUtils.h"
 
 class QTimer;
 class KNotification;
-class AsyncDbus;
 
 
 class LliurexOneDriveWidget : public QObject
@@ -64,6 +63,7 @@ public:
     QString iconName() const;
     void setIconName(const QString &name);
 
+
     QStringList runCheckAccount();
     void isAlive();
 
@@ -87,15 +87,18 @@ signals:
 
 private:
 
-    AsyncDbus* adbus;
+    LliurexOneDriveWidgetUtils *m_utils;
+    QProcess *m_checkProcess=nullptr;
     void plasmoidMode();
     void initPlasmoid();
     void updateWidget(QString subtooltip,QString icon);
+    void showSyncNotification();
     QTimer *m_timer = nullptr;
     TrayStatus m_status = PassiveStatus;
-    QString m_iconName = QStringLiteral("onedrive-stop");
+    QString m_iconName = QStringLiteral("onedrive-pause");
     QString m_oneDriveFolder;
     QString m_freeSpace;
+    QString userHome;
     bool m_syncStatus=false;
     QString m_toolTip;
     QString m_subToolTip;
@@ -105,15 +108,15 @@ private:
     bool previousError=false;
     bool warning=false;
     bool checkExecuted=false;
+    bool initClientStatus=false;
+    bool changeSyncStatus=false;
     QString previousErrorCode="";
-    LliurexOneDriveWidgetUtils* m_utils;
     QPointer<KNotification> m_errorNotification;
 
 private slots:
 
      void checkStatus();
-     void dbusDone(QStringList result);
-     
+     void checkProcessFinished(int exitCode, QProcess::ExitStatus exitStatus);
 };
 
 /**
@@ -121,37 +124,5 @@ private slots:
  * The monitoring is performed through a timer, running the 'quota'
  * command line tool.
  */
-
-class AsyncDbus: public QThread
-
-{
-
-    Q_OBJECT
-
-public:
-    
-    LliurexOneDriveWidget* llxonedrive;
-    
-    AsyncDbus(LliurexOneDriveWidget* lliurexonedrivewidget)
-     {
-        llxonedrive = lliurexonedrivewidget;
-     }
-
-     void run() override
-     {      
-
-        QStringList result=llxonedrive->runCheckAccount();
-        emit message(result);
-
-     }
-     
-signals:
-
-    void message(QStringList);
-
-
-
-};
-
 
 #endif // PLASMA_LLIUREX_ONEDRIVE_WIDGET_H

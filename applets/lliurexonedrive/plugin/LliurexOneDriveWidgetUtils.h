@@ -20,8 +20,10 @@ public:
 
     QString getUserHome();
     bool isRunning();
-    bool manageSync();
-    QStringList getAccountStatus();
+    void manageSync();
+    bool isSystemdActive();
+
+    QStringList getAccountStatus(int exitCode,QString poutProces,QString perrProcess);
 
     QString UPLOADING_PENDING_CHANGES="416";
     QString NETWORK_CONNECT_ERROR="-2";
@@ -34,7 +36,6 @@ public:
 
 private:
 
-    bool isSystemdActive();
     QString formatFreeSpace(QString freeSpace);
     QFile SYSTEMDTOKEN;
      

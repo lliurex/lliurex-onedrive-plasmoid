@@ -63,7 +63,7 @@ bool LliurexOneDriveWidgetUtils::isSystemdActive(){
 
 }
 
-bool LliurexOneDriveWidgetUtils::manageSync(){
+void LliurexOneDriveWidgetUtils::manageSync(){
 
     SYSTEMDTOKEN.setFileName(getUserHome()+"/.config/systemd/user/onedrive.service");
     QString cmd="";
@@ -88,13 +88,6 @@ bool LliurexOneDriveWidgetUtils::manageSync(){
     job = new KIO::CommandLauncherJob(cmd);
     job->start();
     
-    if (initClientStatus!=isRunning()){
-        return true;
-    }else{
-        return false;
-    }
-    
-    
 }
 
 QString LliurexOneDriveWidgetUtils::formatFreeSpace(QString freespace){
@@ -104,7 +97,7 @@ QString LliurexOneDriveWidgetUtils::formatFreeSpace(QString freespace){
     return valueText;
 }
 
-QStringList LliurexOneDriveWidgetUtils::getAccountStatus(){
+QStringList LliurexOneDriveWidgetUtils::getAccountStatus(int exitCode,QString poutProces,QString perrProcess){
 
     QString code="";
     QString freeSpace="Not available";
@@ -116,18 +109,11 @@ QStringList LliurexOneDriveWidgetUtils::getAccountStatus(){
     QString allSyncRef="No pending";
     QString outSyncRef="out of sync";
     QString freeSpaceRef="Free Space";
+    QString uploading="Uploading";
 
-    QProcess process;
-    process.setProgram("/usr/bin/onedrive");
-    QStringList arguments={"--display-sync-status", "--verbose"};
-    process.setArguments(arguments);
-    process.start();
-    process.waitForFinished(-1);
-    int exitCode=process.exitCode();
-    QString stdout=process.readAllStandardOutput();
-    QString stderr=process.readAllStandardError();
-    QStringList pout=stdout.split("\n");
-    QStringList perror=stderr.split("\n");
+    
+    QStringList pout=poutProces.split("\n");
+    QStringList perror=perrProcess.split("\n");
 
     if (exitCode!=0){
         for(int i=0 ; i < pout.length() ; i++){
@@ -145,6 +131,11 @@ QStringList LliurexOneDriveWidgetUtils::getAccountStatus(){
         }
     }else{ 
         for(int i=0 ; i < pout.length() ; i++){
+
+            if (pout[i].contains(uploading)){
+                code=UPLOADING_PENDING_CHANGES;
+                break;
+            }
             if (pout[i].contains(allSyncRef)){
                 code=NO_PENDING_SYNC;
             }else if (pout[i].contains(outSyncRef)){
@@ -152,7 +143,6 @@ QStringList LliurexOneDriveWidgetUtils::getAccountStatus(){
             }else if (pout[i].contains(freeSpaceRef)){
                 QString tmp_value=pout[i].split(":")[1];
                 freeSpace=formatFreeSpace(tmp_value);
-                     
             }
         }
     }
