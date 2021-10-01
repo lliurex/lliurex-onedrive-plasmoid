@@ -43,21 +43,21 @@ void LliurexOneDriveWidget::initPlasmoid(){
 
 void LliurexOneDriveWidget::worker(){
 
-    if (!is_working){
+    if (!isWorking){
         if (LliurexOneDriveWidget::TARGET_FILE.exists() ) {
            const QString tooltip(i18n("Lliurex OneDrive"));
            setToolTip(tooltip);
-           bool isrunning=m_utils->isRunning(); 
+           bool isRunning=m_utils->isRunning(); 
            if (changeSyncStatus){
-                if (initClientStatus==isrunning){
+                if (initClientStatus==isRunning){
                     showSyncNotification();
                 }
                 changeSyncStatus=false;
            }
-           setSyncStatus(isrunning);
+           setSyncStatus(isRunning);
            setStatus(ActiveStatus); 
 
-           if (isrunning){
+           if (isRunning){
                
                if ((!previousError) & (!warning) & (!checkExecuted)){
                     QString subtooltip(i18n("Starting the synchronization"));
@@ -71,6 +71,7 @@ void LliurexOneDriveWidget::worker(){
                previousErrorCode="";
                warning=false;
                checkExecuted=false;
+               changeSyncStatus=false;
            }
 
         }else{
@@ -79,6 +80,7 @@ void LliurexOneDriveWidget::worker(){
             previousErrorCode="";
             warning=false;
             checkExecuted=false;
+            changeSyncStatus=false;
         }
         
     }
@@ -87,34 +89,38 @@ void LliurexOneDriveWidget::worker(){
 
 void LliurexOneDriveWidget::checkStatus(){
 
-    last_check=last_check+5;
-    if (last_check>90){
-        last_check=0;
-        if (m_checkProcess->state() != QProcess::NotRunning) {
-            m_checkProcess->kill();
+    lastCheck=lastCheck+5;
+    if (lastCheck>90){
+        isWorking=true;
+        bool isOneDriveDisplayRunning=m_utils->isOneDriveDisplayRunning();
+        if (!isOneDriveDisplayRunning){
+            lastCheck=0;
+            if (m_checkProcess->state() != QProcess::NotRunning) {
+                m_checkProcess->kill();
+            }
+            m_checkProcess->setProgram("/usr/bin/onedrive");
+            QStringList arguments={"--display-sync-status", "--verbose"};
+            m_checkProcess->setArguments(arguments);
+            m_checkProcess->start(QIODevice::ReadOnly);
+        }else{
+            isWorking=false;
         }
-        m_checkProcess->setProgram("/usr/bin/onedrive");
-        QStringList arguments={"--display-sync-status", "--verbose"};
-        m_checkProcess->setArguments(arguments);
-        m_checkProcess->start();
-       
     }
 }    
 
 void LliurexOneDriveWidget::checkProcessFinished(int exitCode, QProcess::ExitStatus exitStatus){
 
-    is_working=false;
-    bool showNotification=false;
-    checkExecuted=true;
     QStringList result;
-
+    bool showNotification=false;
+   
     if (exitStatus!=QProcess::NormalExit){
+        isWorking=false;
+        checkExecuted=true;
         return;
     }
-    
-    QString stdout=m_checkProcess->readAllStandardOutput();
-    QString stderr=m_checkProcess->readAllStandardError();
-    
+    QString stdout=QString::fromLocal8Bit(m_checkProcess->readAllStandardOutput());
+    QString stderr=QString::fromLocal8Bit(m_checkProcess->readAllStandardError());
+
     result=m_utils->getAccountStatus(exitCode,stdout,stderr);
 
     QStringList warningCode;
@@ -160,8 +166,9 @@ void LliurexOneDriveWidget::checkProcessFinished(int exitCode, QProcess::ExitSta
         previousErrorCode="";
     }
    
+    isWorking=false;
+    checkExecuted=true;
     setFreeSpace(result[1]);
-
 } 
 
 void LliurexOneDriveWidget::updateWidget(QString subtooltip,QString icon){
@@ -189,10 +196,10 @@ void LliurexOneDriveWidget::launchOneDrive()
 void LliurexOneDriveWidget::openFolder()
 {
             
-        QString command="xdg-open "+m_oneDriveFolder;
-        KIO::CommandLauncherJob *job = nullptr;
-        job = new KIO::CommandLauncherJob(command);
-        job->start();
+    QString command="xdg-open "+m_oneDriveFolder;
+    KIO::CommandLauncherJob *job = nullptr;
+    job = new KIO::CommandLauncherJob(command);
+    job->start();
 }
 
 void LliurexOneDriveWidget::manageSync(){

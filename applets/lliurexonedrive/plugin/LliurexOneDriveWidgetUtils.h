@@ -21,6 +21,7 @@ public:
     QString getUserHome();
     bool isRunning();
     void manageSync();
+    bool isOneDriveDisplayRunning();
 
     QStringList getAccountStatus(int exitCode,QString poutProces,QString perrProcess);
 

@@ -32,11 +32,11 @@ bool LliurexOneDriveWidgetUtils::isRunning(){
     QProcess process;
     QString cmd="ps -ef | grep '/usr/bin/onedrive --monitor' | grep -v 'grep'";
     process.start("/bin/sh", QStringList()<< "-c" 
-                       << cmd);
+                       << cmd,QIODevice::ReadOnly);
     process.waitForFinished(-1);
-    QString stdout=process.readAllStandardOutput();
+    QString stdout=QString::fromLocal8Bit(process.readAllStandardOutput());
     QStringList pout=stdout.split("\n");
-    
+        
     if (pout[0].size()>0){
         return true;
     }else{
@@ -49,9 +49,9 @@ bool LliurexOneDriveWidgetUtils::isSystemdActive(){
 
     QProcess process;
     QString cmd="systemctl --user is-active onedrive.service";
-    process.start("/bin/sh",QStringList()<<"-c"<<cmd);
+    process.start("/bin/sh",QStringList()<<"-c"<<cmd,QIODevice::ReadOnly);
     process.waitForFinished(-1);
-    QString stdout=process.readAllStandardOutput();
+    QString stdout=QString::fromLocal8Bit(process.readAllStandardOutput());
     QStringList pout=stdout.split("\n");
     
     if (pout[0]=="active"){
@@ -100,7 +100,7 @@ QString LliurexOneDriveWidgetUtils::formatFreeSpace(QString freespace){
 QStringList LliurexOneDriveWidgetUtils::getAccountStatus(int exitCode,QString poutProces,QString perrProcess){
 
     QString code="";
-    QString freeSpace="Not available";
+    QString freeSpace="";
     QStringList result;
     QString uploadingRef="416";
     QString zeroSpaceRef="zero space available";
@@ -151,5 +151,23 @@ QStringList LliurexOneDriveWidgetUtils::getAccountStatus(int exitCode,QString po
     result<<code<<freeSpace;
     return result;
 
+}
+
+bool LliurexOneDriveWidgetUtils::isOneDriveDisplayRunning(){
+
+    QProcess process;
+    QString cmd="ps -ef | grep '/usr/bin/onedrive --display-sync-status --verbose' | grep -v 'grep'";
+    process.start("/bin/sh", QStringList()<< "-c" 
+                       << cmd,QIODevice::ReadOnly);
+    process.waitForFinished(-1);
+    QString stdout=QString::fromLocal8Bit(process.readAllStandardOutput());
+    QStringList pout=stdout.split("\n");
+        
+    if (pout[0].size()>0){
+        return true;
+    }else{
+        return false;
+    }
+   
 }
 

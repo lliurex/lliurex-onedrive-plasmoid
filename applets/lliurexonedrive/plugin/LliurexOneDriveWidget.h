@@ -103,8 +103,8 @@ private:
     QString m_toolTip;
     QString m_subToolTip;
     QFile TARGET_FILE;
-    bool is_working=false;
-    int last_check=90;
+    bool isWorking=false;
+    int lastCheck=80;
     bool previousError=false;
     bool warning=false;
     bool checkExecuted=false;
