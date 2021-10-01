@@ -93,7 +93,13 @@ Item {
                 }
                 Components.Label{
                     id:freeSpaceValue
-                    text:lliurexOneDriveWidget.freeSpace
+                    text:{
+                        if (lliurexOneDriveWidget.freeSpace!=""){
+                            lliurexOneDriveWidget.freeSpace
+                        }else{
+                            i18n("Information not available")
+                        }
+                    }
                     Layout.fillWidth:true
                 }
             }
