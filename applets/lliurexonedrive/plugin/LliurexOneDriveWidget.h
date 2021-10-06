@@ -89,6 +89,8 @@ private:
 
     LliurexOneDriveWidgetUtils *m_utils;
     QProcess *m_checkProcess=nullptr;
+    QProcess *m_isDisplayProcess=nullptr;
+    QProcess *m_isRunningProcess=nullptr;
     void plasmoidMode();
     void initPlasmoid();
     void updateWidget(QString subtooltip,QString icon);
@@ -104,6 +106,7 @@ private:
     QString m_subToolTip;
     QFile TARGET_FILE;
     bool isWorking=false;
+    bool isRunning=false;
     int lastCheck=80;
     bool previousError=false;
     bool warning=false;
@@ -115,14 +118,12 @@ private:
 
 private slots:
 
+     void checkIsRunning();
+     void isRunningProcessFinished(int exitCode,QProcess::ExitStatus exitStatus);
+     void checkIsDisplayRunning();
+     void isDisplayProcessFinished(int exitCode,QProcess::ExitStatus exitStatus);
      void checkStatus();
      void checkProcessFinished(int exitCode, QProcess::ExitStatus exitStatus);
 };
-
-/**
- * Class monitoring the file system quota.
- * The monitoring is performed through a timer, running the 'quota'
- * command line tool.
- */
 
 #endif // PLASMA_LLIUREX_ONEDRIVE_WIDGET_H

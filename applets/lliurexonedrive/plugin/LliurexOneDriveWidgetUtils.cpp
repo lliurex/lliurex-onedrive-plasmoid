@@ -9,13 +9,16 @@
 #include <QStandardPaths>
 #include <sys/types.h>
 #include <KIO/CommandLauncherJob>
+#include <QDebug>
 
 
 LliurexOneDriveWidgetUtils::LliurexOneDriveWidgetUtils(QObject *parent)
     : QObject(parent)
+    ,m_isSystemdActive(new QProcess(this))
        
 {
-  
+    connect(m_isSystemdActive, (void (QProcess::*)(int, QProcess::ExitStatus))&QProcess::finished,
+            this, &LliurexOneDriveWidgetUtils::checkIsSystemdActiveFinished);
 }    
 
 QString LliurexOneDriveWidgetUtils::getUserHome() {
@@ -26,64 +29,55 @@ QString LliurexOneDriveWidgetUtils::getUserHome() {
     return userHome;
 
 }
-
-bool LliurexOneDriveWidgetUtils::isRunning(){
-
-    QProcess process;
-    QString cmd="ps -ef | grep '/usr/bin/onedrive --monitor' | grep -v 'grep'";
-    process.start("/bin/sh", QStringList()<< "-c" 
-                       << cmd,QIODevice::ReadOnly);
-    process.waitForFinished(-1);
-    QString stdout=QString::fromLocal8Bit(process.readAllStandardOutput());
-    QStringList pout=stdout.split("\n");
-        
-    if (pout[0].size()>0){
-        return true;
-    }else{
-        return false;
-    }
-   
-}
-
-bool LliurexOneDriveWidgetUtils::isSystemdActive(){
-
-    QProcess process;
-    QString cmd="systemctl --user is-active onedrive.service";
-    process.start("/bin/sh",QStringList()<<"-c"<<cmd,QIODevice::ReadOnly);
-    process.waitForFinished(-1);
-    QString stdout=QString::fromLocal8Bit(process.readAllStandardOutput());
-    QStringList pout=stdout.split("\n");
-    
-    if (pout[0]=="active"){
-        return true;
-    }else{
-        return false;
-    }
-
-
-}
-
-void LliurexOneDriveWidgetUtils::manageSync(){
+void LliurexOneDriveWidgetUtils::manageSync(bool isRunning){
 
     SYSTEMDTOKEN.setFileName(getUserHome()+"/.config/systemd/user/onedrive.service");
     QString cmd="";
 
-    bool initClientStatus=isRunning();
-
-    if (!initClientStatus){
+   if (!isRunning){
         if (!SYSTEMDTOKEN.exists()){
             cmd="systemctl --user start onedrive.service";
             
         }else{
             cmd="/usr/bin/onedrive --monitor &";
         }
+        KIO::CommandLauncherJob *job = nullptr;
+        job = new KIO::CommandLauncherJob(cmd);
+        job->start();
+
     }else{
-        if (isSystemdActive()){
-            cmd="systemctl --user stop onedrive.service";
-        }else{
-            cmd="ps -ef | grep '/usr/bin/onedrive --monitor' | grep -v grep | awk '{print $2}' | xargs kill -9";             
-        }
+        checkIsSystemdActive();
+       
     }
+}
+
+void LliurexOneDriveWidgetUtils::checkIsSystemdActive(){
+
+    if (m_isSystemdActive->state() != QProcess::NotRunning) {
+        m_isSystemdActive->kill();
+    }
+    QString cmd="systemctl --user is-active onedrive.service";
+    m_isSystemdActive->start("/bin/sh",QStringList()<<"-c"<<cmd,QIODevice::ReadOnly);
+  
+} 
+
+void LliurexOneDriveWidgetUtils::checkIsSystemdActiveFinished(int exitCode, QProcess::ExitStatus exitStatus){
+
+    Q_UNUSED(exitCode);
+    
+    if (exitStatus!=QProcess::NormalExit){
+        return;
+    }
+    QString cmd="";
+    QString stdout=QString::fromLocal8Bit(m_isSystemdActive->readAllStandardOutput());
+    QStringList pout=stdout.split("\n");
+    
+    if (pout[0].size()>0){
+        cmd="systemctl --user stop onedrive.service";
+    }else{
+        cmd="ps -ef | grep '/usr/bin/onedrive --monitor' | grep -v grep | awk '{print $2}' | xargs kill -9";             
+    }
+    
     KIO::CommandLauncherJob *job = nullptr;
     job = new KIO::CommandLauncherJob(cmd);
     job->start();
@@ -116,7 +110,7 @@ QStringList LliurexOneDriveWidgetUtils::getAccountStatus(int exitCode,QString po
     QStringList perror=perrProcess.split("\n");
 
     if (exitCode!=0){
-        for(int i=0 ; i < pout.length() ; i++){
+        for(int i=0 ; i < perror.length() ; i++){
             if (perror[i].contains(uploadingRef)){
                 code=UPLOADING_PENDING_CHANGES;
             }else if (perror[i].contains(zeroSpaceRef)){

@@ -17,6 +17,8 @@ LliurexOneDriveWidget::LliurexOneDriveWidget(QObject *parent)
     : QObject(parent)
     ,m_timer(new QTimer(this))
     ,m_utils(new LliurexOneDriveWidgetUtils(this))
+    ,m_isRunningProcess(new QProcess(this))
+    ,m_isDisplayProcess(new QProcess(this))
     ,m_checkProcess(new QProcess(this))
     
 {
@@ -27,6 +29,10 @@ LliurexOneDriveWidget::LliurexOneDriveWidget(QObject *parent)
     initPlasmoid();
 
     connect(m_timer, &QTimer::timeout, this, &LliurexOneDriveWidget::worker);
+    connect(m_isRunningProcess, (void (QProcess::*)(int, QProcess::ExitStatus))&QProcess::finished,
+            this, &LliurexOneDriveWidget::isRunningProcessFinished);
+    connect(m_isDisplayProcess, (void (QProcess::*)(int, QProcess::ExitStatus))&QProcess::finished,
+            this, &LliurexOneDriveWidget::isDisplayProcessFinished);
     connect(m_checkProcess, (void (QProcess::*)(int, QProcess::ExitStatus))&QProcess::finished,
             this, &LliurexOneDriveWidget::checkProcessFinished);
     
@@ -47,33 +53,7 @@ void LliurexOneDriveWidget::worker(){
         if (LliurexOneDriveWidget::TARGET_FILE.exists() ) {
            const QString tooltip(i18n("Lliurex OneDrive"));
            setToolTip(tooltip);
-           bool isRunning=m_utils->isRunning(); 
-           if (changeSyncStatus){
-                if (initClientStatus==isRunning){
-                    showSyncNotification();
-                }
-                changeSyncStatus=false;
-           }
-           setSyncStatus(isRunning);
-           setStatus(ActiveStatus); 
-
-           if (isRunning){
-               
-               if ((!previousError) & (!warning) & (!checkExecuted)){
-                    QString subtooltip(i18n("Starting the synchronization"));
-                    updateWidget(subtooltip,"onedrive-starting");
-               }
-               checkStatus();
-           }else{
-               QString subtooltip(i18n("Synchronization is stopped"));
-               updateWidget(subtooltip,"onedrive-pause");
-               previousError=false;
-               previousErrorCode="";
-               warning=false;
-               checkExecuted=false;
-               changeSyncStatus=false;
-           }
-
+           checkIsRunning();
         }else{
             setStatus(PassiveStatus);
             previousError=false;
@@ -87,26 +67,127 @@ void LliurexOneDriveWidget::worker(){
 
 }
 
+void LliurexOneDriveWidget::checkIsRunning(){
+
+    if (m_isRunningProcess->state() != QProcess::NotRunning) {
+        m_isRunningProcess->kill();
+    }
+    QString cmd="ps -ef | grep '/usr/bin/onedrive --monitor' | grep -v 'grep'";
+    m_isRunningProcess->start("/bin/sh", QStringList()<< "-c" 
+                       << cmd,QIODevice::ReadOnly);
+  
+}    
+
+void LliurexOneDriveWidget::isRunningProcessFinished(int exitCode, QProcess::ExitStatus exitStatus){
+
+    Q_UNUSED(exitCode);
+
+    if (exitStatus!=QProcess::NormalExit){
+        isRunning=false;
+        return;
+    }
+
+    QString stdout=QString::fromLocal8Bit(m_isRunningProcess->readAllStandardOutput());
+    QStringList pout=stdout.split("\n");
+    
+    if (pout[0].size()>0){
+        if (tryChangeStatus){
+            tryChangeStatus=false;
+            initClientStatus=true;
+            m_utils->manageSync(initClientStatus);
+        }else{
+            isRunning=true;
+            if (changeSyncStatus){
+                if (initClientStatus==isRunning){
+                    showSyncNotification();
+                }
+                changeSyncStatus=false;
+            } 
+        }     
+    }else{
+        if (tryChangeStatus){
+            tryChangeStatus=false;
+            initClientStatus=false;
+            m_utils->manageSync(initClientStatus);
+
+        }else{
+            isRunning=false;
+            if (changeSyncStatus){
+                if (initClientStatus==isRunning){
+                    showSyncNotification();
+                }
+                changeSyncStatus=false;
+            } 
+        }    
+     
+    }
+    
+    setSyncStatus(isRunning);
+    setStatus(ActiveStatus); 
+    
+    if (isRunning){
+        if ((!previousError) & (!warning) & (!checkExecuted)){
+            QString subtooltip(i18n("Starting the synchronization"));
+            updateWidget(subtooltip,"onedrive-starting");
+        }
+        checkStatus();
+    }else{
+        QString subtooltip(i18n("Synchronization is stopped"));
+        updateWidget(subtooltip,"onedrive-pause");
+        previousError=false;
+        previousErrorCode="";
+        warning=false;
+        checkExecuted=false;
+        changeSyncStatus=false;
+    }
+}
+
 void LliurexOneDriveWidget::checkStatus(){
 
     lastCheck=lastCheck+5;
     if (lastCheck>90){
         isWorking=true;
-        bool isOneDriveDisplayRunning=m_utils->isOneDriveDisplayRunning();
-        if (!isOneDriveDisplayRunning){
-            lastCheck=0;
-            if (m_checkProcess->state() != QProcess::NotRunning) {
-                m_checkProcess->kill();
-            }
-            m_checkProcess->setProgram("/usr/bin/onedrive");
-            QStringList arguments={"--display-sync-status", "--verbose"};
-            m_checkProcess->setArguments(arguments);
-            m_checkProcess->start(QIODevice::ReadOnly);
-        }else{
-            isWorking=false;
-        }
+        checkIsDisplayRunning();
+       
     }
+}
+
+void LliurexOneDriveWidget::checkIsDisplayRunning(){
+
+    if (m_isDisplayProcess->state() != QProcess::NotRunning) {
+        m_isDisplayProcess->kill();
+    }
+    QString cmd="ps -ef | grep '/usr/bin/onedrive --display-sync-status --verbose' | grep -v 'grep'";
+    m_isDisplayProcess->start("/bin/sh", QStringList()<< "-c" 
+                       << cmd,QIODevice::ReadOnly);
+  
 }    
+
+void LliurexOneDriveWidget::isDisplayProcessFinished(int exitCode, QProcess::ExitStatus exitStatus){
+
+    Q_UNUSED(exitCode);
+
+    if (exitStatus!=QProcess::NormalExit){
+        isWorking=false;
+        return;
+    }
+    QString stdout=QString::fromLocal8Bit(m_isDisplayProcess->readAllStandardOutput());
+    QStringList pout=stdout.split("\n");
+
+    if (pout[0].size()>0){
+        isWorking=false;
+        return;
+    }else{
+        lastCheck=0;
+        if (m_checkProcess->state() != QProcess::NotRunning) {
+            m_checkProcess->kill();
+        }
+        m_checkProcess->setProgram("/usr/bin/onedrive");
+        QStringList arguments={"--display-sync-status", "--verbose"};
+        m_checkProcess->setArguments(arguments);
+        m_checkProcess->start(QIODevice::ReadOnly);;
+    }
+}        
 
 void LliurexOneDriveWidget::checkProcessFinished(int exitCode, QProcess::ExitStatus exitStatus){
 
@@ -205,8 +286,8 @@ void LliurexOneDriveWidget::openFolder()
 void LliurexOneDriveWidget::manageSync(){
 
     changeSyncStatus=true;
-    initClientStatus=m_utils->isRunning();
-    m_utils->manageSync();
+    tryChangeStatus=true;
+    checkIsRunning();
 }
 
 void LliurexOneDriveWidget::showSyncNotification(){
@@ -218,7 +299,6 @@ void LliurexOneDriveWidget::showSyncNotification(){
         QString subtooltip(i18n("Unable to start synchronization"));
         m_errorNotification = KNotification::event(QStringLiteral("ErrorStart"), subtooltip, {}, "lliurex-onedrive", nullptr, KNotification::CloseOnTimeout , QStringLiteral("llxonedrive"));
     }
-    connect(m_errorNotification, QOverload<unsigned int>::of(&KNotification::activated), this, &LliurexOneDriveWidget::launchOneDrive);
             
 }
 

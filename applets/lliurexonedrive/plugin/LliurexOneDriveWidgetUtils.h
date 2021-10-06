@@ -19,9 +19,7 @@ public:
     LliurexOneDriveWidgetUtils(QObject *parent = nullptr);
 
     QString getUserHome();
-    bool isRunning();
-    void manageSync();
-    bool isOneDriveDisplayRunning();
+    void manageSync(bool isRunning);
 
     QStringList getAccountStatus(int exitCode,QString poutProces,QString perrProcess);
 
@@ -35,11 +33,17 @@ public:
 
 
 private:
-
-    bool isSystemdActive();
+    
+    QProcess *m_isSystemdActive=nullptr;
     QString formatFreeSpace(QString freeSpace);
     QFile SYSTEMDTOKEN;
-     
+  
+private slots:
+
+    void checkIsSystemdActive();
+    void checkIsSystemdActiveFinished(int exitCode, QProcess::ExitStatus exitStatus);
+
+
 };
 
 
