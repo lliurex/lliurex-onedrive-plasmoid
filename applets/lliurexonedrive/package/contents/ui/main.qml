@@ -38,7 +38,7 @@ Item {
 
     Component.onCompleted: {
         plasmoid.removeAction("configure");
-        plasmoid.setAction("launchOneDrive", i18n("OneDrive Settings"), "configure"); 
+        plasmoid.setAction("launchOneDrive", i18n("Open Lliurex Onedrive"), "configure"); 
     }
 
     Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation
