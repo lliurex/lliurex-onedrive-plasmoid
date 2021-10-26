@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lliurexonedrive\n"
 "Report-Msgid-Bugs-To: http://lliurex.net\n"
-"POT-Creation-Date: 2021-10-19 16:08+0200\n"
-"PO-Revision-Date: 2021-10-19 16:11+0200\n"
+"POT-Creation-Date: 2021-10-26 09:18+0200\n"
+"PO-Revision-Date: 2021-10-26 09:21+0200\n"
 "Last-Translator: lliurex <lliurex@gva.es>\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -20,8 +20,9 @@ msgstr ""
 "X-Generator: Poedit 2.3\n"
 
 #: ../applets/lliurexonedrive/package/contents/ui/main.qml:41
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:249
 #, kde-format
-msgid "Open Lliurex Onedrive"
+msgid "Open Lliurex OneDrive"
 msgstr ""
 
 #: ../applets/lliurexonedrive/package/contents/ui/main.qml:63
@@ -36,7 +37,7 @@ msgstr ""
 
 #: ../applets/lliurexonedrive/package/contents/ui/main.qml:91
 #, kde-format
-msgid "Free Space:"
+msgid "Free Space on OneDrive:"
 msgstr ""
 
 #: ../applets/lliurexonedrive/package/contents/ui/main.qml:100
@@ -94,11 +95,6 @@ msgstr ""
 msgid ""
 "OneDrive has reported an error.\n"
 "Open Lliurex OneDrive for more information"
-msgstr ""
-
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:249
-#, kde-format
-msgid "Open Lliurex OneDrive"
 msgstr ""
 
 #: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:256

@@ -38,7 +38,7 @@ Item {
 
     Component.onCompleted: {
         plasmoid.removeAction("configure");
-        plasmoid.setAction("launchOneDrive", i18n("Open Lliurex Onedrive"), "configure"); 
+        plasmoid.setAction("launchOneDrive", i18n("Open Lliurex OneDrive"), "configure"); 
     }
 
     Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation
@@ -88,7 +88,7 @@ Item {
 
                 Components.Label{
                     id:freeSpace
-                    text:i18n("Free Space:")
+                    text:i18n("Free Space on OneDrive:")
                     Layout.rightMargin:5
                 }
                 Components.Label{
