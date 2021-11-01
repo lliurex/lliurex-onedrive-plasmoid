@@ -146,22 +146,3 @@ QStringList LliurexOneDriveWidgetUtils::getAccountStatus(int exitCode,QString po
     return result;
 
 }
-
-bool LliurexOneDriveWidgetUtils::isOneDriveDisplayRunning(){
-
-    QProcess process;
-    QString cmd="ps -ef | grep '/usr/bin/onedrive --display-sync-status --verbose' | grep -v 'grep'";
-    process.start("/bin/sh", QStringList()<< "-c" 
-                       << cmd,QIODevice::ReadOnly);
-    process.waitForFinished(-1);
-    QString stdout=QString::fromLocal8Bit(process.readAllStandardOutput());
-    QStringList pout=stdout.split("\n");
-        
-    if (pout[0].size()>0){
-        return true;
-    }else{
-        return false;
-    }
-   
-}
-
