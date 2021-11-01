@@ -8,14 +8,14 @@ plasma_install_package(package org.kde.plasma.lliurexonedrive)
 # Notes Library
 add_definitions(-DTRANSLATION_DOMAIN="plasma_applet_org.kde.plasma.lliurexonedrive")
 
-set(upnotifier_SRCS
+set(llxonedrivewidget_SRCS
     plugin/plugin.cpp
     plugin/LliurexOneDriveWidget.cpp
     plugin/LliurexOneDriveWidgetUtils.cpp
    
 )
 
-add_library(lliurexonedriveplugin SHARED ${upnotifier_SRCS})
+add_library(lliurexonedriveplugin SHARED ${llxonedrivewidget_SRCS})
 
 target_link_libraries(lliurexonedriveplugin
                       Qt5::Quick
@@ -39,6 +39,8 @@ install(FILES "icons/onedrive-waiting.svg"
 install(FILES "icons/onedrive-error.svg"
         DESTINATION ${DATAROOTDIR}/usr/share/icons/hicolor/scalable/apps/)
 install(FILES "icons/onedrive-starting.svg"
+        DESTINATION ${DATAROOTDIR}/usr/share/icons/hicolor/scalable/apps/)
+install(FILES "icons/onedrive-widget.svg"
         DESTINATION ${DATAROOTDIR}/usr/share/icons/hicolor/scalable/apps/)
 install(FILES "knotifications5/llxonedrive.notifyrc"
         DESTINATION ${DATAROOTDIR}/usr/share/knotifications5/)        

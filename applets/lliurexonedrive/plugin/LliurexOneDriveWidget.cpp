@@ -232,7 +232,7 @@ void LliurexOneDriveWidget::checkProcessFinished(int exitCode, QProcess::ExitSta
             showNotification=true;
         }
         if (showNotification){
-            m_errorNotification = KNotification::event(QStringLiteral("ErrorStatus"), subtooltip, {}, "lliurex-onedrive", nullptr, KNotification::CloseOnTimeout , QStringLiteral("llxonedrive"));
+            m_errorNotification = KNotification::event(QStringLiteral("ErrorStatus"), subtooltip, {}, "onedrive-widget", nullptr, KNotification::CloseOnTimeout , QStringLiteral("llxonedrive"));
             QString name = i18n("Open Lliurex OneDrive");
             m_errorNotification->setDefaultAction(name);
             m_errorNotification->setActions({name});
@@ -294,10 +294,10 @@ void LliurexOneDriveWidget::showSyncNotification(){
 
     if (initClientStatus){
         QString subtooltip(i18n("Unable to stop synchronization"));
-        m_errorNotification = KNotification::event(QStringLiteral("ErrorStop"), subtooltip, {}, "lliurex-onedrive", nullptr, KNotification::CloseOnTimeout , QStringLiteral("llxonedrive"));
+        m_errorNotification = KNotification::event(QStringLiteral("ErrorStop"), subtooltip, {}, "onedrive-widget", nullptr, KNotification::CloseOnTimeout , QStringLiteral("llxonedrive"));
     }else{
         QString subtooltip(i18n("Unable to start synchronization"));
-        m_errorNotification = KNotification::event(QStringLiteral("ErrorStart"), subtooltip, {}, "lliurex-onedrive", nullptr, KNotification::CloseOnTimeout , QStringLiteral("llxonedrive"));
+        m_errorNotification = KNotification::event(QStringLiteral("ErrorStart"), subtooltip, {}, "onedrive-widget", nullptr, KNotification::CloseOnTimeout , QStringLiteral("llxonedrive"));
     }
             
 }

@@ -114,7 +114,7 @@ QStringList LliurexOneDriveWidgetUtils::getAccountStatus(int exitCode,QString po
             if (perror[i].contains(uploadingRef)){
                 code=UPLOADING_PENDING_CHANGES;
             }else if (perror[i].contains(zeroSpaceRef)){
-                code=ZERO_SPACE_AVAILABLE;   
+                code=ZERO_SPACE_AVAILABLE;
             }else if (perror[i].contains(unauthorizedRef)){
                 code=UNAUTHORIZED_ERROR;
             }else if (perror[i].contains(networkRef)){ 
