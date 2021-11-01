@@ -127,6 +127,7 @@ Item {
                     height:35
                     display:AbstractButton.IconOnly
                     icon.name:lliurexOneDriveWidget.syncStatus?"kt-stop.svg":"kt-start.svg"
+                    enabled:!lliurexOneDriveWidget.lliurexOneDriveOpen
                     onClicked:lliurexOneDriveWidget.manageSync() 
                     Components3.ToolTip{
                         text:lliurexOneDriveWidget.syncStatus?i18n("Click to stop synchronization"):i18n("Click to start synchronization")

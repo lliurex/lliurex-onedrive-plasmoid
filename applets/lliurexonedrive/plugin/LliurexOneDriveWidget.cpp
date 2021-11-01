@@ -20,6 +20,8 @@ LliurexOneDriveWidget::LliurexOneDriveWidget(QObject *parent)
     ,m_isRunningProcess(new QProcess(this))
     ,m_isDisplayProcess(new QProcess(this))
     ,m_checkProcess(new QProcess(this))
+    ,m_isLliurexOneDriveOpen(new QProcess(this))
+
     
 {
     
@@ -35,7 +37,9 @@ LliurexOneDriveWidget::LliurexOneDriveWidget(QObject *parent)
             this, &LliurexOneDriveWidget::isDisplayProcessFinished);
     connect(m_checkProcess, (void (QProcess::*)(int, QProcess::ExitStatus))&QProcess::finished,
             this, &LliurexOneDriveWidget::checkProcessFinished);
-    
+    connect(m_isLliurexOneDriveOpen, (void (QProcess::*)(int, QProcess::ExitStatus))&QProcess::finished,
+            this, &LliurexOneDriveWidget::isLliurexOneDriveOpenProcessFinished);
+
     m_timer->start(5000);
     worker();
 }    
@@ -54,6 +58,7 @@ void LliurexOneDriveWidget::worker(){
            const QString tooltip(i18n("Lliurex OneDrive"));
            setToolTip(tooltip);
            checkIsRunning();
+           checkIsLliurexOneDriveOpen();
         }else{
             setStatus(PassiveStatus);
             previousError=false;
@@ -252,6 +257,38 @@ void LliurexOneDriveWidget::checkProcessFinished(int exitCode, QProcess::ExitSta
     setFreeSpace(result[1]);
 } 
 
+void LliurexOneDriveWidget::checkIsLliurexOneDriveOpen(){
+
+    if (m_isLliurexOneDriveOpen->state() != QProcess::NotRunning) {
+        m_isLliurexOneDriveOpen->kill();
+    }
+    QString cmd="ps -ef | grep '/usr/bin/lliurex-onedrive' | grep -v 'grep'";
+    m_isLliurexOneDriveOpen->start("/bin/sh", QStringList()<< "-c" 
+                       << cmd,QIODevice::ReadOnly);
+  
+}
+
+void LliurexOneDriveWidget::isLliurexOneDriveOpenProcessFinished(int exitCode, QProcess::ExitStatus exitStatus){
+
+    Q_UNUSED(exitCode);
+
+    if (exitStatus!=QProcess::NormalExit){
+        setLliurexOneDriveOpen(true);
+        return;
+    }
+    QString stdout=QString::fromLocal8Bit(m_isLliurexOneDriveOpen->readAllStandardOutput());
+    QStringList pout=stdout.split("\n");
+    
+    if (pout[0].size()>0){
+        setLliurexOneDriveOpen(true);
+    }else{
+        setLliurexOneDriveOpen(false);
+    }
+
+}        
+
+
+
 void LliurexOneDriveWidget::updateWidget(QString subtooltip,QString icon){
 
     setSubToolTip(subtooltip);
@@ -387,6 +424,20 @@ void LliurexOneDriveWidget::setSyncStatus(bool &syncStatus)
         emit syncStatusChanged();
     }
 }
+
+bool LliurexOneDriveWidget::lliurexOneDriveOpen()
+{
+    return m_lliurexOneDriveOpen;
+}
+
+void LliurexOneDriveWidget::setLliurexOneDriveOpen(bool lliurexOneDriveOpen)
+{
+    if (m_lliurexOneDriveOpen != lliurexOneDriveOpen) {
+        m_lliurexOneDriveOpen = lliurexOneDriveOpen;
+        emit lliurexOneDriveOpenChanged();
+    }
+}
+
 
 
 
