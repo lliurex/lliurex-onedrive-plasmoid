@@ -77,6 +77,7 @@ public slots:
     void launchOneDrive();
     void openFolder();
     void manageSync();
+    void openHelp();
 
 signals:
    

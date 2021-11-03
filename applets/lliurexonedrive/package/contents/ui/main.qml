@@ -47,7 +47,7 @@ Item {
         Layout.fillWidth:true
         GridLayout{
             id: optionsAccount
-            rows: 3
+            rows: 4
             flow: GridLayout.TopToBottom
             rowSpacing:10
             width:parent.width
@@ -133,7 +133,30 @@ Item {
                         text:lliurexOneDriveWidget.syncStatus?i18n("Click to stop synchronization"):i18n("Click to start synchronization")
                     }
                 } 
-            }   
+            } 
+            RowLayout{
+                id:helpRow
+                Layout.fillWidth:true
+                Layout.leftMargin:5
+                Layout.rightMargin:5
+
+                Components.Label{
+                    id:helpText
+                    text:i18n("See help documentation")
+                    Layout.fillWidth:true
+                }
+
+               Components3.ToolButton {
+                    width:35
+                    height:35
+                    display:AbstractButton.IconOnly
+                    icon.name:"help-contents.svg"
+                    onClicked:lliurexOneDriveWidget.openHelp() 
+                    Components3.ToolTip{
+                        text:i18n("Click to see help")
+                    }
+                } 
+            }     
         }    
     }
 

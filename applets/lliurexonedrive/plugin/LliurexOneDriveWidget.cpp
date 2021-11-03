@@ -438,6 +438,15 @@ void LliurexOneDriveWidget::setLliurexOneDriveOpen(bool lliurexOneDriveOpen)
     }
 }
 
+void LliurexOneDriveWidget::openHelp()
+{
+            
+    QString command="xdg-open https://wiki.edu.gva.es/lliurex/tiki-index.php?page=Lliurex-Onedrive";
+    KIO::CommandLauncherJob *job = nullptr;
+    job = new KIO::CommandLauncherJob(command);
+    job->start();
+}
+
 
 
 
