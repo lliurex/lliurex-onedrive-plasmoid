@@ -120,6 +120,7 @@ private:
     bool checkExecuted=false;
     bool initClientStatus=false;
     bool changeSyncStatus=false;
+    bool tryChangeStatus=false;
     QString previousErrorCode="";
     QPointer<KNotification> m_errorNotification;
 
