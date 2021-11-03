@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: lliurexonedrive\n"
 "Report-Msgid-Bugs-To: http://lliurex.net\n"
 "POT-Creation-Date: 2021-10-26 09:18+0200\n"
-"PO-Revision-Date: 2021-10-26 09:19+0200\n"
+"PO-Revision-Date: 2021-11-03 16:04+0100\n"
 "Last-Translator: lliurex <lliurex@gva.es>\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -23,7 +23,7 @@ msgstr ""
 #: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:249
 #, kde-format
 msgid "Open Lliurex OneDrive"
-msgstr "Abrir LliureX OneDrive"
+msgstr "Abrir Lliurex OneDrive"
 
 #: ../applets/lliurexonedrive/package/contents/ui/main.qml:63
 #, kde-format

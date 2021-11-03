@@ -1,8 +1,8 @@
 [Global]
 IconName=lliurex-onedrive
-Comment=Lliurex-OneDrive
-Comment[ca@valencia]=Lliurex-OneDrive
-Comment[es]=Lliurex-OneDrive
+Comment=Lliurex OneDrive
+Comment[ca@valencia]=Lliurex OneDrive
+Comment[es]=Lliurex OneDrive
 
 
 [Event/ErrorStatus]
