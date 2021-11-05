@@ -71,11 +71,11 @@ void LliurexOneDriveWidgetUtils::checkIsSystemdActiveFinished(int exitCode, QPro
     QString cmd="";
     QString stdout=QString::fromLocal8Bit(m_isSystemdActive->readAllStandardOutput());
     QStringList pout=stdout.split("\n");
-    
-    if (pout[0].size()>0){
+
+    if (pout[0]!="inactive"){
         cmd="systemctl --user stop onedrive.service";
     }else{
-        cmd="ps -ef | grep '/usr/bin/onedrive --monitor' | grep -v grep | awk '{print $2}' | xargs kill -9";             
+        cmd="ps -ef | grep 'onedrive --monitor' | grep -v grep | awk '{print $2}' | xargs kill -9";             
     }
     
     KIO::CommandLauncherJob *job = nullptr;
