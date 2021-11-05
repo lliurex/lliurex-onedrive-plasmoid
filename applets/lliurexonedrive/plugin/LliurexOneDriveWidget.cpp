@@ -77,7 +77,7 @@ void LliurexOneDriveWidget::checkIsRunning(){
     if (m_isRunningProcess->state() != QProcess::NotRunning) {
         m_isRunningProcess->kill();
     }
-    QString cmd="ps -ef | grep '/usr/bin/onedrive --monitor' | grep -v 'grep'";
+    QString cmd="ps -ef | grep 'onedrive --monitor' | grep -v 'grep'";
     m_isRunningProcess->start("/bin/sh", QStringList()<< "-c" 
                        << cmd,QIODevice::ReadOnly);
   
@@ -162,7 +162,7 @@ void LliurexOneDriveWidget::checkIsDisplayRunning(){
     if (m_isDisplayProcess->state() != QProcess::NotRunning) {
         m_isDisplayProcess->kill();
     }
-    QString cmd="ps -ef | grep '/usr/bin/onedrive --display-sync-status --verbose' | grep -v 'grep'";
+    QString cmd="ps -ef | grep 'onedrive --display-sync-status --verbose' | grep -v 'grep'";
     m_isDisplayProcess->start("/bin/sh", QStringList()<< "-c" 
                        << cmd,QIODevice::ReadOnly);
   
@@ -262,7 +262,7 @@ void LliurexOneDriveWidget::checkIsLliurexOneDriveOpen(){
     if (m_isLliurexOneDriveOpen->state() != QProcess::NotRunning) {
         m_isLliurexOneDriveOpen->kill();
     }
-    QString cmd="ps -ef | grep '/usr/bin/lliurex-onedrive' | grep -v 'grep'";
+    QString cmd="ps -ef | grep 'lliurex-onedrive' | grep -v 'grep'";
     m_isLliurexOneDriveOpen->start("/bin/sh", QStringList()<< "-c" 
                        << cmd,QIODevice::ReadOnly);
   
