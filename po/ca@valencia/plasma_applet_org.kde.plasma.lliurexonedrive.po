@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: lliurexonedrive\n"
 "Report-Msgid-Bugs-To: http://lliurex.net\n"
 "POT-Creation-Date: 2021-11-03 17:51+0100\n"
-"PO-Revision-Date: 2021-11-16 08:16+0000\n"
+"PO-Revision-Date: 2021-11-17 12:51+0000\n"
 "Last-Translator: d33475574v <gimenez_angcam@gva.es>\n"
 "Language-Team: Valencian <https://weblate.gva.es/projects/lliurex-onedrive/"
 "onedrive-plamsoid/ca@valencia/>\n"
@@ -29,7 +29,7 @@ msgstr "Obri el LliureX OneDrive"
 #: ../applets/lliurexonedrive/package/contents/ui/main.qml:63
 #, kde-format
 msgid "OneDrive folder:"
-msgstr "Carpeta de OneDrive:"
+msgstr "Carpeta del OneDrive:"
 
 #: ../applets/lliurexonedrive/package/contents/ui/main.qml:78
 #, kde-format
@@ -39,7 +39,7 @@ msgstr "Feu clic per a obrir la carpeta"
 #: ../applets/lliurexonedrive/package/contents/ui/main.qml:91
 #, kde-format
 msgid "Free Space on OneDrive:"
-msgstr "Espai disponible en OneDrive:"
+msgstr "Espai disponible en el OneDrive:"
 
 #: ../applets/lliurexonedrive/package/contents/ui/main.qml:100
 #, kde-format
@@ -54,7 +54,7 @@ msgstr "Sincronització:"
 #: ../applets/lliurexonedrive/package/contents/ui/main.qml:121
 #, kde-format
 msgid "Running"
-msgstr "En marxa"
+msgstr "S'està executant"
 
 #: ../applets/lliurexonedrive/package/contents/ui/main.qml:121
 #, kde-format
@@ -74,12 +74,12 @@ msgstr "Feu clic per a iniciar la sincronització"
 #: ../applets/lliurexonedrive/package/contents/ui/main.qml:145
 #, kde-format
 msgid "See help documentation"
-msgstr ""
+msgstr "Consulteu la documentació d'ajuda"
 
 #: ../applets/lliurexonedrive/package/contents/ui/main.qml:156
 #, kde-format
 msgid "Click to see help"
-msgstr ""
+msgstr "Feu clic per a consultar l'ajuda"
 
 #: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:54
 #, kde-format
@@ -103,12 +103,12 @@ msgstr "Hi ha canvis pendents de sincronitzar"
 
 #: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:239
 #: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:234
-#, fuzzy, kde-format
+#, kde-format
 msgid ""
 "OneDrive has reported an error.\n"
 "Open Lliurex OneDrive for more information"
 msgstr ""
-"OneDrive ha indicat un error.\n"
+"OneDrive ha informat d'un error.\n"
 "Obriu Lliurex OneDrive per a obtindre més información"
 
 #: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:256
