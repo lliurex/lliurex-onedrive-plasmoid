@@ -1,5 +1,5 @@
 import QtQuick 2.2
-import QtQuick.Layouts 1.15
+import QtQuick.Layouts 1.12
 import QtQuick.Controls 2.6
 import QtQml.Models 2.3
 import org.kde.plasma.core 2.0 as PlasmaCore
