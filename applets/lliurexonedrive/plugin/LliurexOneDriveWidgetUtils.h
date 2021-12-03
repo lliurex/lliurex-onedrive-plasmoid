@@ -22,6 +22,7 @@ public:
     void manageSync(bool isRunning);
 
     QStringList getAccountStatus(int exitCode,QString poutProces,QString perrProcess);
+    QString getErrorMessage(QString code);
 
     QString UPLOADING_PENDING_CHANGES="416";
     QString NETWORK_CONNECT_ERROR="-2";
@@ -29,7 +30,8 @@ public:
     QString UNAUTHORIZED_ERROR="-7";
     QString GENERAL_ERROR="-1";
     QString NO_PENDING_SYNC="0";
-    QString OUT_OF_SYNC="1"; 
+    QString OUT_OF_SYNC="1";
+    QString SERVICE_UNAVAILABLE="-9";
 
 
 private:

@@ -124,6 +124,7 @@ private:
     bool tryChangeStatus=false;
     QString previousErrorCode="";
     QPointer<KNotification> m_errorNotification;
+    int countRepeatGeneralError=0;
 
 private slots:
 
