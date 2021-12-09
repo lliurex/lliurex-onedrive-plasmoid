@@ -1,3 +1,9 @@
+plasma-widget-lliurex-onedrive (0.1.1) bionic-updates; urgency=medium
+
+  * Improved feedback when OneDrive client report an error
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 09 Dec 2021 13:28:15 +0100
+
 plasma-widget-lliurex-onedrive (0.1) bionic-updates; urgency=medium
 
   * Initial release
