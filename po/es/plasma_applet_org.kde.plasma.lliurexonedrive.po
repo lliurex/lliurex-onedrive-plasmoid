@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lliurexonedrive\n"
 "Report-Msgid-Bugs-To: http://lliurex.net\n"
-"POT-Creation-Date: 2021-11-03 17:51+0100\n"
-"PO-Revision-Date: 2021-11-03 17:53+0100\n"
+"POT-Creation-Date: 2021-12-03 11:14+0100\n"
+"PO-Revision-Date: 2021-12-03 11:19+0100\n"
 "Last-Translator: lliurex <lliurex@gva.es>\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -20,8 +20,7 @@ msgstr ""
 "X-Generator: Poedit 2.3\n"
 
 #: ../applets/lliurexonedrive/package/contents/ui/main.qml:41
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:254
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:249
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:261
 #, kde-format
 msgid "Open Lliurex OneDrive"
 msgstr "Abrir Lliurex OneDrive"
@@ -62,13 +61,11 @@ msgid "Stopped"
 msgstr "Parada"
 
 #: ../applets/lliurexonedrive/package/contents/ui/main.qml:133
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:132
 #, kde-format
 msgid "Click to stop synchronization"
 msgstr "Haga clic para parar la sincronización"
 
 #: ../applets/lliurexonedrive/package/contents/ui/main.qml:133
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:132
 #, kde-format
 msgid "Click to start synchronization"
 msgstr "Haga clic para iniciar la sincronización"
@@ -84,31 +81,61 @@ msgid "Click to see help"
 msgstr "Haga clic para consultar la ayuda"
 
 #: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:58
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:54
 #, kde-format
 msgid "Lliurex OneDrive"
 msgstr "Lliurex OneDrive"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:138
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:133
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:135
 #, kde-format
 msgid "Starting the synchronization"
 msgstr "Iniciando la sincronización"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:143
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:138
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:140
 #, kde-format
 msgid "Synchronization is stopped"
 msgstr "La sincronización está parada"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:232
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:227
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:222
 #, kde-format
 msgid "Changes pending of synchronization"
 msgstr "Cambios pendientes de sincronizar"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:239
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:234
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:269
+#, kde-format
+msgid "All remote changes are synchronized"
+msgstr "Todos los cambios remotos están sincronizados"
+
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:355
+#, kde-format
+msgid "Unable to stop synchronization"
+msgstr "No es posible detener la sincronización"
+
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:358
+#, kde-format
+msgid "Unable to start synchronization"
+msgstr "No es posible iniciar la sincronización"
+
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidgetUtils.cpp:165
+#, kde-format
+msgid "Unable to connect with Microsoft OneDrive"
+msgstr "No es posible conectar con Microsoft OneDrive"
+
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidgetUtils.cpp:168
+#, kde-format
+msgid "Your free space is 0"
+msgstr "Su espacio disponible es 0"
+
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidgetUtils.cpp:171
+#, kde-format
+msgid "The authorization to access your account has expired"
+msgstr "La autorización para acceder a su cuenta ha caducado"
+
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidgetUtils.cpp:174
+#, kde-format
+msgid "Microsoft OneDrive not available"
+msgstr "Microsoft OneDrive no esta disponible"
+
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidgetUtils.cpp:177
 #, kde-format
 msgid ""
 "OneDrive has reported an error.\n"
@@ -116,21 +143,3 @@ msgid ""
 msgstr ""
 "OneDrive ha reportado un error.\n"
 "Abra Lliurex OneDrive para obtener más información"
-
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:261
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:256
-#, kde-format
-msgid "All remote changes are synchronized"
-msgstr "Todos los cambios remotos están sincronizados"
-
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:349
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:309
-#, kde-format
-msgid "Unable to stop synchronization"
-msgstr "No es posible detener la sincronización"
-
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:352
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:312
-#, kde-format
-msgid "Unable to start synchronization"
-msgstr "No es posible iniciar la sincronización"

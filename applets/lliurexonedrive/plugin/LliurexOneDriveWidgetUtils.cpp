@@ -10,6 +10,8 @@
 #include <sys/types.h>
 #include <KIO/CommandLauncherJob>
 #include <QDebug>
+#include <KLocalizedString>
+
 
 
 LliurexOneDriveWidgetUtils::LliurexOneDriveWidgetUtils(QObject *parent)
@@ -104,6 +106,7 @@ QStringList LliurexOneDriveWidgetUtils::getAccountStatus(int exitCode,QString po
     QString outSyncRef="out of sync";
     QString freeSpaceRef="Free Space";
     QString uploading="Uploading";
+    QString unavailableRef="503";
 
     
     QStringList pout=poutProces.split("\n");
@@ -113,12 +116,19 @@ QStringList LliurexOneDriveWidgetUtils::getAccountStatus(int exitCode,QString po
         for(int i=0 ; i < perror.length() ; i++){
             if (perror[i].contains(uploadingRef)){
                 code=UPLOADING_PENDING_CHANGES;
+                break;
             }else if (perror[i].contains(zeroSpaceRef)){
                 code=ZERO_SPACE_AVAILABLE;
+                break;
             }else if (perror[i].contains(unauthorizedRef)){
                 code=UNAUTHORIZED_ERROR;
+                break;
             }else if (perror[i].contains(networkRef)){ 
                 code=NETWORK_CONNECT_ERROR;
+                break;
+            }else if (perror[i].contains(unavailableRef)){
+                code=SERVICE_UNAVAILABLE;
+                break;
             }else{
                 code=GENERAL_ERROR;
             }
@@ -144,5 +154,28 @@ QStringList LliurexOneDriveWidgetUtils::getAccountStatus(int exitCode,QString po
 
     result<<code<<freeSpace;
     return result;
+
+}
+
+QString LliurexOneDriveWidgetUtils::getErrorMessage(QString code){
+
+    QString msg="";
+   
+    if (code==NETWORK_CONNECT_ERROR){
+        msg=i18n("Unable to connect with Microsoft OneDrive");
+        return msg;
+    }else if (code==ZERO_SPACE_AVAILABLE){
+        msg=i18n("Your free space is 0");
+        return msg;
+    }else if (code==UNAUTHORIZED_ERROR){
+        msg=i18n("The authorization to access your account has expired");
+        return msg;
+    }else if (code==SERVICE_UNAVAILABLE){
+        msg=i18n("Microsoft OneDrive not available");
+        return msg;
+    }else{
+        msg=i18n("OneDrive has reported an error.\nOpen Lliurex OneDrive for more information");
+        return msg;
+    }
 
 }

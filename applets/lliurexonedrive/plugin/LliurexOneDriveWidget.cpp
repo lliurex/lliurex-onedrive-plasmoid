@@ -198,7 +198,9 @@ void LliurexOneDriveWidget::checkProcessFinished(int exitCode, QProcess::ExitSta
 
     QStringList result;
     bool showNotification=false;
-   
+    QString msgError;
+    bool processError=true;
+
     if (exitStatus!=QProcess::NormalExit){
         isWorking=false;
         checkExecuted=true;
@@ -212,36 +214,50 @@ void LliurexOneDriveWidget::checkProcessFinished(int exitCode, QProcess::ExitSta
     QStringList warningCode;
     warningCode<<m_utils->UPLOADING_PENDING_CHANGES<<m_utils->OUT_OF_SYNC;
     QStringList errorCode;
-    errorCode<<m_utils->GENERAL_ERROR<<m_utils->ZERO_SPACE_AVAILABLE<<m_utils->UNAUTHORIZED_ERROR<<m_utils->NETWORK_CONNECT_ERROR;
-    
+    errorCode<<m_utils->GENERAL_ERROR<<m_utils->ZERO_SPACE_AVAILABLE<<m_utils->UNAUTHORIZED_ERROR<<m_utils->NETWORK_CONNECT_ERROR<<m_utils->SERVICE_UNAVAILABLE;
+
     if (warningCode.contains(result[0])){
         warning=true;
         QString subtooltip(i18n("Changes pending of synchronization"));
         updateWidget(subtooltip,"onedrive-waiting");
         previousError=false;
         previousErrorCode="";
+        countRepeatGeneralError=0;
 
     }else if (errorCode.contains(result[0])){
         warning=false;
-        QString subtooltip(i18n("OneDrive has reported an error.\nOpen Lliurex OneDrive for more information"));
-        updateWidget(subtooltip,"onedrive-error");
-
-        if (previousError){
-            if (previousErrorCode!=result[0]){
-                showNotification=true;
-                previousErrorCode=result[0];
+        if (result[0]==m_utils->GENERAL_ERROR){
+            countRepeatGeneralError+=1;
+            if (countRepeatGeneralError<2){
+                processError=false;
             }
         }else{
-            previousError=true;
-            previousErrorCode=result[0];
-            showNotification=true;
+            countRepeatGeneralError=0;
         }
-        if (showNotification){
-            m_errorNotification = KNotification::event(QStringLiteral("ErrorStatus"), subtooltip, {}, "onedrive-widget", nullptr, KNotification::CloseOnTimeout , QStringLiteral("llxonedrive"));
-            QString name = i18n("Open Lliurex OneDrive");
-            m_errorNotification->setDefaultAction(name);
-            m_errorNotification->setActions({name});
-            connect(m_errorNotification, QOverload<unsigned int>::of(&KNotification::activated), this, &LliurexOneDriveWidget::launchOneDrive);
+
+        if (processError){
+
+            msgError=m_utils->getErrorMessage(result[0]);
+            QString subtooltip(msgError);
+            updateWidget(subtooltip,"onedrive-error");
+
+            if (previousError){
+                if (previousErrorCode!=result[0]){
+                    showNotification=true;
+                    previousErrorCode=result[0];
+                }
+            }else{
+                previousError=true;
+                previousErrorCode=result[0];
+                showNotification=true;
+            }
+            if (showNotification){
+                m_errorNotification = KNotification::event(QStringLiteral("ErrorStatus"), subtooltip, {}, "onedrive-widget", nullptr, KNotification::CloseOnTimeout , QStringLiteral("llxonedrive"));
+                QString name = i18n("Open Lliurex OneDrive");
+                m_errorNotification->setDefaultAction(name);
+                m_errorNotification->setActions({name});
+                connect(m_errorNotification, QOverload<unsigned int>::of(&KNotification::activated), this, &LliurexOneDriveWidget::launchOneDrive);
+            }
         }
     
     }else{
@@ -250,6 +266,7 @@ void LliurexOneDriveWidget::checkProcessFinished(int exitCode, QProcess::ExitSta
         warning=false;
         previousError=false;
         previousErrorCode="";
+        countRepeatGeneralError=0;
     }
    
     isWorking=false;
