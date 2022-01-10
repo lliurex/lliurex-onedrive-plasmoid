@@ -1,11 +1,12 @@
-import QtQuick 2.2
+import QtQuick 2.6
 import QtQuick.Layouts 1.12
 
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.components 2.0 as Components
-import org.kde.plasma.components 3.0 as Components3
 import org.kde.kquickcontrolsaddons 2.0 as KQuickControlsAddons
+import QtQuick.Controls 2.6 as QQC2
+
 import org.kde.plasma.private.lliurexonedrive 1.0
 
 Components.ListItem {
@@ -24,9 +25,8 @@ Components.ListItem {
         } else {
             listView.currentIndex = -1
         }
-    }
-     ListView.onIsCurrentItemChanged: {
-        console.log(listView.currentIndex)
+        listView.forceActiveFocus()
+
     }
 
     Item{
@@ -52,7 +52,7 @@ Components.ListItem {
             width:listView.width-(searchBtn.width*1.4)
             anchors.verticalCenter: parent.verticalCenter
         }
-        Components3.ToolButton {
+        QQC2.ToolButton {
         	id:searchBtn
         	width:35
         	height:35
@@ -64,9 +64,9 @@ Components.ListItem {
 	            leftMargin:10
 	            rightMargin:10
 	        }
-            icon.name:"search"
+            icon.name:"document-open-recent"
             visible:fileItem.ListView.isCurrentItem
-            Components3.ToolTip{
+            QQC2.ToolTip{
                 text:i18n("Click to access the file location")
             }
             onClicked:{
@@ -74,6 +74,6 @@ Components.ListItem {
             } 
 
        }
-  }     
+   }     
     
 }

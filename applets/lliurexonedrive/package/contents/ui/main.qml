@@ -1,13 +1,13 @@
-import QtQuick 2.2
+import QtQuick 2.6
 import QtQuick.Layouts 1.12
-import QtQuick.Controls 2.6
+import QtQuick.Controls 2.6 as QQC2
 import QtQml.Models 2.3
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.components 2.0 as Components
-import org.kde.plasma.components 3.0 as Components3
 
 import org.kde.plasma.extras 2.0 as PlasmaExtras
+import org.kde.kirigami 2.12 as Kirigami
 
 import org.kde.plasma.private.lliurexonedrive 1.0
 // Item - the most basic plasmoid component, an empty container.
@@ -30,8 +30,8 @@ Item {
         return  PlasmaCore.Types.ActiveStatus
     }
 
-    Plasmoid.switchWidth: PlasmaCore.Units.gridUnit * 5
-    Plasmoid.switchHeight: PlasmaCore.Units.gridUnit * 5
+    Plasmoid.switchWidth: units.gridUnit * 5
+    Plasmoid.switchHeight: units.gridUnit * 5
     Plasmoid.icon:lliurexOneDriveWidget.iconName
     Plasmoid.toolTipMainText: lliurexOneDriveWidget.toolTip
     Plasmoid.toolTipSubText: lliurexOneDriveWidget.subToolTip
@@ -73,13 +73,12 @@ Item {
                         text:lliurexOneDriveWidget.oneDriveFolder
                         Layout.fillWidth:true
                     }
-                    Components3.ToolButton {
+                    QQC2.ToolButton {
                         width:35
                         height:35
-                        display:AbstractButton.IconOnly
                         icon.name:"document-open-folder.svg"
                         onClicked:lliurexOneDriveWidget.openFolder()
-                        Components3.ToolTip{
+                        QQC2.ToolTip{
                             text:i18n("Click to open folder")
                         }
                     } 
@@ -127,14 +126,13 @@ Item {
                         Layout.fillWidth:true
                     }
 
-                    Components3.ToolButton {
+                    QQC2.ToolButton {
                         width:35
                         height:35
-                        display:AbstractButton.IconOnly
                         icon.name:lliurexOneDriveWidget.syncStatus?"kt-stop.svg":"kt-start.svg"
                         enabled:!lliurexOneDriveWidget.lliurexOneDriveOpen
                         onClicked:lliurexOneDriveWidget.manageSync() 
-                        Components3.ToolTip{
+                        QQC2.ToolTip{
                             text:lliurexOneDriveWidget.syncStatus?i18n("Click to stop synchronization"):i18n("Click to start synchronization")
                         }
                     } 
@@ -151,16 +149,19 @@ Item {
                         Layout.fillWidth:true
                     }
                    
-                    Components3.ToolButton {
+                    QQC2.ToolButton {
                         width:35
                         height:35
-                        display:AbstractButton.IconOnly
                         icon.name:"arrow-right.svg"
                         onClicked:{
                             lliurexOneDriveWidget.getLatestFiles()
+                            listView.forceActiveFocus()
+                            if (listView.count > 0){
+                                listView.currentIndex=0
+                            }
                             stackLayout.currentIndex=1
                         }
-                        Components3.ToolTip{
+                        QQC2.ToolTip{
                             text:i18n("Click to see the list")
                         }
                     } 
@@ -177,13 +178,12 @@ Item {
                         Layout.fillWidth:true
                     }
 
-                   Components3.ToolButton {
+                   QQC2.ToolButton {
                         width:35
                         height:35
-                        display:AbstractButton.IconOnly
                         icon.name:"help-contents.svg"
                         onClicked:lliurexOneDriveWidget.openHelp() 
-                        Components3.ToolTip{
+                        QQC2.ToolTip{
                             text:i18n("Click to see help")
                         }
                     } 
@@ -199,12 +199,9 @@ Item {
                 RowLayout{
                     id:head
                     Layout.fillWidth:true
-                    Layout.leftMargin:1
-                    Layout.rightMargin:5
-                    Components3.ToolButton {
+                    QQC2.ToolButton {
                         height:35
                         Layout.rightMargin:10
-                        display:AbstractButton.TextBesideIcon
                         icon.name:"arrow-left.svg"
                         text:i18n("Back to main view")
                         onClicked:stackLayout.currentIndex=0 
@@ -214,26 +211,33 @@ Item {
                         color:"transparent"
                         border.color:"transparent"
                     }
-                    Components3.ToolButton {
+                    QQC2.ToolButton {
                         width:35
                         height:35
                         Layout.rightMargin:5
                         Layout.alignment:Qt.AlignRight
-                        display:AbstractButton.IconOnly
-                        icon.name:"view-refresh.svg"
-                        Components3.ToolTip{
+                        icon.name:"view-refresh"
+                        QQC2.ToolTip{
                             text:i18n("Click to refresh list")
                         }
-                        onClicked:lliurexOneDriveWidget.getLatestFiles() 
+                        onClicked:{
+                            lliurexOneDriveWidget.getLatestFiles()
+                            listView.forceActiveFocus()
+                            if (listView.count > 0){
+                                listView.currentIndex=0
+                            }
+
+                        }
+ 
                     } 
                 }
-                PlasmaExtras.ScrollArea{
+               PlasmaExtras.ScrollArea {
                     Layout.topMargin:10
                     Layout.bottomMargin:10
                     Layout.leftMargin:5
                     Layout.rightMargin:5
                     implicitWidth:parent.width-10
-                    implicitHeight:300
+                    implicitHeight:250
                     ListView{
                         id:listView
                         focus:true
@@ -250,10 +254,10 @@ Item {
                             fileDate: model.fileDate
                             fileTime: model.fileTime
                         }
-                        PlasmaExtras.PlaceholderMessage {
+                         Kirigami.PlaceholderMessage { 
                             id: emptyHint
                             anchors.centerIn: parent
-                            width: parent.width - (PlasmaCore.Units.largeSpacing * 4)
+                            width: parent.width - (units.largeSpacing * 4)
                             visible: {
                                 if ((listView.count === 0)&&(!lliurexOneDriveWidget.showSearchFiles)){
                                     return true
@@ -263,16 +267,16 @@ Item {
                             }    
                             text: i18n("Information is not available")
                         }
-                        PlasmaExtras.PlaceholderMessage {
+                         Kirigami.PlaceholderMessage {
                             id: showHint
                             anchors.centerIn: parent
-                            width: parent.width - (PlasmaCore.Units.largeSpacing * 4)
+                            width: parent.width - (units.largeSpacing * 4)
                             visible: lliurexOneDriveWidget.showSearchFiles
                             text: i18n("Searching information. Wait a moment...")
                         }
                        
                     }
-                }
+               }
             }   
         }
     }
