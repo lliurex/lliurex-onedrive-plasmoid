@@ -240,7 +240,10 @@ Item {
                         model:lliurexOneDriveWidget.model
                         currentIndex: -1
                         boundsBehavior: Flickable.StopAtBounds
-
+                        interactive: contentHeight > height
+                        highlight: Rectangle { color: "#add8e6"; opacity:0.8;border.color:"#53a1c9" }
+                        highlightMoveDuration: 0
+                        highlightResizeDuration: 0
                         delegate: ListDelegateItem {
                             fileName: model.fileName
                             filePath: model.filePath
