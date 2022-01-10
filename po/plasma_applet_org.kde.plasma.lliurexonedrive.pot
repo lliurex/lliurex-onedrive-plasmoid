@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lliurexonedrive \n"
 "Report-Msgid-Bugs-To: http://lliurex.net\n"
-"POT-Creation-Date: 2021-12-24 12:21+0100\n"
+"POT-Creation-Date: 2022-01-10 14:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,17 +17,17 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateItem.qml:26
+#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateItem.qml:39
 #, kde-format
 msgid "Last modification: "
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateItem.qml:26
+#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateItem.qml:70
 #, kde-format
 msgid "Click to access the file location"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:41 ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:264
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:41 ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:263
 #, kde-format
 msgid "Open Lliurex OneDrive"
 msgstr ""
@@ -37,57 +37,57 @@ msgstr ""
 msgid "OneDrive folder:"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:83
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:82
 #, kde-format
 msgid "Click to open folder"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:96
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:95
 #, kde-format
 msgid "Free Space on OneDrive:"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:105
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:104
 #, kde-format
 msgid "Information not available"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:120
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:119
 #, kde-format
 msgid "Synchronization:"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:126
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:125
 #, kde-format
 msgid "Running"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:126
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:125
 #, kde-format
 msgid "Stopped"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:138
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:136
 #, kde-format
 msgid "Click to stop synchronization"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:138
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:136
 #, kde-format
 msgid "Click to start synchronization"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:150
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:148
 #, kde-format
 msgid "Recently modified files"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:164
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:165
 #, kde-format
 msgid "Click to see the list"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:176
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:177
 #, kde-format
 msgid "See help documentation"
 msgstr ""
@@ -97,22 +97,22 @@ msgstr ""
 msgid "Click to see help"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:209
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:206
 #, kde-format
 msgid "Back to main view"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:220
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:221
 #, kde-format
 msgid "Click to refresh list"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:256
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:268
 #, kde-format
 msgid "Information is not available"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:263
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:275
 #, kde-format
 msgid "Searching information. Wait a moment..."
 msgstr ""
@@ -132,22 +132,22 @@ msgstr ""
 msgid "Synchronization is stopped"
 msgstr ""
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:229
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:228
 #, kde-format
 msgid "Changes pending of synchronization"
 msgstr ""
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:272
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:271
 #, kde-format
 msgid "All remote changes are synchronized"
 msgstr ""
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:359
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:357
 #, kde-format
 msgid "Unable to stop synchronization"
 msgstr ""
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:362
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:360
 #, kde-format
 msgid "Unable to start synchronization"
 msgstr ""

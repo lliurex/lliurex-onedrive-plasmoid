@@ -286,7 +286,7 @@ void LliurexOneDriveWidget::checkIsLliurexOneDriveOpen(){
     if (m_isLliurexOneDriveOpen->state() != QProcess::NotRunning) {
         m_isLliurexOneDriveOpen->kill();
     }
-    QString cmd="ps -ef | grep 'lliurex-onedrive' | grep -v 'grep'";
+    QString cmd="ps -ef | grep '/usr/bin/lliurex-onedrive' | grep -v 'grep'";
     m_isLliurexOneDriveOpen->start("/bin/sh", QStringList()<< "-c" 
                        << cmd,QIODevice::ReadOnly);
   
@@ -489,6 +489,7 @@ void LliurexOneDriveWidget::getLatestFiles(){
     if (m_getLatestFiles->state() != QProcess::NotRunning) {
         m_getLatestFiles->kill();
     }
+    m_model->clear();
     setShowSearchFiles(true);
     QString cmd="find "+userHome+"/OneDrive -type f -mmin +1 -printf '%T+\t%s\t%p\n' 2>/dev/null | sort -r | more";
     m_getLatestFiles->start("/bin/sh", QStringList()<< "-c" 
@@ -514,7 +515,6 @@ void LliurexOneDriveWidget::getLatestFilesFinished(int exitCode, QProcess::ExitS
         if (searchFilesPout.size()>0){
             QVector<LliurexOneDriveWidgetItem> items;
             latestFiles=m_utils->getFiles(searchFilesPout);
-            m_model->clear();
             
             for (int i=0;i<latestFiles.length();i++){
                 LliurexOneDriveWidgetItem item;
