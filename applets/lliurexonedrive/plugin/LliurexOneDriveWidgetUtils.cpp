@@ -185,21 +185,24 @@ QList<QStringList> LliurexOneDriveWidgetUtils::getFiles(QStringList info){
     QList<QStringList> lastestFiles;
 
     QString reference=getUserHome()+"/OneDrive";
-    
-    for (int i=0;i<10;i++){
-        if (i<info.length()){
-            QStringList tmpLine=info[i].split(reference)[1].split("/");
-            int tmpRef=tmpLine.length()-1;
-            QStringList tmpItem;
-            tmpItem.append(tmpLine[tmpRef]);
-            tmpItem.append(info[i].split("\t")[2]);
-            QStringList tmpDate;
-            tmpDate=info[i].split("\t")[0].split("+");
-            tmpItem.append(formatFileDate(tmpDate[0]));
-            tmpItem.append(tmpDate[1].split(".")[0]);
-            lastestFiles.append(tmpItem);
-        }else{
-            break;
+
+    info.removeLast();
+    if (!info.isEmpty()){
+        for (int i=0;i<10;i++){
+            if (i<info.length()){
+                QStringList tmpLine=info[i].split(reference)[1].split("/");
+                int tmpRef=tmpLine.length()-1;
+                QStringList tmpItem;
+                tmpItem.append(tmpLine[tmpRef]);
+                tmpItem.append(info[i].split("\t")[2]);
+                QStringList tmpDate;
+                tmpDate=info[i].split("\t")[0].split("+");
+                tmpItem.append(formatFileDate(tmpDate[0]));
+                tmpItem.append(tmpDate[1].split(".")[0]);
+                lastestFiles.append(tmpItem);
+            }else{
+                break;
+            }
         }
     }
 
