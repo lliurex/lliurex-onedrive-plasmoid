@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: lliurexonedrive\n"
 "Report-Msgid-Bugs-To: http://lliurex.net\n"
 "POT-Creation-Date: 2022-01-10 14:32+0100\n"
-"PO-Revision-Date: 2022-01-10 14:33+0100\n"
+"PO-Revision-Date: 2022-01-11 08:09+0100\n"
 "Last-Translator: d33475574v <gimenez_angcam@gva.es>\n"
 "Language-Team: Valencian <https://weblate.gva.es/projects/lliurex-onedrive/"
 "onedrive-plamsoid/ca@valencia/>\n"
@@ -28,7 +28,7 @@ msgstr "Última modificació: "
 #: ../applets/lliurexonedrive/package/contents/ui/ListDelegateItem.qml:70
 #, kde-format
 msgid "Click to access the file location"
-msgstr "Fecu clic per a accedir a la ubicació de l'arxiu"
+msgstr "Feu clic per a accedir a la ubicació de l'arxiu"
 
 #: ../applets/lliurexonedrive/package/contents/ui/main.qml:41
 #: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:263

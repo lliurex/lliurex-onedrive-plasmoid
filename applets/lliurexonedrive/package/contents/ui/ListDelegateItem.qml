@@ -49,7 +49,7 @@ Components.ListItem {
             	}
 
             }	
-            width:listView.width-(searchBtn.width*1.4)
+            width:listView.width-(searchBtn.width*1.6)
             anchors.verticalCenter: parent.verticalCenter
         }
         QQC2.ToolButton {
