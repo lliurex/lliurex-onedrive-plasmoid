@@ -107,6 +107,8 @@ QStringList LliurexOneDriveWidgetUtils::getAccountStatus(int exitCode,QString po
     QString freeSpaceRef="Free Space";
     QString uploading="Uploading";
     QString unavailableRef="503";
+    QString forbiddenUser="HTTP 403 - Forbidden";
+    QString unableQuery="Unable to query OneDrive";
 
     
     QStringList pout=poutProces.split("\n");
@@ -125,6 +127,9 @@ QStringList LliurexOneDriveWidgetUtils::getAccountStatus(int exitCode,QString po
                 break;
             }else if (perror[i].contains(networkRef)){ 
                 code=NETWORK_CONNECT_ERROR;
+                break;
+            }else if (perror[i].contains(unableQuery)){
+                code=UNAUTHORIZED_ERROR;
                 break;
             }else if (perror[i].contains(unavailableRef)){
                 code=SERVICE_UNAVAILABLE;
@@ -147,6 +152,9 @@ QStringList LliurexOneDriveWidgetUtils::getAccountStatus(int exitCode,QString po
             }else if (pout[i].contains(freeSpaceRef)){
                 QString tmp_value=pout[i].split(":")[1];
                 freeSpace=formatFreeSpace(tmp_value);
+            }else if (perror[i].contains(unavailableRef)){
+                code=UNAUTHORIZED_ERROR;
+                break;
             }
         }
     }
