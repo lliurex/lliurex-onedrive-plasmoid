@@ -145,6 +145,10 @@ QStringList LliurexOneDriveWidgetUtils::getAccountStatus(int exitCode,QString po
                 code=UPLOADING_PENDING_CHANGES;
                 break;
             }
+            if (pout[i].contains(forbiddenUser)){
+                code=UNAUTHORIZED_ERROR;
+                break;
+            }
             if (pout[i].contains(allSyncRef)){
                 code=NO_PENDING_SYNC;
             }else if (pout[i].contains(outSyncRef)){
@@ -152,9 +156,6 @@ QStringList LliurexOneDriveWidgetUtils::getAccountStatus(int exitCode,QString po
             }else if (pout[i].contains(freeSpaceRef)){
                 QString tmp_value=pout[i].split(":")[1];
                 freeSpace=formatFreeSpace(tmp_value);
-            }else if (perror[i].contains(unavailableRef)){
-                code=UNAUTHORIZED_ERROR;
-                break;
             }
         }
     }
