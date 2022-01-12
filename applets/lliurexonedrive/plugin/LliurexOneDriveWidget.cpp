@@ -552,3 +552,14 @@ void LliurexOneDriveWidget::goToFile(const QString &filePath)
     job->start();
 }
 
+bool LliurexOneDriveWidget::checkIfFileExists(const QString &filePath)
+{
+    recentFile.setFileName(filePath);
+    
+    if (recentFile.exists()){
+        return true;
+    }else{
+        return false;
+    }
+}
+

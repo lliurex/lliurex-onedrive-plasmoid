@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lliurexonedrive\n"
 "Report-Msgid-Bugs-To: http://lliurex.net\n"
-"POT-Creation-Date: 2022-01-10 14:32+0100\n"
-"PO-Revision-Date: 2022-01-11 08:09+0100\n"
+"POT-Creation-Date: 2022-01-12 17:20+0100\n"
+"PO-Revision-Date: 2022-01-12 17:22+0100\n"
 "Last-Translator: d33475574v <gimenez_angcam@gva.es>\n"
 "Language-Team: Valencian <https://weblate.gva.es/projects/lliurex-onedrive/"
 "onedrive-plamsoid/ca@valencia/>\n"
@@ -25,10 +25,15 @@ msgstr ""
 msgid "Last modification: "
 msgstr "Última modificació: "
 
-#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateItem.qml:70
+#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateItem.qml:71
 #, kde-format
 msgid "Click to access the file location"
 msgstr "Feu clic per a accedir a la ubicació de l'arxiu"
+
+#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateItem.qml:77
+#, kde-format
+msgid "File does not exist. Update the list"
+msgstr "L'arxiu no existeix. Actualitze la llista"
 
 #: ../applets/lliurexonedrive/package/contents/ui/main.qml:41
 #: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:263
@@ -156,27 +161,27 @@ msgstr "No es pot detindre la sincronització"
 msgid "Unable to start synchronization"
 msgstr "No es pot iniciar la sincronització"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidgetUtils.cpp:165
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidgetUtils.cpp:174
 #, kde-format
 msgid "Unable to connect with Microsoft OneDrive"
 msgstr "No es pot connectar amb Microsoft OneDrive"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidgetUtils.cpp:168
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidgetUtils.cpp:177
 #, kde-format
 msgid "Your free space is 0"
 msgstr "El vostre espai disponible és 0"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidgetUtils.cpp:171
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidgetUtils.cpp:180
 #, kde-format
 msgid "The authorization to access your account has expired"
 msgstr "L'autorització per a accedir al vostre compte ha caducat"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidgetUtils.cpp:174
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidgetUtils.cpp:183
 #, kde-format
 msgid "Microsoft OneDrive not available"
 msgstr "El Microsoft OneDrive no està disponible"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidgetUtils.cpp:177
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidgetUtils.cpp:186
 #, kde-format
 msgid ""
 "OneDrive has reported an error.\n"

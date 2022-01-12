@@ -79,7 +79,6 @@ public:
 
     LliurexOneDriveWidgetModel *model() const;
 
-
 public slots:
     
     void worker();
@@ -89,6 +88,7 @@ public slots:
     void openHelp();
     void getLatestFiles();
     void goToFile(const QString &filePath);
+    bool checkIfFileExists(const QString &filePath);
 
 signals:
    
@@ -139,6 +139,8 @@ private:
     QString previousErrorCode="";
     QPointer<KNotification> m_errorNotification;
     int countRepeatGeneralError=0;
+    QFile recentFile;
+
 
 private slots:
 

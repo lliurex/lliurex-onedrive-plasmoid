@@ -67,10 +67,15 @@ Components.ListItem {
             icon.name:"document-open-recent"
             visible:fileItem.ListView.isCurrentItem
             QQC2.ToolTip{
+                id:btnToolTip
                 text:i18n("Click to access the file location")
             }
             onClicked:{
-            	lliurexOneDriveWidget.goToFile(filePath)
+                if (lliurexOneDriveWidget.checkIfFileExists(filePath)){
+                   lliurexOneDriveWidget.goToFile(filePath)
+                }else{
+                    btnToolTip.text=i18n("File does not exist. Update the list")
+                }   
             } 
 
        }
