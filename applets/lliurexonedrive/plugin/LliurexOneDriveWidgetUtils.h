@@ -32,6 +32,7 @@ public:
     QString NO_PENDING_SYNC="0";
     QString OUT_OF_SYNC="1";
     QString SERVICE_UNAVAILABLE="-9";
+    QList<QStringList> getFiles(QStringList info);
 
 
 private:
@@ -39,12 +40,12 @@ private:
     QProcess *m_isSystemdActive=nullptr;
     QString formatFreeSpace(QString freeSpace);
     QFile SYSTEMDTOKEN;
+    QString formatFileDate(QString fileDate);
   
 private slots:
 
     void checkIsSystemdActive();
     void checkIsSystemdActiveFinished(int exitCode, QProcess::ExitStatus exitStatus);
-
 
 };
 

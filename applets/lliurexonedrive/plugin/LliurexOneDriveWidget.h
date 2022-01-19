@@ -8,12 +8,11 @@
 #include <QDir>
 #include <QFile>
 #include <KIO/CommandLauncherJob>
-
 #include "LliurexOneDriveWidgetUtils.h"
 
 class QTimer;
 class KNotification;
-
+class LliurexOneDriveWidgetModel;
 
 class LliurexOneDriveWidget : public QObject
 {
@@ -28,8 +27,14 @@ class LliurexOneDriveWidget : public QObject
     Q_PROPERTY(bool syncStatus READ syncStatus NOTIFY syncStatusChanged)
     Q_PROPERTY(QString freeSpace READ freeSpace NOTIFY freeSpaceChanged)
     Q_PROPERTY(bool lliurexOneDriveOpen READ lliurexOneDriveOpen NOTIFY lliurexOneDriveOpenChanged)
-  
+    Q_PROPERTY(bool showSearchFiles READ showSearchFiles NOTIFY showSearchFilesChanged)
+    Q_PROPERTY(LliurexOneDriveWidgetModel* model READ model CONSTANT)
+
     Q_ENUMS(TrayStatus)
+
+public:
+    LliurexOneDriveWidget(QObject *parent = nullptr);
+
 
 public:
     /**
@@ -40,8 +45,7 @@ public:
         PassiveStatus
     };
 
-    LliurexOneDriveWidget(QObject *parent = nullptr);
-
+public:
     TrayStatus status() const;
     void changeTryIconState (int state);
     void setStatus(TrayStatus status);
@@ -70,6 +74,10 @@ public:
     QStringList runCheckAccount();
     void isAlive();
 
+    bool showSearchFiles();
+    void setShowSearchFiles(bool);
+
+    LliurexOneDriveWidgetModel *model() const;
 
 public slots:
     
@@ -78,6 +86,9 @@ public slots:
     void openFolder();
     void manageSync();
     void openHelp();
+    void getLatestFiles();
+    void goToFile(const QString &filePath);
+    bool checkIfFileExists(const QString &filePath);
 
 signals:
    
@@ -89,15 +100,17 @@ signals:
     void subToolTipChanged();
     void iconNameChanged();
     void lliurexOneDriveOpenChanged();
-
+    void showSearchFilesChanged();
 
 private:
 
     LliurexOneDriveWidgetUtils *m_utils;
+    LliurexOneDriveWidgetModel *m_model = nullptr;
     QProcess *m_checkProcess=nullptr;
     QProcess *m_isDisplayProcess=nullptr;
     QProcess *m_isRunningProcess=nullptr;
     QProcess *m_isLliurexOneDriveOpen=nullptr;
+    QProcess *m_getLatestFiles=nullptr;
     void plasmoidMode();
     void initPlasmoid();
     void updateWidget(QString subtooltip,QString icon);
@@ -122,9 +135,12 @@ private:
     bool initClientStatus=false;
     bool changeSyncStatus=false;
     bool tryChangeStatus=false;
+    bool m_showSearchFiles=false;
     QString previousErrorCode="";
     QPointer<KNotification> m_errorNotification;
     int countRepeatGeneralError=0;
+    QFile recentFile;
+
 
 private slots:
 
@@ -136,6 +152,7 @@ private slots:
      void checkProcessFinished(int exitCode, QProcess::ExitStatus exitStatus);
      void checkIsLliurexOneDriveOpen();
      void isLliurexOneDriveOpenProcessFinished(int exitCode, QProcess::ExitStatus exitStatus);
+     void getLatestFilesFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
 };
 
