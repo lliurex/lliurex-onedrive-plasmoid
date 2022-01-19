@@ -1,6 +1,8 @@
 
 #include <iostream>
 #include "LliurexOneDriveWidget.h"
+#include "LliurexOneDriveWidgetItem.h"
+#include "LliurexOneDriveWidgetModel.h"
 #include "LliurexOneDriveWidgetUtils.h"
 
 #include <KLocalizedString>
@@ -11,6 +13,7 @@
 #include <QStandardPaths>
 #include <QDebug>
 #include <QFile>
+#include <QTextStream>
 
 
 LliurexOneDriveWidget::LliurexOneDriveWidget(QObject *parent)
@@ -21,6 +24,8 @@ LliurexOneDriveWidget::LliurexOneDriveWidget(QObject *parent)
     ,m_isDisplayProcess(new QProcess(this))
     ,m_checkProcess(new QProcess(this))
     ,m_isLliurexOneDriveOpen(new QProcess(this))
+    ,m_getLatestFiles(new QProcess(this))
+    ,m_model(new LliurexOneDriveWidgetModel(this))
 
     
 {
@@ -39,6 +44,8 @@ LliurexOneDriveWidget::LliurexOneDriveWidget(QObject *parent)
             this, &LliurexOneDriveWidget::checkProcessFinished);
     connect(m_isLliurexOneDriveOpen, (void (QProcess::*)(int, QProcess::ExitStatus))&QProcess::finished,
             this, &LliurexOneDriveWidget::isLliurexOneDriveOpenProcessFinished);
+     connect(m_getLatestFiles, (void (QProcess::*)(int, QProcess::ExitStatus))&QProcess::finished,
+            this, &LliurexOneDriveWidget::getLatestFilesFinished);
 
     m_timer->start(5000);
     worker();
@@ -279,7 +286,7 @@ void LliurexOneDriveWidget::checkIsLliurexOneDriveOpen(){
     if (m_isLliurexOneDriveOpen->state() != QProcess::NotRunning) {
         m_isLliurexOneDriveOpen->kill();
     }
-    QString cmd="ps -ef | grep 'lliurex-onedrive' | grep -v 'grep'";
+    QString cmd="ps -ef | grep '/usr/bin/lliurex-onedrive' | grep -v 'grep'";
     m_isLliurexOneDriveOpen->start("/bin/sh", QStringList()<< "-c" 
                        << cmd,QIODevice::ReadOnly);
   
@@ -464,6 +471,95 @@ void LliurexOneDriveWidget::openHelp()
     job->start();
 }
 
+bool LliurexOneDriveWidget::showSearchFiles()
+{
+    return m_showSearchFiles;
+}
+
+void LliurexOneDriveWidget::setShowSearchFiles(bool showSearchFiles)
+{
+    if (m_showSearchFiles != showSearchFiles) {
+        m_showSearchFiles = showSearchFiles;
+        emit showSearchFilesChanged();
+    }
+}
+
+void LliurexOneDriveWidget::getLatestFiles(){
+
+    if (m_getLatestFiles->state() != QProcess::NotRunning) {
+        m_getLatestFiles->kill();
+    }
+    m_model->clear();
+    setShowSearchFiles(true);
+    QString cmd="find "+userHome+"/OneDrive -type f -mmin +1 -printf '%T+\t%s\t%p\n' 2>/dev/null | sort -r | more";
+    m_getLatestFiles->start("/bin/sh", QStringList()<< "-c" 
+                       << cmd,QIODevice::ReadOnly);
+}
+
+void LliurexOneDriveWidget::getLatestFilesFinished(int exitCode, QProcess::ExitStatus exitStatus){
+
+    Q_UNUSED(exitCode);
+    QList<QStringList> latestFiles;
+    QStringList searchFilesPout;
+
+    if (exitStatus!=QProcess::NormalExit){
+        m_model->clear();
+        setShowSearchFiles(false);     
+        return;
+    }
+
+    QString stdout=QString::fromLocal8Bit(m_getLatestFiles->readAllStandardOutput());
+    
+    if (stdout!=""){
+        searchFilesPout=stdout.split("\n");
+        if (searchFilesPout.size()>0){
+            QVector<LliurexOneDriveWidgetItem> items;
+            latestFiles=m_utils->getFiles(searchFilesPout);
+            
+            for (int i=0;i<latestFiles.length();i++){
+                LliurexOneDriveWidgetItem item;
+                item.setFileName(latestFiles[i][0]);
+                item.setFilePath(latestFiles[i][1]);
+                item.setFileDate(latestFiles[i][2]);
+                item.setFileTime(latestFiles[i][3]);
+                items.append(item);
+                
+            }
+            m_model->updateItems(items);
+
+        }else{
+            m_model->clear();
+
+        }
+    }else{
+        m_model->clear();
+    }
+    setShowSearchFiles(false);
+}
+
+LliurexOneDriveWidgetModel *LliurexOneDriveWidget::model() const
+{
+    return m_model;
+}
 
 
+void LliurexOneDriveWidget::goToFile(const QString &filePath)
+{
+            
+    QString command="dolphin --select "+filePath;
+    KIO::CommandLauncherJob *job = nullptr;
+    job = new KIO::CommandLauncherJob(command);
+    job->start();
+}
+
+bool LliurexOneDriveWidget::checkIfFileExists(const QString &filePath)
+{
+    recentFile.setFileName(filePath);
+    
+    if (recentFile.exists()){
+        return true;
+    }else{
+        return false;
+    }
+}
 
