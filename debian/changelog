@@ -1,6 +1,12 @@
+plasma-widget-lliurex-onedrive (1.3) focal-updates; urgency=medium
+
+  * Added option to show recent files
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Wed, 19 Jan 2022 10:30:40 +0100
+
 plasma-widget-lliurex-onedrive (1.2) focal; urgency=medium
 
-  * Improved feeback when OneDrive client reuturn an error
+  * Improved feeback when OneDrive client return an error
   
  -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 09 Dec 2021 13:09:53 +0100
 
