@@ -37,6 +37,7 @@ void LliurexOneDriveWidgetUtils::manageSync(bool isRunning){
     QString cmd="";
 
    if (!isRunning){
+        restoreSyncListFile();
         if (!SYSTEMDTOKEN.exists()){
             cmd="systemctl --user start onedrive.service";
             
@@ -230,3 +231,17 @@ QString LliurexOneDriveWidgetUtils::formatFileDate(QString fileDate){
 
 }
 
+void LliurexOneDriveWidgetUtils::restoreSyncListFile()
+{
+    syncList.setFileName(getUserHome()+"/.config/onedrive/sync_list.back");
+    syncListHash.setFileName(getUserHome()+"/.config/onedrive/.sync_list.hash.back");
+
+    if (syncList.exists()){
+        syncList.rename(getUserHome()+"/.config/onedrive/sync_list");
+    }
+
+    if (syncListHash.exists()){
+        syncListHash.rename(getUserHome()+"/.config/onedrive/.sync_list.hash");
+    }
+
+}

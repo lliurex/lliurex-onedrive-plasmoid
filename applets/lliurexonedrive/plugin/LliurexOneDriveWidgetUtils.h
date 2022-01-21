@@ -41,6 +41,10 @@ private:
     QString formatFreeSpace(QString freeSpace);
     QFile SYSTEMDTOKEN;
     QString formatFileDate(QString fileDate);
+    void restoreSyncListFile();
+    QFile syncList;
+    QFile syncListHash;
+
   
 private slots:
 
