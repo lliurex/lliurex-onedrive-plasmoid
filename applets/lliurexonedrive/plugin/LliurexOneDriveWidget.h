@@ -115,6 +115,7 @@ private:
     void initPlasmoid();
     void updateWidget(QString subtooltip,QString icon);
     void showSyncNotification();
+    void checkIfStartIsLocked();
     QTimer *m_timer = nullptr;
     TrayStatus m_status = PassiveStatus;
     QString m_iconName = QStringLiteral("onedrive-pause");
@@ -140,6 +141,7 @@ private:
     QPointer<KNotification> m_errorNotification;
     int countRepeatGeneralError=0;
     QFile recentFile;
+    bool showStartLockMessage=true;
 
 
 private slots:

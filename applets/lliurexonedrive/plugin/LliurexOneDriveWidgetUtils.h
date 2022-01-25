@@ -23,6 +23,8 @@ public:
 
     QStringList getAccountStatus(int exitCode,QString poutProces,QString perrProcess);
     QString getErrorMessage(QString code);
+    QList<QStringList> getFiles(QStringList info);
+    void checkIfLocalFolderExists();
 
     QString UPLOADING_PENDING_CHANGES="416";
     QString NETWORK_CONNECT_ERROR="-2";
@@ -32,18 +34,24 @@ public:
     QString NO_PENDING_SYNC="0";
     QString OUT_OF_SYNC="1";
     QString SERVICE_UNAVAILABLE="-9";
-    QList<QStringList> getFiles(QStringList info);
-
+    bool startLocked=false;
+    QFile localFolderEmptyToken;
+    QFile localFolderRemovedToken;
 
 private:
     
-    QProcess *m_isSystemdActive=nullptr;
     QString formatFreeSpace(QString freeSpace);
-    QFile SYSTEMDTOKEN;
     QString formatFileDate(QString fileDate);
+
     void restoreSyncListFile();
+    void managelocalFolderToken (bool remove, bool empty);
+    void manageLockAutoStart();
+
+    QProcess *m_isSystemdActive=nullptr;
+    QFile SYSTEMDTOKEN;
     QFile syncList;
     QFile syncListHash;
+    QFile lockAutoStartToken;
 
   
 private slots:

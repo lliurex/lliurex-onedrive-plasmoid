@@ -12,6 +12,7 @@
 #include <QDebug>
 #include <KLocalizedString>
 #include <QDate>
+#include <QDir>
 
 
 LliurexOneDriveWidgetUtils::LliurexOneDriveWidgetUtils(QObject *parent)
@@ -243,5 +244,101 @@ void LliurexOneDriveWidgetUtils::restoreSyncListFile()
     if (syncListHash.exists()){
         syncListHash.rename(getUserHome()+"/.config/onedrive/.sync_list.hash");
     }
+
+}
+
+void LliurexOneDriveWidgetUtils::checkIfLocalFolderExists(){
+
+    QDir locaFolder(getUserHome()+"/OneDrive");
+    QFile emptyToken(getUserHome()+"/.config/onedrive/.emptyToken");
+    localFolderEmptyToken.setFileName(getUserHome()+"/.config/onedrive/.localFolderEmptyToken");
+    localFolderRemovedToken.setFileName(getUserHome()+"/.config/onedrive/.localFolderRemovedToken");
+
+    if (locaFolder.exists()){
+        if (locaFolder.isEmpty()){
+            if (!emptyToken.exists()){
+                if (!startLocked){
+                    manageSync(true);
+                }
+                startLocked=true;
+                managelocalFolderToken(false,true);
+
+            }else{
+            	startLocked=false;
+                managelocalFolderToken(false,false);
+
+            }
+        }else{
+        	emptyToken.remove();
+            startLocked=false;
+            managelocalFolderToken(false,false);
+            
+        }
+    }else{
+        if(!startLocked){
+            manageSync(true);
+        }
+        startLocked=true;
+        managelocalFolderToken(true,false);
+
+    }
+    manageLockAutoStart();
+
+}
+
+void LliurexOneDriveWidgetUtils::managelocalFolderToken(bool remove, bool empty){
+
+    if (remove){
+        if (localFolderEmptyToken.exists()){
+            localFolderEmptyToken.remove();
+        }
+        if (!localFolderRemovedToken.exists()){
+            localFolderRemovedToken.open(QIODevice::WriteOnly|QIODevice::Text);
+        }      
+    }else if (empty){
+        if (!localFolderEmptyToken.exists()){
+            localFolderEmptyToken.open(QIODevice::WriteOnly|QIODevice::Text);
+        }
+        if (localFolderRemovedToken.exists()){
+            localFolderRemovedToken.remove();
+        }
+    }else{
+        if (localFolderEmptyToken.exists()){
+            localFolderEmptyToken.remove();
+        }
+        if (localFolderRemovedToken.exists()){
+            localFolderRemovedToken.remove();
+        }         
+
+    }
+
+}
+
+void LliurexOneDriveWidgetUtils::manageLockAutoStart(){
+
+    lockAutoStartToken.setFileName(getUserHome()+"/.config/onedrive/.lockAutoStartToken");
+    QString cmd="";
+    
+    if (!SYSTEMDTOKEN.exists()){
+        if ((localFolderRemovedToken.exists()) || (localFolderEmptyToken.exists())){
+            if (!lockAutoStartToken.exists()){
+                lockAutoStartToken.open(QIODevice::WriteOnly|QIODevice::Text);
+                cmd="systemctl --user mask onedrive.service";
+                KIO::CommandLauncherJob *job = nullptr;
+                job = new KIO::CommandLauncherJob(cmd);
+                job->start();
+            }
+        }else{
+            if (lockAutoStartToken.exists()){
+                lockAutoStartToken.remove();
+            }  
+        }
+     }else{
+        if ((!localFolderRemovedToken.exists()) && (!localFolderEmptyToken.exists())){
+            if (lockAutoStartToken.exists()){
+                lockAutoStartToken.remove();
+            }
+        }
+     }       
 
 }
