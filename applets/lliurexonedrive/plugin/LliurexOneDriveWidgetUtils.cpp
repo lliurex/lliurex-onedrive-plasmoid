@@ -337,6 +337,11 @@ void LliurexOneDriveWidgetUtils::manageLockAutoStart(){
         if ((!localFolderRemovedToken.exists()) && (!localFolderEmptyToken.exists())){
             if (lockAutoStartToken.exists()){
                 lockAutoStartToken.remove();
+                cmd="systemctl --user unmask onedrive.service";
+                KIO::CommandLauncherJob *job = nullptr;
+                job = new KIO::CommandLauncherJob(cmd);
+                job->start();    
+
             }
         }
      }       
