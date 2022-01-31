@@ -64,8 +64,7 @@ void LliurexOneDriveWidget::worker(){
         if (LliurexOneDriveWidget::TARGET_FILE.exists() ) {
            const QString tooltip(i18n("Lliurex OneDrive"));
            setToolTip(tooltip);
-           checkIsRunning();
-           checkIsLliurexOneDriveOpen();
+           checkIfStartIsLocked();
         }else{
             setStatus(PassiveStatus);
             previousError=false;
@@ -134,24 +133,28 @@ void LliurexOneDriveWidget::isRunningProcessFinished(int exitCode, QProcess::Exi
      
     }
     
-    setSyncStatus(isRunning);
-    setStatus(ActiveStatus); 
+   setSyncStatus(isRunning);
+   setStatus(ActiveStatus); 
     
-    if (isRunning){
-        if ((!previousError) & (!warning) & (!checkExecuted)){
-            QString subtooltip(i18n("Starting the synchronization"));
-            updateWidget(subtooltip,"onedrive-starting");
+    if (! m_utils->startLocked){
+        if (isRunning){
+            if ((!previousError) & (!warning) & (!checkExecuted)){
+                qDebug()<<"actualizando widget";
+                QString subtooltip(i18n("Starting the synchronization"));
+                updateWidget(subtooltip,"onedrive-starting");
+            }
+            checkStatus();
+        }else{
+            QString subtooltip(i18n("Synchronization is stopped"));
+            updateWidget(subtooltip,"onedrive-pause");
+            previousError=false;
+            previousErrorCode="";
+            warning=false;
+            checkExecuted=false;
+            changeSyncStatus=false;
         }
-        checkStatus();
-    }else{
-        QString subtooltip(i18n("Synchronization is stopped"));
-        updateWidget(subtooltip,"onedrive-pause");
-        previousError=false;
-        previousErrorCode="";
-        warning=false;
-        checkExecuted=false;
-        changeSyncStatus=false;
     }
+    
 }
 
 void LliurexOneDriveWidget::checkStatus(){
@@ -563,3 +566,34 @@ bool LliurexOneDriveWidget::checkIfFileExists(const QString &filePath)
     }
 }
 
+void LliurexOneDriveWidget::checkIfStartIsLocked(){
+
+       QString subtooltip="";
+       m_utils->checkIfLocalFolderExists();
+       checkIsRunning();
+       if (!m_utils->startLocked){
+           checkIsLliurexOneDriveOpen();
+           showStartLockMessage=true;
+       }else{
+            checkExecuted=false;
+            warning=false;
+            previousError=false;
+            setLliurexOneDriveOpen(true);
+            if (m_utils->localFolderEmptyToken.exists()){
+                subtooltip=i18n("Synchronization is stopped. Local OneDrive folder is empty");
+             
+            }else{
+                subtooltip=i18n("Synchronization is stopped. Local OneDrive folder not exists");
+            }
+            updateWidget(subtooltip,"onedrive-error");
+            if (showStartLockMessage){
+                m_errorNotification = KNotification::event(QStringLiteral("ErrorStatus"), subtooltip, {}, "onedrive-widget", nullptr, KNotification::CloseOnTimeout , QStringLiteral("llxonedrive"));
+                QString name = i18n("Open Lliurex OneDrive");
+                m_errorNotification->setDefaultAction(name);
+                m_errorNotification->setActions({name});
+                connect(m_errorNotification, QOverload<unsigned int>::of(&KNotification::activated), this, &LliurexOneDriveWidget::launchOneDrive);
+                showStartLockMessage=false;
+            }
+       }
+
+}

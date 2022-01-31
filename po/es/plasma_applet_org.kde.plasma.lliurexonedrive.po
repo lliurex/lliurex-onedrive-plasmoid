@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lliurexonedrive\n"
 "Report-Msgid-Bugs-To: http://lliurex.net\n"
-"POT-Creation-Date: 2022-01-12 17:20+0100\n"
-"PO-Revision-Date: 2022-01-12 17:20+0100\n"
+"POT-Creation-Date: 2022-01-25 14:34+0100\n"
+"PO-Revision-Date: 2022-01-25 14:36+0100\n"
 "Last-Translator: lliurex <lliurex@gva.es>\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -35,7 +35,8 @@ msgid "File does not exist. Update the list"
 msgstr "El archivo no existe. Actualice la lista"
 
 #: ../applets/lliurexonedrive/package/contents/ui/main.qml:41
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:263
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:267
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:592
 #, kde-format
 msgid "Open Lliurex OneDrive"
 msgstr "Abrir Lliurex OneDrive"
@@ -130,57 +131,67 @@ msgstr "Buscando información. Espere un momento..."
 msgid "Lliurex OneDrive"
 msgstr "Lliurex OneDrive"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:142
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:144
 #, kde-format
 msgid "Starting the synchronization"
 msgstr "Iniciando la sincronización"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:147
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:149
 #, kde-format
 msgid "Synchronization is stopped"
 msgstr "La sincronización está parada"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:228
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:232
 #, kde-format
 msgid "Changes pending of synchronization"
 msgstr "Cambios pendientes de sincronizar"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:271
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:275
 #, kde-format
 msgid "All remote changes are synchronized"
 msgstr "Todos los cambios remotos están sincronizados"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:357
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:361
 #, kde-format
 msgid "Unable to stop synchronization"
 msgstr "No es posible detener la sincronización"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:360
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:364
 #, kde-format
 msgid "Unable to start synchronization"
 msgstr "No es posible iniciar la sincronización"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidgetUtils.cpp:174
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:584
+#, kde-format
+msgid "Synchronization is stopped. Local OneDrive folder is empty"
+msgstr "La sincronización está parada La carpeta local OneDirve está vacía"
+
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:587
+#, kde-format
+msgid "Synchronization is stopped. Local OneDrive folder not exists"
+msgstr "La sincronización está parada. La carpeta local OneDrive no existe"
+
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidgetUtils.cpp:176
 #, kde-format
 msgid "Unable to connect with Microsoft OneDrive"
 msgstr "No es posible conectar con Microsoft OneDrive"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidgetUtils.cpp:177
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidgetUtils.cpp:179
 #, kde-format
 msgid "Your free space is 0"
 msgstr "Su espacio disponible es 0"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidgetUtils.cpp:180
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidgetUtils.cpp:182
 #, kde-format
 msgid "The authorization to access your account has expired"
 msgstr "La autorización para acceder a su cuenta ha caducado"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidgetUtils.cpp:183
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidgetUtils.cpp:185
 #, kde-format
 msgid "Microsoft OneDrive not available"
 msgstr "Microsoft OneDrive no esta disponible"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidgetUtils.cpp:186
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidgetUtils.cpp:188
 #, kde-format
 msgid ""
 "OneDrive has reported an error.\n"
