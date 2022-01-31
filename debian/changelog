@@ -1,3 +1,9 @@
+plasma-widget-lliurex-onedrive (1.4) focal-updates; urgency=medium
+
+  * Checked if local folder exists or is empty
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Mon, 31 Jan 2022 13:07:48 +0100
+
 plasma-widget-lliurex-onedrive (1.3) focal-updates; urgency=medium
 
   * Added option to show recent files
