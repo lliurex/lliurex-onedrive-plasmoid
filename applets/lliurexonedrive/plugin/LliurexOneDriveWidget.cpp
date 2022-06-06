@@ -198,7 +198,7 @@ void LliurexOneDriveWidget::isDisplayProcessFinished(int exitCode, QProcess::Exi
             m_checkProcess->kill();
         }
         m_checkProcess->setProgram("/usr/bin/onedrive");
-        QStringList arguments={"--display-sync-status", "--verbose","--dry-run"};
+        QStringList arguments={"--display-sync-status", "--verbose", "--dry-run"};
         m_checkProcess->setArguments(arguments);
         m_checkProcess->start(QIODevice::ReadOnly);;
     }
