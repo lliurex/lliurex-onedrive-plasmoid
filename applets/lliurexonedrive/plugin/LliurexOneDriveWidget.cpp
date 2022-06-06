@@ -172,7 +172,7 @@ void LliurexOneDriveWidget::checkIsDisplayRunning(){
     if (m_isDisplayProcess->state() != QProcess::NotRunning) {
         m_isDisplayProcess->kill();
     }
-    QString cmd="ps -ef | grep 'onedrive --display-sync-status --verbose' | grep -v 'grep'";
+    QString cmd="ps -ef | grep 'onedrive --display-sync-status --verbose --dry-run' | grep -v 'grep'";
     m_isDisplayProcess->start("/bin/sh", QStringList()<< "-c" 
                        << cmd,QIODevice::ReadOnly);
   
@@ -198,7 +198,7 @@ void LliurexOneDriveWidget::isDisplayProcessFinished(int exitCode, QProcess::Exi
             m_checkProcess->kill();
         }
         m_checkProcess->setProgram("/usr/bin/onedrive");
-        QStringList arguments={"--display-sync-status", "--verbose"};
+        QStringList arguments={"--display-sync-status", "--verbose","--dry-run"};
         m_checkProcess->setArguments(arguments);
         m_checkProcess->start(QIODevice::ReadOnly);;
     }
