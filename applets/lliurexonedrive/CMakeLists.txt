@@ -11,6 +11,8 @@ add_definitions(-DTRANSLATION_DOMAIN="plasma_applet_org.kde.plasma.lliurexonedri
 set(llxonedrivewidget_SRCS
     plugin/plugin.cpp
     plugin/LliurexOneDriveWidget.cpp
+    plugin/LliurexOneDriveWidgetSpaceItem.cpp
+    plugin/LliurexOneDriveWidgetSpacesModel.cpp
     plugin/LliurexOneDriveWidgetModel.cpp
     plugin/LliurexOneDriveWidgetItem.cpp
     plugin/LliurexOneDriveWidgetUtils.cpp

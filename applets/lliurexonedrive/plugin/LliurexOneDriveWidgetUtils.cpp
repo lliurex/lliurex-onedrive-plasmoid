@@ -13,15 +13,14 @@
 #include <KLocalizedString>
 #include <QDate>
 #include <QDir>
-
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 
 LliurexOneDriveWidgetUtils::LliurexOneDriveWidgetUtils(QObject *parent)
     : QObject(parent)
-    ,m_isSystemdActive(new QProcess(this))
        
 {
-    connect(m_isSystemdActive, (void (QProcess::*)(int, QProcess::ExitStatus))&QProcess::finished,
-            this, &LliurexOneDriveWidgetUtils::checkIsSystemdActiveFinished);
 }    
 
 QString LliurexOneDriveWidgetUtils::getUserHome() {
@@ -32,318 +31,112 @@ QString LliurexOneDriveWidgetUtils::getUserHome() {
     return userHome;
 
 }
-void LliurexOneDriveWidgetUtils::manageSync(bool isRunning){
+bool LliurexOneDriveWidgetUtils::checkIfSpaceSyncIsRunning(QString spaceConfigPath){
 
-    SYSTEMDTOKEN.setFileName(getUserHome()+"/.config/systemd/user/onedrive.service");
-    QString cmd="";
+    QFile statusToken;
+    statusToken.setFileName(spaceConfigPath+"/.statusToken");
 
-   if (!isRunning){
-        restoreSyncListFile();
-        if (!SYSTEMDTOKEN.exists()){
-            cmd="systemctl --user start onedrive.service";
-            
-        }else{
-            cmd="/usr/bin/onedrive --monitor &";
-        }
-        KIO::CommandLauncherJob *job = nullptr;
-        job = new KIO::CommandLauncherJob(cmd);
-        job->start();
-
+    if (statusToken.exists()){
+        return true;
     }else{
-        checkIsSystemdActive();
-       
+        return false;
     }
 }
 
-void LliurexOneDriveWidgetUtils::checkIsSystemdActive(){
+QStringList LliurexOneDriveWidgetUtils::readStatusToken(QString spaceConfigPath){
 
-    if (m_isSystemdActive->state() != QProcess::NotRunning) {
-        m_isSystemdActive->kill();
-    }
-    QString cmd="systemctl --user is-active onedrive.service";
-    m_isSystemdActive->start("/bin/sh",QStringList()<<"-c"<<cmd,QIODevice::ReadOnly);
-  
-} 
-
-void LliurexOneDriveWidgetUtils::checkIsSystemdActiveFinished(int exitCode, QProcess::ExitStatus exitStatus){
-
-    Q_UNUSED(exitCode);
-    
-    if (exitStatus!=QProcess::NormalExit){
-        return;
-    }
-    QString cmd="";
-    QString stdout=QString::fromLocal8Bit(m_isSystemdActive->readAllStandardOutput());
-    QStringList pout=stdout.split("\n");
-
-    if (pout[0]!="inactive"){
-        cmd="systemctl --user stop onedrive.service";
-    }else{
-        cmd="ps -ef | grep 'onedrive --monitor' | grep -v grep | awk '{print $2}' | xargs kill -9";             
-    }
-    
-    KIO::CommandLauncherJob *job = nullptr;
-    job = new KIO::CommandLauncherJob(cmd);
-    job->start();
-    
-}
-
-QString LliurexOneDriveWidgetUtils::formatFreeSpace(QString freespace){
-
-    long int value=freespace.toLong();
-    QString valueText=QLocale().formattedDataSize(value,2,QLocale::DataSizeTraditionalFormat);
-    return valueText;
-}
-
-QStringList LliurexOneDriveWidgetUtils::getAccountStatus(int exitCode,QString poutProces,QString perrProcess){
-
-    QString code="";
-    QString freeSpace="";
     QStringList result;
-    QString uploadingRef="416";
-    QString zeroSpaceRef="zero space available";
-    QString unauthorizedRef="Unauthorized";
-    QString networkRef="Cannot connect to";
-    QString allSyncRef="No pending";
-    QString outSyncRef="out of sync";
-    QString freeSpaceRef="Free Space";
-    QString uploading="Uploading";
-    QString unavailableRef="503";
-    QString forbiddenUser="HTTP 403 - Forbidden";
-    QString unableQuery="Unable to query OneDrive";
 
-    
-    QStringList pout=poutProces.split("\n");
-    QStringList perror=perrProcess.split("\n");
+    spaceStatusToken.setFileName(spaceConfigPath+"/.statusToken");
 
-    if (exitCode!=0){
-        for(int i=0 ; i < perror.length() ; i++){
-            if (perror[i].contains(uploadingRef)){
-                code=UPLOADING_PENDING_CHANGES;
-                break;
-            }else if (perror[i].contains(zeroSpaceRef)){
-                code=ZERO_SPACE_AVAILABLE;
-                break;
-            }else if (perror[i].contains(unauthorizedRef)){
-                code=UNAUTHORIZED_ERROR;
-                break;
-            }else if (perror[i].contains(networkRef)){ 
-                code=NETWORK_CONNECT_ERROR;
-                break;
-            }else if (perror[i].contains(unableQuery)){
-                code=UNAUTHORIZED_ERROR;
-                break;
-            }else if (perror[i].contains(unavailableRef)){
-                code=SERVICE_UNAVAILABLE;
-                break;
-            }else{
-                code=GENERAL_ERROR;
+    if (spaceStatusToken.exists()){
+        if (spaceStatusToken.open(QIODevice::ReadOnly)){
+            QTextStream content(&spaceStatusToken);
+            while (!content.atEnd()){
+                result.append(content.readLine());
             }
+            spaceStatusToken.close();
         }
-    }else{ 
-        for(int i=0 ; i < pout.length() ; i++){
 
-            if (pout[i].contains(uploading)){
-                code=UPLOADING_PENDING_CHANGES;
-                break;
-            }
-            if (pout[i].contains(forbiddenUser)){
-                code=UNAUTHORIZED_ERROR;
-                break;
-            }
-            if (pout[i].contains(allSyncRef)){
-                code=NO_PENDING_SYNC;
-            }else if (pout[i].contains(outSyncRef)){
-                code=OUT_OF_SYNC;
-            }else if (pout[i].contains(freeSpaceRef)){
-                QString tmp_value=pout[i].split(":")[1];
-                freeSpace=formatFreeSpace(tmp_value);
-            }
-        }
+    }else{
+        result.append("False");
+        result.append("0");
+        result.append("");
     }
-    
-
-    result<<code<<freeSpace;
     return result;
 
 }
 
-QString LliurexOneDriveWidgetUtils::getErrorMessage(QString code){
+QList<bool> LliurexOneDriveWidgetUtils::checkLocalFolder(QString spaceConfigPath){
 
-    QString msg="";
-   
-    if (code==NETWORK_CONNECT_ERROR){
-        msg=i18n("Unable to connect with Microsoft OneDrive");
-        return msg;
-    }else if (code==ZERO_SPACE_AVAILABLE){
-        msg=i18n("Your free space is 0");
-        return msg;
-    }else if (code==UNAUTHORIZED_ERROR){
-        msg=i18n("The authorization to access your account has expired");
-        return msg;
-    }else if (code==SERVICE_UNAVAILABLE){
-        msg=i18n("Microsoft OneDrive not available");
-        return msg;
-    }else{
-        msg=i18n("OneDrive has reported an error.\nOpen Lliurex OneDrive for more information");
-        return msg;
-    }
+    QList<bool> result;
+    bool localFolderEmpty=false;
+    bool localFolderRemoved=false;
 
-}
+    QDir spaceConfigFolder(spaceConfigPath);
+    localFolderEmptyToken.setFileName(spaceConfigPath+"/.localFolderEmptyToken");
+    localFolderRemovedToken.setFileName(spaceConfigPath+"/.localFolderRemovedToken");
 
-QList<QStringList> LliurexOneDriveWidgetUtils::getFiles(QStringList info){
-
-    QList<QStringList> lastestFiles;
-
-    QString reference=getUserHome()+"/OneDrive";
-
-    info.removeLast();
-    if (!info.isEmpty()){
-        for (int i=0;i<10;i++){
-            if (i<info.length()){
-                QStringList tmpLine=info[i].split(reference)[1].split("/");
-                int tmpRef=tmpLine.length()-1;
-                QStringList tmpItem;
-                tmpItem.append(tmpLine[tmpRef]);
-                tmpItem.append(info[i].split("\t")[2]);
-                QStringList tmpDate;
-                tmpDate=info[i].split("\t")[0].split("+");
-                tmpItem.append(formatFileDate(tmpDate[0]));
-                tmpItem.append(tmpDate[1].split(".")[0]);
-                lastestFiles.append(tmpItem);
-            }else{
-                break;
-            }
-        }
-    }
-
-    return lastestFiles;
-
-}
-
-QString LliurexOneDriveWidgetUtils::formatFileDate(QString fileDate){
-
-    QDate myDate;
-    myDate=QDate::fromString(fileDate,"yyyy-MM-dd");
-    QString formatDate;
-    formatDate=myDate.toString("dd/MM/yyyy");
-
-    return formatDate;
-
-}
-
-void LliurexOneDriveWidgetUtils::restoreSyncListFile()
-{
-    syncList.setFileName(getUserHome()+"/.config/onedrive/sync_list.back");
-    syncListHash.setFileName(getUserHome()+"/.config/onedrive/.sync_list.hash.back");
-
-    if (syncList.exists()){
-        syncList.rename(getUserHome()+"/.config/onedrive/sync_list");
-    }
-
-    if (syncListHash.exists()){
-        syncListHash.rename(getUserHome()+"/.config/onedrive/.sync_list.hash");
-    }
-
-}
-
-void LliurexOneDriveWidgetUtils::checkIfLocalFolderExists(){
-
-    QDir locaFolder(getUserHome()+"/OneDrive");
-    QFile emptyToken(getUserHome()+"/.config/onedrive/.emptyToken");
-    localFolderEmptyToken.setFileName(getUserHome()+"/.config/onedrive/.localFolderEmptyToken");
-    localFolderRemovedToken.setFileName(getUserHome()+"/.config/onedrive/.localFolderRemovedToken");
-
-    if (locaFolder.exists()){
-        if (locaFolder.isEmpty()){
-            if (!emptyToken.exists()){
-                if (!startLocked){
-                    manageSync(true);
-                }
-                startLocked=true;
-                managelocalFolderToken(false,true);
-
-            }else{
-            	startLocked=false;
-                managelocalFolderToken(false,false);
-
-            }
-        }else{
-        	emptyToken.remove();
-            startLocked=false;
-            managelocalFolderToken(false,false);
-            
-        }
-    }else{
-        if(!startLocked){
-            manageSync(true);
-        }
-        startLocked=true;
-        managelocalFolderToken(true,false);
-
-    }
-    manageLockAutoStart();
-
-}
-
-void LliurexOneDriveWidgetUtils::managelocalFolderToken(bool remove, bool empty){
-
-    if (remove){
+    if (spaceConfigFolder.exists()){
         if (localFolderEmptyToken.exists()){
-            localFolderEmptyToken.remove();
-        }
-        if (!localFolderRemovedToken.exists()){
-            localFolderRemovedToken.open(QIODevice::WriteOnly|QIODevice::Text);
-        }      
-    }else if (empty){
-        if (!localFolderEmptyToken.exists()){
-            localFolderEmptyToken.open(QIODevice::WriteOnly|QIODevice::Text);
+            localFolderEmpty=true;
         }
         if (localFolderRemovedToken.exists()){
-            localFolderRemovedToken.remove();
+            localFolderRemoved=true;
         }
-    }else{
-        if (localFolderEmptyToken.exists()){
-            localFolderEmptyToken.remove();
-        }
-        if (localFolderRemovedToken.exists()){
-            localFolderRemovedToken.remove();
-        }         
+    }
+    result.append(localFolderEmpty);
+    result.append(localFolderRemoved);
 
+    return result;
+
+}
+
+
+QVariantList LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPath){
+
+    QVariantList spacesInfo;
+
+    QFile tmpConfig;
+    tmpConfig.setFileName(onedriveConfigPath);
+    tmpConfig.open(QIODevice::ReadOnly | QIODevice::Text);
+    QByteArray contentFile=tmpConfig.readAll();
+    tmpConfig.close();
+
+    QJsonParseError err;
+    auto doc=QJsonDocument::fromJson(contentFile,&err);
+    if (err.error != QJsonParseError::NoError){
+        qDebug()<<err.errorString();
     }
 
+    QJsonObject obj=doc.object();
+    onedriveConfig=obj.value("spacesList").toArray();
+
+    foreach(const QJsonValue &val, onedriveConfig){
+        QString tmpTokenPath=val.toObject().value("configPath").toString()+"/refresh_token";
+        QFile tmpTokenFile;
+        tmpTokenFile.setFileName(tmpTokenPath);
+        if (tmpTokenFile.exists()){
+            QVariantList tmpItem;
+            tmpItem.append(val.toObject().value("id").toString());
+            QFileInfo fi(val.toObject().value("localFolder").toString());
+            tmpItem.append(fi.baseName());
+            QString spaceConfigPath=val.toObject().value("configPath").toString();
+            QStringList statusResult=readStatusToken(spaceConfigPath);
+            tmpItem.append(statusResult[1].toInt());
+            tmpItem.append(checkIfSpaceSyncIsRunning(spaceConfigPath));
+            QList<bool>checkFolder=checkLocalFolder(spaceConfigPath);
+            if ((!checkFolder[0])&&(!checkFolder[1])){
+                tmpItem.append(false);
+            }else{
+                tmpItem.append(true);
+            }
+            spacesInfo.push_back(tmpItem);
+        }
+     }
+    return spacesInfo;
+
 }
 
-void LliurexOneDriveWidgetUtils::manageLockAutoStart(){
 
-    lockAutoStartToken.setFileName(getUserHome()+"/.config/onedrive/.lockAutoStartToken");
-    QString cmd="";
-    
-    if (!SYSTEMDTOKEN.exists()){
-        if ((localFolderRemovedToken.exists()) || (localFolderEmptyToken.exists())){
-            if (!lockAutoStartToken.exists()){
-                lockAutoStartToken.open(QIODevice::WriteOnly|QIODevice::Text);
-                cmd="systemctl --user mask onedrive.service";
-                KIO::CommandLauncherJob *job = nullptr;
-                job = new KIO::CommandLauncherJob(cmd);
-                job->start();
-            }
-        }else{
-            if (lockAutoStartToken.exists()){
-                lockAutoStartToken.remove();
-            }  
-        }
-     }else{
-        if ((!localFolderRemovedToken.exists()) && (!localFolderEmptyToken.exists())){
-            if (lockAutoStartToken.exists()){
-                lockAutoStartToken.remove();
-                cmd="systemctl --user unmask onedrive.service";
-                KIO::CommandLauncherJob *job = nullptr;
-                job = new KIO::CommandLauncherJob(cmd);
-                job->start();    
 
-            }
-        }
-     }       
-
-}

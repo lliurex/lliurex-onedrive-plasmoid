@@ -2,6 +2,7 @@
 #include "LliurexOneDriveWidget.h"
 #include "LliurexOneDriveWidgetUtils.h"
 #include "LliurexOneDriveWidgetModel.h"
+#include "LliurexOneDriveWidgetSpacesModel.h"
 #include <QtQml>
 
 void LliurexOneDriveWidgetPlugin::registerTypes (const char *uri)
@@ -10,5 +11,6 @@ void LliurexOneDriveWidgetPlugin::registerTypes (const char *uri)
     qmlRegisterType<LliurexOneDriveWidget>(uri, 1, 0, "LliurexOneDriveWidget");
     qmlRegisterType<LliurexOneDriveWidgetUtils>(uri, 1, 0, "LliurexOneDriveWidgetUtils");
     qmlRegisterType<LliurexOneDriveWidgetModel>(uri, 1, 0, "LliurexOneDriveWidgetModel");
+    qmlRegisterType<LliurexOneDriveWidgetSpacesModel>(uri, 1, 0, "LliurexOneDriveWidgetSpacesModel");
 
 }

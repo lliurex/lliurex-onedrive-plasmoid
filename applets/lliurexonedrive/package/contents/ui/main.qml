@@ -42,6 +42,7 @@ Item {
     }
 
     Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation
+    
     Plasmoid.fullRepresentation: Item{
         id:root
         Layout.fillWidth:true
@@ -50,9 +51,88 @@ Item {
             currentIndex:0
             width:parent.width
             height:parent.height
+
+            GridLayout{
+                id:spacesLayout
+                rows: 2
+                flow: GridLayout.TopToBottom
+                rowSpacing:10
+                width:parent.width
+                                
+                PlasmaExtras.ScrollArea {
+                    Layout.topMargin:10
+                    Layout.bottomMargin:10
+                    Layout.leftMargin:5
+                    Layout.rightMargin:5
+                    implicitWidth:parent.width-10
+                    implicitHeight:300
+                    ListView{
+                        id:listSpaceView
+                        focus:true
+                        model:lliurexOneDriveWidget.spacesModel
+                        currentIndex: -1
+                        boundsBehavior: Flickable.StopAtBounds
+                        interactive: contentHeight > height
+                        highlight: Rectangle { color: "#add8e6"; opacity:0.8;border.color:"#53a1c9" }
+                        highlightMoveDuration: 0
+                        highlightResizeDuration: 0
+                        delegate: ListDelegateSpaceItem {
+                            idSpace: model.id
+                            nameSpace: model.name
+                            statusSpace: model.status
+                            isRunningSpace: model.isRunning
+                            localFolderWarning: model.localFolderWarning
+                        }
+                        Kirigami.PlaceholderMessage { 
+                            id: emptySpaceHint
+                            anchors.centerIn: parent
+                            width: parent.width - (units.largeSpacing * 4)
+                            visible: {
+                                if (listSpaceView.count === 0){
+                                    return true
+                                }else{
+                                    return false
+                                } 
+                            }    
+                            text: i18n("Information is not available")
+                        }
+                        Kirigami.PlaceholderMessage {
+                            id: showSpaceHint
+                            anchors.centerIn: parent
+                            width: parent.width - (units.largeSpacing * 4)
+                            visible: listSpaceView.count>0?false:true
+                            text: i18n("No spaces configured")
+                        }
+                       
+                    }
+                }
+                RowLayout{
+                    id:helpRow
+                    Layout.fillWidth:true
+                    Layout.leftMargin:5
+                    Layout.rightMargin:5
+
+                    Components.Label{
+                        id:helpText
+                        text:i18n("See help documentation")
+                        Layout.fillWidth:true
+                    }
+
+                   QQC2.ToolButton {
+                        width:35
+                        height:35
+                        icon.name:"help-contents.svg"
+                        onClicked:lliurexOneDriveWidget.openHelp() 
+                        QQC2.ToolTip{
+                            text:i18n("Click to see help")
+                        }
+                    } 
+                }
+            }
+            /*
             GridLayout{
                 id: optionsAccount
-                rows: 5
+                rows: 4
                 flow: GridLayout.TopToBottom
                 rowSpacing:10
                 width:parent.width
@@ -166,28 +246,7 @@ Item {
                         }
                     } 
                 }
-                RowLayout{
-                    id:helpRow
-                    Layout.fillWidth:true
-                    Layout.leftMargin:5
-                    Layout.rightMargin:5
-
-                    Components.Label{
-                        id:helpText
-                        text:i18n("See help documentation")
-                        Layout.fillWidth:true
-                    }
-
-                   QQC2.ToolButton {
-                        width:35
-                        height:35
-                        icon.name:"help-contents.svg"
-                        onClicked:lliurexOneDriveWidget.openHelp() 
-                        QQC2.ToolTip{
-                            text:i18n("Click to see help")
-                        }
-                    } 
-                }     
+                  
             } 
 
             GridLayout{
@@ -276,10 +335,12 @@ Item {
                         }
                        
                     }
-               }
-            }   
+                }
+            }
+            */  
         }
     }
+    
 
     function action_launchOneDrive() {
         lliurexOneDriveWidget.launchOneDrive()
