@@ -77,6 +77,10 @@ private:
     void plasmoidMode();
     void initPlasmoid();
     void updateWidget(QString subtooltip,QString icon);
+    void checkIfStartIsLocked();
+    void checkIsRunning();
+    void checkStatus();
+
     QTimer *m_timer = nullptr;
     TrayStatus m_status = PassiveStatus;
     QString m_iconName = QStringLiteral("onedrive-pause");
@@ -85,9 +89,14 @@ private:
     QString m_subToolTip;
     QFile TARGET_FILE;
     bool isWorking=false;
+    int lastCheck=80;
+    int countRepeatGeneralError;
+    bool previousError=false;
+    bool checkExecuted=false;
+    bool warning=false;
+    bool showStartLockMessage=true;
     QPointer<KNotification> m_errorNotification;
-
-
+    QList <int> previousStatusError;
 };
 
 #endif // PLASMA_LLIUREX_ONEDRIVE_WIDGET_H

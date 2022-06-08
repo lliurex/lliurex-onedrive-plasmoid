@@ -96,8 +96,13 @@ QList<bool> LliurexOneDriveWidgetUtils::checkLocalFolder(QString spaceConfigPath
 QVariantList LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPath){
 
     QVariantList spacesInfo;
+    int localFolderWarningCount=0;
+    int areSpacesSyncRunningCount=0;
+    totalSpaces=0;
 
     QFile tmpConfig;
+    spacesStatusCode.clear();
+
     tmpConfig.setFileName(onedriveConfigPath);
     tmpConfig.open(QIODevice::ReadOnly | QIODevice::Text);
     QByteArray contentFile=tmpConfig.readAll();
@@ -112,11 +117,13 @@ QVariantList LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPat
     QJsonObject obj=doc.object();
     onedriveConfig=obj.value("spacesList").toArray();
 
+
     foreach(const QJsonValue &val, onedriveConfig){
         QString tmpTokenPath=val.toObject().value("configPath").toString()+"/refresh_token";
         QFile tmpTokenFile;
         tmpTokenFile.setFileName(tmpTokenPath);
         if (tmpTokenFile.exists()){
+            totalSpaces+=1;
             QVariantList tmpItem;
             tmpItem.append(val.toObject().value("id").toString());
             QFileInfo fi(val.toObject().value("localFolder").toString());
@@ -124,17 +131,73 @@ QVariantList LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPat
             QString spaceConfigPath=val.toObject().value("configPath").toString();
             QStringList statusResult=readStatusToken(spaceConfigPath);
             tmpItem.append(statusResult[1].toInt());
-            tmpItem.append(checkIfSpaceSyncIsRunning(spaceConfigPath));
+            spacesStatusCode.append(statusResult[1].toInt());
+            bool isSpaceRunning=checkIfSpaceSyncIsRunning(spaceConfigPath);
+            if (isSpaceRunning){
+                areSpacesSyncRunningCount+=1;
+            }
+            tmpItem.append(isSpaceRunning);
             QList<bool>checkFolder=checkLocalFolder(spaceConfigPath);
             if ((!checkFolder[0])&&(!checkFolder[1])){
                 tmpItem.append(false);
             }else{
                 tmpItem.append(true);
+                localFolderWarningCount+=1;
             }
             spacesInfo.push_back(tmpItem);
         }
-     }
+    }
+
+    if (areSpacesSyncRunningCount>0){
+        areSpacesSyncRunning=true;
+    }else{
+        areSpacesSyncRunning=false;
+    }
+
+    if (localFolderWarningCount>0){
+        isLocalFolderWarning=true;
+    }else{
+        isLocalFolderWarning=false;
+    }
     return spacesInfo;
+
+}
+
+QString LliurexOneDriveWidgetUtils::getGlobalStatus(){
+
+    int warningCount=0;
+    int errorCount=0;
+    int generalErrorCount=0;
+    int okCount=0;
+    bool generalError=false;
+
+    for (int i=0;i<spacesStatusCode.length();i++){
+        if (warningCode.contains(spacesStatusCode[i])){
+            warningCount+=1;
+        }else if (errorCode.contains(spacesStatusCode[i])){
+            if ((spacesStatusCode[i]==MICROSOFT_API_ERROR)||(spacesStatusCode[i]==UNABLE_CONNECT_MICROSOFT_ERROR)){
+                generalErrorCount+=1;
+            }else{
+                errorCount+=1;
+            }
+            if (!spacesStatusErrorCode.contains(spacesStatusCode[i])){
+                spacesStatusErrorCode.append(spacesStatusCode[i]);
+            }
+        }else{
+            okCount+=1;
+        }
+    }    
+    if (okCount==totalSpaces){
+        spacesStatusErrorCode.clear();
+        return "OK";
+    }else if (errorCount>0){
+        return "Error";
+    }else if (generalErrorCount>0){
+        return "GeneralError";
+    }else{
+        spacesStatusErrorCode.clear();
+        return "Warning";
+    }
 
 }
 

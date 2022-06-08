@@ -73,14 +73,133 @@ void LliurexOneDriveWidget::worker(){
         if (!isPassiveStatus){
             const QString tooltip(i18n("Lliurex OneDrive"));
             setToolTip(tooltip);
+            checkIfStartIsLocked();
             setStatus(ActiveStatus);
         }else{
             setStatus(PassiveStatus);
+            previousError=false;
+            previousStatusError.clear();
+            warning=false;
+            isWorking=false;
         }
-        isWorking=false;
-        
+    
     }
 
+}
+
+void LliurexOneDriveWidget::checkIfStartIsLocked(){
+
+    QString subtooltip="";
+    checkIsRunning();
+    if (m_utils->isLocalFolderWarning){
+        warning=false;
+        previousError=false;
+        checkExecuted=false;
+        subtooltip=i18n("Synchronization of one or more spaces is stopped. Detected problems with local folder");
+        updateWidget(subtooltip,"onedrive-error");
+        if (showStartLockMessage){
+            m_errorNotification = KNotification::event(QStringLiteral("ErrorStatus"), subtooltip, {}, "onedrive-widget", nullptr, KNotification::CloseOnTimeout , QStringLiteral("llxonedrive"));
+            QString name = i18n("Open Lliurex OneDrive");
+            m_errorNotification->setDefaultAction(name);
+            m_errorNotification->setActions({name});
+            connect(m_errorNotification, QOverload<unsigned int>::of(&KNotification::activated), this, &LliurexOneDriveWidget::launchOneDrive);
+            showStartLockMessage=false;
+        }
+    }else{
+        showStartLockMessage=true;
+        isWorking=false;
+    }
+
+}
+
+void LliurexOneDriveWidget::checkIsRunning(){
+
+    if (!m_utils->isLocalFolderWarning){
+        if (m_utils->areSpacesSyncRunning){
+            if ((!previousError) & (!warning) & (!checkExecuted)){
+                QString subtooltip(i18n("Starting the synchronization"));
+                updateWidget(subtooltip,"onedrive-starting");
+            }
+            checkStatus();
+        }else{
+            QString subtooltip(i18n("Synchronization is stopped"));
+            updateWidget(subtooltip,"onedrive-pause");
+            previousError=false;
+            previousStatusError.clear();
+            warning=false;
+            checkExecuted=false;
+            isWorking=false;
+        }              
+    }
+}
+
+void LliurexOneDriveWidget::checkStatus(){
+
+    lastCheck=lastCheck+5;
+    if (lastCheck>90){
+        bool showNotification=false;
+        QString msgError;
+        bool processError=true;
+
+        QString globalStatus=m_utils->getGlobalStatus();
+
+        if (globalStatus=="OK"){
+            QString subtooltip(i18n("All remote changes are synchronized"));
+            updateWidget(subtooltip,"onedrive-running");
+            warning=false;
+            previousError=false;
+            previousStatusError.clear();
+            countRepeatGeneralError=0;
+
+        }else if (globalStatus=="Warning"){
+            warning=true;
+            QString subtooltip(i18n("One or more spaces have changes pending of synchronization"));
+            updateWidget(subtooltip,"onedrive-waiting");
+            previousError=false;
+            previousStatusError.clear();
+            countRepeatGeneralError=0;
+        }else{
+            warning=false;
+            if (globalStatus=="GeneralError"){
+                countRepeatGeneralError+=1;
+                msgError=i18n("Unable to connect with Microsoft OneDrive");
+                if (countRepeatGeneralError<2){
+                    processError=false;
+                }
+            }else if (globalStatus=="Error"){
+                msgError=i18n("OneDrive has reported an error in one or more spaces");
+                countRepeatGeneralError=0;
+  
+            }
+
+            if(processError){
+;               QString subtooltip(msgError);
+                updateWidget(subtooltip,"onedrive-error");
+                
+                if (previousError){
+                    if (previousStatusError!=m_utils->spacesStatusErrorCode){
+                        showNotification=true;
+                        previousStatusError=m_utils->spacesStatusErrorCode;
+                    }
+                }else{
+                    previousError=true;
+                    previousStatusError=m_utils->spacesStatusErrorCode;
+                    showNotification=true;
+                }
+                if (showNotification){
+                    m_errorNotification = KNotification::event(QStringLiteral("ErrorStatus"), subtooltip, {}, "onedrive-widget", nullptr, KNotification::CloseOnTimeout , QStringLiteral("llxonedrive"));
+                    QString name = i18n("Open Lliurex OneDrive");
+                    m_errorNotification->setDefaultAction(name);
+                    m_errorNotification->setActions({name});
+                    connect(m_errorNotification, QOverload<unsigned int>::of(&KNotification::activated), this, &LliurexOneDriveWidget::launchOneDrive);
+                }
+            }
+  
+        }
+        isWorking=false;
+        lastCheck=0;
+        checkExecuted=true;
+    }
 }
 
 void LliurexOneDriveWidget::updateWidget(QString subtooltip,QString icon){
