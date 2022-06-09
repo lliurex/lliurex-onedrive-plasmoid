@@ -163,6 +163,13 @@ QVariantList LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPat
 
 }
 
+QString LliurexOneDriveWidgetUtils::formatFreeSpace(QString freespace){
+
+    long int value=freespace.toLong();
+    QString valueText=QLocale().formattedDataSize(value,2,QLocale::DataSizeTraditionalFormat);
+    return valueText;
+}
+
 QString LliurexOneDriveWidgetUtils::getGlobalStatus(){
 
     int warningCount=0;
@@ -198,6 +205,73 @@ QString LliurexOneDriveWidgetUtils::getGlobalStatus(){
         spacesStatusErrorCode.clear();
         return "Warning";
     }
+
+}
+
+QStringList LliurexOneDriveWidgetUtils::readSpaceInfo(QString idSpace){
+
+    QStringList spaceInfo;
+
+    foreach(const QJsonValue &val, onedriveConfig){
+        QString tmpId=val.toObject().value("id").toString();
+        if (idSpace==tmpId){
+            QString tmpTokenPath=val.toObject().value("configPath").toString()+"/refresh_token";
+            QFile tmpTokenFile;
+            tmpTokenFile.setFileName(tmpTokenPath);
+            if (tmpTokenFile.exists()){
+                spaceInfo.append(val.toObject().value("email").toString());
+                spaceInfo.append(val.toObject().value("type").toString());
+                spaceInfo.append(val.toObject().value("sharepoint").toString());
+                spaceInfo.append(val.toObject().value("library").toString());
+                spaceInfo.append(val.toObject().value("localFolder").toString());
+                spaceInfo.append(val.toObject().value("configPath").toString());
+                spaceInfo.append(val.toObject().value("systemd").toString());
+            }
+        break;
+        }
+    }    
+
+    return spaceInfo;
+}
+
+QList<QStringList> LliurexOneDriveWidgetUtils::getFiles(QStringList info, QString spaceLocalFolder){
+
+    QList<QStringList> lastestFiles;
+
+    QString reference=spaceLocalFolder;
+
+    info.removeLast();
+    if (!info.isEmpty()){
+        for (int i=0;i<10;i++){
+            if (i<info.length()){
+                QStringList tmpLine=info[i].split(reference)[1].split("/");
+                int tmpRef=tmpLine.length()-1;
+                QStringList tmpItem;
+                tmpItem.append(tmpLine[tmpRef]);
+                tmpItem.append(info[i].split("\t")[2]);
+                QStringList tmpDate;
+                tmpDate=info[i].split("\t")[0].split("+");
+                tmpItem.append(formatFileDate(tmpDate[0]));
+                tmpItem.append(tmpDate[1].split(".")[0]);
+                lastestFiles.append(tmpItem);
+            }else{
+                break;
+            }
+        }
+    }
+
+    return lastestFiles;
+
+}
+
+QString LliurexOneDriveWidgetUtils::formatFileDate(QString fileDate){
+
+    QDate myDate;
+    myDate=QDate::fromString(fileDate,"yyyy-MM-dd");
+    QString formatDate;
+    formatDate=myDate.toString("dd/MM/yyyy");
+
+    return formatDate;
 
 }
 

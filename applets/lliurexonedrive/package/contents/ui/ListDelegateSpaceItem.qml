@@ -84,7 +84,7 @@ Components.ListItem {
                 id:btnToolTip
                 text:i18n("Click to get details of this space")
             }
-            /*onClicked:lliurexOneDriveWidget.goToSpace(spaceId)*/
+            onClicked:lliurexOneDriveWidget.goToSpace(idSpace)
 
        }
    } 

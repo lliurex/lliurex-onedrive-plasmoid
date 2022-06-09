@@ -25,6 +25,9 @@ public:
     QStringList readStatusToken(QString spaceConfigPath);
     bool checkIfSpaceSyncIsRunning(QString spaceConfigPath);
     QString getGlobalStatus();
+    QStringList readSpaceInfo(QString idSpace);
+    QString formatFreeSpace(QString freeSpace);
+    QList<QStringList> getFiles(QStringList info,QString spaceLocalFolder);
 
     QJsonArray onedriveConfig;
     QFile localFolderEmptyToken;
@@ -49,6 +52,9 @@ public:
     int UPLOADING_PENDING_CHANGES=4;
     QList <int> warningCode={UPLOADING_PENDING_CHANGES,OUT_OF_SYNC_MSG};
     QList <int> errorCode={MICROSOFT_API_ERROR,UNABLE_CONNECT_MICROSOFT_ERROR,ZERO_SPACE_AVAILABLE_ERROR,UNAUTHORIZED_ERROR,SERVICE_UNAVAILABLE};
+
+private:
+    QString formatFileDate(QString fileDate);
 
 };
 #endif // PLASMA_LLIUREX_UP_INDICATOR_UTILS_H

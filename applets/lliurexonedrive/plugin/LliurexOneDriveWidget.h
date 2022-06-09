@@ -25,6 +25,17 @@ class LliurexOneDriveWidget : public QObject
     Q_PROPERTY(QString subToolTip READ subToolTip NOTIFY subToolTipChanged)
     Q_PROPERTY(QString iconName READ iconName NOTIFY iconNameChanged)
     Q_PROPERTY(LliurexOneDriveWidgetSpacesModel* spacesModel READ spacesModel CONSTANT)
+    Q_PROPERTY(int currentIndex READ currentIndex NOTIFY currentIndexChanged)
+    Q_PROPERTY(QString spaceMail READ spaceMail NOTIFY spaceMailChanged)
+    Q_PROPERTY(QString spaceType READ spaceType NOTIFY spaceTypeChanged)
+    Q_PROPERTY(QString spaceSharePoint READ spaceSharePoint NOTIFY spaceSharePointChanged)
+    Q_PROPERTY(QString spaceLibrary READ spaceLibrary NOTIFY spaceLibraryChanged)
+    Q_PROPERTY(QString oneDriveFolder READ oneDriveFolder NOTIFY oneDriveFolderChanged)
+    Q_PROPERTY(bool syncStatus READ syncStatus NOTIFY syncStatusChanged)
+    Q_PROPERTY(QString freeSpace READ freeSpace NOTIFY freeSpaceChanged)
+    Q_PROPERTY(bool lliurexOneDriveOpen READ lliurexOneDriveOpen NOTIFY lliurexOneDriveOpenChanged)
+    Q_PROPERTY(bool showSearchFiles READ showSearchFiles NOTIFY showSearchFilesChanged)
+    Q_PROPERTY(LliurexOneDriveWidgetModel* model READ model CONSTANT)
 
     Q_ENUMS(TrayStatus)
 
@@ -57,11 +68,50 @@ public:
 
     LliurexOneDriveWidgetSpacesModel *spacesModel() const;
 
+    int currentIndex();
+    void setCurrentIndex(int);
+
+    QString spaceMail() const;
+    void setSpaceMail(const QString &spaceMail);
+
+    QString spaceType() const;
+    void setSpaceType(const QString &spaceType);
+
+    QString spaceSharePoint() const;
+    void setSpaceSharePoint(const QString &spaceSharePoint);
+
+    QString spaceLibrary() const;
+    void setSpaceLibrary(const QString &spaceLibrary);
+
+    QString oneDriveFolder() const;
+    void setOneDriveFolder(const QString &oneDriveFolder);
+
+    QString freeSpace() const;
+    void setFreeSpace(const QString &freeSpace);
+
+    bool syncStatus();
+    void setSyncStatus(bool);
+    bool lliurexOneDriveOpen();
+    void setLliurexOneDriveOpen(bool);
+    bool showSearchFiles();
+    void setShowSearchFiles(bool);
+
+    LliurexOneDriveWidgetModel *model() const;
+
+
 public slots:
     
     void worker();
     void launchOneDrive();
     void openHelp();
+    void goToSpace(const QString &idSpace);
+    void openFolder();
+    void manageSync();
+    void manageNavigation(int stackIndex);
+    void getLatestFiles();
+    void goToFile(const QString &filePath);
+    bool checkIfFileExists(const QString &filePath);
+
 
 signals:
    
@@ -69,6 +119,16 @@ signals:
     void subToolTipChanged();
     void iconNameChanged();
     void statusChanged();
+    void currentIndexChanged();
+    void spaceMailChanged();
+    void spaceTypeChanged();
+    void spaceSharePointChanged();
+    void spaceLibraryChanged();
+    void oneDriveFolderChanged();
+    void syncStatusChanged();
+    void freeSpaceChanged();
+    void lliurexOneDriveOpenChanged();
+    void showSearchFilesChanged();
 
 private:
 
@@ -80,6 +140,7 @@ private:
     void checkIfStartIsLocked();
     void checkIsRunning();
     void checkStatus();
+    void getSpaceStatusDetails();
 
     QTimer *m_timer = nullptr;
     TrayStatus m_status = PassiveStatus;
@@ -97,6 +158,26 @@ private:
     bool showStartLockMessage=true;
     QPointer<KNotification> m_errorNotification;
     QList <int> previousStatusError;
+    QString spaceConfigPath;
+    QString spaceLocalFolder;
+    QString spaceSystemd;
+    int m_currentIndex=0;
+    QString m_spaceMail;
+    QString m_spaceType;
+    QString m_spaceSharePoint;
+    QString m_spaceLibrary;
+    QString m_oneDriveFolder;
+    QString m_freeSpace;
+    bool m_syncStatus=false;
+    bool m_lliurexOneDriveOpen=false;
+    LliurexOneDriveWidgetModel *m_model = nullptr;
+    QProcess *m_getLatestFiles=nullptr;
+    bool m_showSearchFiles=false;
+    QFile recentFile;
+
+private slots:
+     void getLatestFilesFinished(int exitCode, QProcess::ExitStatus exitStatus);
+
 };
 
 #endif // PLASMA_LLIUREX_ONEDRIVE_WIDGET_H

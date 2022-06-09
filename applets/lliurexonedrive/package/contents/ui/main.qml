@@ -48,7 +48,7 @@ Item {
         Layout.fillWidth:true
         StackLayout{
             id:stackLayout
-            currentIndex:0
+            currentIndex:lliurexOneDriveWidget.currentIndex
             width:parent.width
             height:parent.height
 
@@ -129,29 +129,123 @@ Item {
                     } 
                 }
             }
-            /*
+            
             GridLayout{
                 id: optionsAccount
-                rows: 4
+                rows: 9
                 flow: GridLayout.TopToBottom
                 rowSpacing:10
                 width:parent.width
 
-                RowLayout {
-                    id:folderRow
+                RowLayout{
+                    id:head
+                    Layout.fillWidth:true
+                    QQC2.ToolButton {
+                        height:35
+                        Layout.rightMargin:10
+                        icon.name:"arrow-left.svg"
+                        text:i18n("Back to main view")
+                        onClicked:lliurexOneDriveWidget.manageNavigation(0)
+                    } 
+                } 
+                RowLayout{
+                    id:spaceMailRow
                     Layout.fillWidth:true
                     Layout.leftMargin:5
                     Layout.rightMargin:5
 
                     Components.Label{
-                        id:oneDriveFolder
-                        text:i18n("OneDrive folder:")
+                        id:spaceMail
+                        text:i18n("Email associated:")
                         Layout.rightMargin:5
+                    }
+                    Components.Label{
+                        id:spaceMailValue
+                        text:lliurexOneDriveWidget.spaceMail
+                        Layout.fillWidth:true
+                    }
+                }
+                RowLayout{
+                    id:spaceTypeRow
+                    Layout.fillWidth:true
+                    Layout.leftMargin:5
+                    Layout.rightMargin:5
+
+                    Components.Label{
+                        id:spaceType
+                        text:i18n("Type:")
+                        Layout.rightMargin:5
+
+                    }
+                    Components.Label{
+                        id:spaceTypeValue
+                        text:{
+                            if (lliurexOneDriveWidget.spaceType=="onedrive"){
+                                "OneDrive"
+                            }else{
+                                "SharePoint"
+                            }
+                        }
+                        Layout.fillWidth:true
+                    }
+                }
+                RowLayout{
+                    id:spaceSharePointRow
+                    Layout.fillWidth:true
+                    Layout.leftMargin:5
+                    Layout.rightMargin:5
+                    visible:lliurexOneDriveWidget.spaceType=="onedrive"?false:true
+
+                    Components.Label{
+                        id:spaceSharePoint
+                        text:i18n("SharePoint:")
+                        Layout.rightMargin:5
+
+                    }
+                    Components.Label{
+                        id:spaceSharePointValue
+                        text:lliurexOneDriveWidget.spaceSharePoint
+                        Layout.preferredWidth:300
+                        elide:Text.ElideMiddle
+                    }
+                }    
+                RowLayout{
+                    id:spaceLibraryRow
+                    Layout.fillWidth:true
+                    Layout.leftMargin:5
+                    Layout.rightMargin:5
+                    visible:lliurexOneDriveWidget.spaceType=="onedrive"?false:true
+
+                    Components.Label{
+                        id:spaceLibrary
+                        text:i18n("Library:")
+                        Layout.rightMargin:5
+
+                    }
+                    Components.Label{
+                        id:spaceLibraryValue
+                        text:lliurexOneDriveWidget.spaceLibrary
+                        Layout.preferredWidth:300
+                        elide:Text.ElideMiddle
+                    }
+                }    
+                RowLayout {
+                    id:folderRow
+                    Layout.leftMargin:5
+                    Layout.rightMargin:5
+                    Layout.fillWidth:true
+
+                    Components.Label{
+                        id:oneDriveFolder
+                        text:i18n("Local folder:")
+                        Layout.rightMargin:5
+                        Layout.fillWidth:true
                     }
                     Components.Label{
                         id:oneDriveFolderValue
                         text:lliurexOneDriveWidget.oneDriveFolder
-                        Layout.fillWidth:true
+                        Layout.preferredWidth:300
+                        elide:Text.ElideMiddle
                     }
                     QQC2.ToolButton {
                         width:35
@@ -239,7 +333,7 @@ Item {
                             if (listView.count > 0){
                                 listView.currentIndex=0
                             }
-                            stackLayout.currentIndex=1
+                            lliurexOneDriveWidget.manageNavigation(2)
                         }
                         QQC2.ToolTip{
                             text:i18n("Click to see the list")
@@ -248,7 +342,6 @@ Item {
                 }
                   
             } 
-
             GridLayout{
                 id:filesLayout
                 rows: 2
@@ -256,14 +349,14 @@ Item {
                 rowSpacing:10
                 width:parent.width
                 RowLayout{
-                    id:head
+                    id:headLatestFiles
                     Layout.fillWidth:true
                     QQC2.ToolButton {
                         height:35
                         Layout.rightMargin:10
                         icon.name:"arrow-left.svg"
-                        text:i18n("Back to main view")
-                        onClicked:stackLayout.currentIndex=0 
+                        text:i18n("Back to space view")
+                        onClicked:lliurexOneDriveWidget.manageNavigation(1) 
                     } 
                     Rectangle{
                         Layout.fillWidth:true
@@ -337,7 +430,6 @@ Item {
                     }
                 }
             }
-            */  
         }
     }
     

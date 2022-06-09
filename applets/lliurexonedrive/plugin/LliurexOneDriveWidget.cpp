@@ -23,7 +23,9 @@ LliurexOneDriveWidget::LliurexOneDriveWidget(QObject *parent)
     ,m_timer(new QTimer(this))
     ,m_utils(new LliurexOneDriveWidgetUtils(this))
     ,m_spacesModel(new LliurexOneDriveWidgetSpacesModel(this))
-    
+    ,m_getLatestFiles(new QProcess(this))
+    ,m_model(new LliurexOneDriveWidgetModel(this))
+   
 {
     
     userHome=m_utils->getUserHome();
@@ -32,6 +34,8 @@ LliurexOneDriveWidget::LliurexOneDriveWidget(QObject *parent)
     //initPlasmoid();
 
     connect(m_timer, &QTimer::timeout, this, &LliurexOneDriveWidget::worker);
+    connect(m_getLatestFiles, (void (QProcess::*)(int, QProcess::ExitStatus))&QProcess::finished,
+            this, &LliurexOneDriveWidget::getLatestFilesFinished);
 
     m_timer->start(5000);
     worker();
@@ -214,6 +218,7 @@ LliurexOneDriveWidget::TrayStatus LliurexOneDriveWidget::status() const
     return m_status;
 }
 
+
 void LliurexOneDriveWidget::launchOneDrive()
 {
     KIO::CommandLauncherJob *job = nullptr;
@@ -283,4 +288,275 @@ void LliurexOneDriveWidget::openHelp()
 LliurexOneDriveWidgetSpacesModel *LliurexOneDriveWidget::spacesModel() const
 {
     return m_spacesModel;
+}
+
+void LliurexOneDriveWidget::goToSpace(QString const &idSpace ){
+
+    spaceConfigPath="";
+    spaceLocalFolder="";
+    spaceSystemd="";
+
+    QStringList spaceInfo=m_utils->readSpaceInfo(idSpace);
+    if (spaceInfo.length()>0){
+        setSpaceMail(spaceInfo[0]);
+        setSpaceType(spaceInfo[1]);
+        setSpaceSharePoint(spaceInfo[2]);
+        setSpaceLibrary(spaceInfo[3]);
+        spaceLocalFolder=spaceInfo[4];
+        QFileInfo fi(spaceLocalFolder);
+        setOneDriveFolder(fi.baseName());
+        spaceConfigPath=spaceInfo[5];
+        spaceSystemd=spaceInfo[6];
+        getSpaceStatusDetails();
+   }
+
+}
+
+void LliurexOneDriveWidget::getSpaceStatusDetails(){
+
+    QFile spaceTokenStatus;
+    spaceTokenStatus.setFileName(spaceConfigPath+"/.statusToken");
+    if (spaceTokenStatus.exists()){
+        QStringList spaceDetails=m_utils->readStatusToken(spaceConfigPath);
+        QString freeSpace=m_utils->formatFreeSpace(spaceDetails[2]);
+        setFreeSpace(freeSpace);
+        setSyncStatus(true);
+        setLliurexOneDriveOpen(false);
+    }else{
+        setFreeSpace("");
+        setSyncStatus(false);
+    }
+    setCurrentIndex(1);
+
+}
+
+void LliurexOneDriveWidget::manageNavigation(int stackIndex){
+
+    setCurrentIndex(stackIndex);
+
+}
+
+void LliurexOneDriveWidget::openFolder()
+{
+            
+    QString command="xdg-open "+spaceLocalFolder;
+    KIO::CommandLauncherJob *job = nullptr;
+    job = new KIO::CommandLauncherJob(command);
+    job->start();
+}
+
+void LliurexOneDriveWidget::manageSync(){
+
+    qDebug()<<"Cambiando estado";
+}
+
+void LliurexOneDriveWidget::getLatestFiles(){
+
+    if (m_getLatestFiles->state() != QProcess::NotRunning) {
+        m_getLatestFiles->kill();
+    }
+    m_model->clear();
+    setShowSearchFiles(true);
+    QString cmd="find "+spaceLocalFolder+" -type f -mmin +1 -printf '%T+\t%s\t%p\n' 2>/dev/null | sort -r | more";
+    m_getLatestFiles->start("/bin/sh", QStringList()<< "-c" 
+                       << cmd,QIODevice::ReadOnly);
+}
+
+void LliurexOneDriveWidget::getLatestFilesFinished(int exitCode, QProcess::ExitStatus exitStatus){
+
+    Q_UNUSED(exitCode);
+    QList<QStringList> latestFiles;
+    QStringList searchFilesPout;
+
+    if (exitStatus!=QProcess::NormalExit){
+        m_model->clear();
+        setShowSearchFiles(false);     
+        return;
+    }
+
+    QString stdout=QString::fromLocal8Bit(m_getLatestFiles->readAllStandardOutput());
+    
+    if (stdout!=""){
+        searchFilesPout=stdout.split("\n");
+        if (searchFilesPout.size()>0){
+            QVector<LliurexOneDriveWidgetItem> items;
+            latestFiles=m_utils->getFiles(searchFilesPout,spaceLocalFolder);
+            
+            for (int i=0;i<latestFiles.length();i++){
+                LliurexOneDriveWidgetItem item;
+                item.setFileName(latestFiles[i][0]);
+                item.setFilePath(latestFiles[i][1]);
+                item.setFileDate(latestFiles[i][2]);
+                item.setFileTime(latestFiles[i][3]);
+                items.append(item);
+                
+            }
+            m_model->updateItems(items);
+
+        }else{
+            m_model->clear();
+
+        }
+    }else{
+        m_model->clear();
+    }
+    setShowSearchFiles(false);
+}
+
+void LliurexOneDriveWidget::goToFile(const QString &filePath)
+{
+            
+    QString command="dolphin --select "+filePath;
+    KIO::CommandLauncherJob *job = nullptr;
+    job = new KIO::CommandLauncherJob(command);
+    job->start();
+}
+
+bool LliurexOneDriveWidget::checkIfFileExists(const QString &filePath)
+{
+    recentFile.setFileName(filePath);
+    
+    if (recentFile.exists()){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+int LliurexOneDriveWidget::currentIndex()
+{
+    return m_currentIndex;
+}
+
+void LliurexOneDriveWidget::setCurrentIndex(int currentIndex)
+{
+    if (m_currentIndex != currentIndex) {
+        m_currentIndex = currentIndex;
+        emit currentIndexChanged();
+    }
+}
+
+QString LliurexOneDriveWidget::spaceMail() const
+{
+    return m_spaceMail;
+}
+
+void LliurexOneDriveWidget::setSpaceMail(const QString &spaceMail)
+{
+    if (m_spaceMail != spaceMail) {
+        m_spaceMail = spaceMail;
+        emit spaceMailChanged();
+    }
+}
+
+QString LliurexOneDriveWidget::spaceType() const
+{
+    return m_spaceType;
+}
+
+void LliurexOneDriveWidget::setSpaceType(const QString &spaceType)
+{
+    if (m_spaceType != spaceType) {
+        m_spaceType = spaceType;
+        emit spaceTypeChanged();
+    }
+}
+
+QString LliurexOneDriveWidget::spaceSharePoint() const
+{
+    return m_spaceSharePoint;
+}
+
+void LliurexOneDriveWidget::setSpaceSharePoint(const QString &spaceSharePoint)
+{
+    if (m_spaceSharePoint != spaceSharePoint) {
+        m_spaceSharePoint = spaceSharePoint;
+        emit spaceSharePointChanged();
+    }
+}
+
+QString LliurexOneDriveWidget::spaceLibrary() const
+{
+    return m_spaceLibrary;
+}
+
+void LliurexOneDriveWidget::setSpaceLibrary(const QString &spaceLibrary)
+{
+    if (m_spaceLibrary != spaceLibrary) {
+        m_spaceLibrary = spaceLibrary;
+        emit spaceLibraryChanged();
+    }
+}
+
+
+QString LliurexOneDriveWidget::oneDriveFolder() const
+{
+    return m_oneDriveFolder;
+}
+
+void LliurexOneDriveWidget::setOneDriveFolder(const QString &oneDriveFolder)
+{
+    if (m_oneDriveFolder != oneDriveFolder) {
+        m_oneDriveFolder = oneDriveFolder;
+        emit oneDriveFolderChanged();
+    }
+}
+
+QString LliurexOneDriveWidget::freeSpace() const
+{
+    return m_freeSpace;
+}
+
+void LliurexOneDriveWidget::setFreeSpace(const QString &freeSpace)
+{
+    if (m_freeSpace != freeSpace) {
+        m_freeSpace = freeSpace;
+        emit freeSpaceChanged();
+    }
+}
+
+bool LliurexOneDriveWidget::syncStatus()
+{
+    return m_syncStatus;
+}
+
+void LliurexOneDriveWidget::setSyncStatus(bool syncStatus)
+{
+    if (m_syncStatus != syncStatus) {
+        m_syncStatus = syncStatus;
+        emit syncStatusChanged();
+    }
+}
+
+
+bool LliurexOneDriveWidget::lliurexOneDriveOpen()
+{
+    return m_lliurexOneDriveOpen;
+}
+
+void LliurexOneDriveWidget::setLliurexOneDriveOpen(bool lliurexOneDriveOpen)
+{
+    if (m_lliurexOneDriveOpen != lliurexOneDriveOpen) {
+        m_lliurexOneDriveOpen = lliurexOneDriveOpen;
+        emit lliurexOneDriveOpenChanged();
+    }
+}
+
+
+bool LliurexOneDriveWidget::showSearchFiles()
+{
+    return m_showSearchFiles;
+}
+
+void LliurexOneDriveWidget::setShowSearchFiles(bool showSearchFiles)
+{
+    if (m_showSearchFiles != showSearchFiles) {
+        m_showSearchFiles = showSearchFiles;
+        emit showSearchFilesChanged();
+    }
+}
+
+LliurexOneDriveWidgetModel *LliurexOneDriveWidget::model() const
+{
+    return m_model;
 }
