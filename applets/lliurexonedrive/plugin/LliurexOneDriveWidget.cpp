@@ -23,6 +23,7 @@ LliurexOneDriveWidget::LliurexOneDriveWidget(QObject *parent)
     ,m_timer(new QTimer(this))
     ,m_utils(new LliurexOneDriveWidgetUtils(this))
     ,m_spacesModel(new LliurexOneDriveWidgetSpacesModel(this))
+    ,m_isLliurexOneDriveOpen(new QProcess(this))
     ,m_getLatestFiles(new QProcess(this))
     ,m_model(new LliurexOneDriveWidgetModel(this))
    
@@ -34,6 +35,8 @@ LliurexOneDriveWidget::LliurexOneDriveWidget(QObject *parent)
     //initPlasmoid();
 
     connect(m_timer, &QTimer::timeout, this, &LliurexOneDriveWidget::worker);
+    connect(m_isLliurexOneDriveOpen, (void (QProcess::*)(int, QProcess::ExitStatus))&QProcess::finished,
+            this, &LliurexOneDriveWidget::isLliurexOneDriveOpenProcessFinished);
     connect(m_getLatestFiles, (void (QProcess::*)(int, QProcess::ExitStatus))&QProcess::finished,
             this, &LliurexOneDriveWidget::getLatestFilesFinished);
 
@@ -44,33 +47,50 @@ LliurexOneDriveWidget::LliurexOneDriveWidget(QObject *parent)
 void LliurexOneDriveWidget::worker(){
 
     bool isPassiveStatus=true;
+    bool spaceIdMatch=false;
 
     if (!isWorking){
         if (LliurexOneDriveWidget::TARGET_FILE.exists() ) {
             isWorking=true;
             m_spacesModel->clear();
-            QVariantList spacesInfo;
             QString onedriveConfigPath=userHome+"/.config/lliurex-onedrive-config/onedriveConfig.json";
-            spacesInfo=m_utils->getSpacesInfo(onedriveConfigPath);
-            
-            if (spacesInfo.length()>0){
+            oneDriveSpacesConfig=m_utils->getSpacesInfo(onedriveConfigPath);
+            if (oneDriveSpacesConfig.length()>0){
                 QVector<LliurexOneDriveWidgetSpaceItem> items;
-                for (QVariantList::iterator j=spacesInfo.begin();j!=spacesInfo.end();j++){
+                for (QVariantList::iterator j=oneDriveSpacesConfig.begin();j!=oneDriveSpacesConfig.end();j++){
                     QVariantList tmpList=(*j).toList();
                     LliurexOneDriveWidgetSpaceItem item;
                     item.setId(tmpList[0].toString());
-                    item.setName(tmpList[1].toString());
-                    item.setStatus(tmpList[2].toString());
-                    item.setIsRunning(tmpList[3].toBool());
-                    item.setLocalFolderWarning(tmpList[4].toBool());
+                    item.setName(tmpList[6].toString());
+                    item.setStatus(tmpList[9].toString());
+                    item.setIsRunning(tmpList[11].toBool());
+                    item.setLocalFolderWarning(tmpList[12].toBool());
                     items.append(item);
-            
+                    if ((m_currentIndex!=0)&&(spaceId!="")){
+                        if (spaceId==tmpList[0].toString()){
+                            spaceIdMatch=true;
+                            setFreeSpace(tmpList[10].toString());
+                            setSyncStatus(tmpList[11].toBool());
+                            if (tmpList[12].toBool()){
+                                setLliurexOneDriveOpen(true);
+                            }else{
+                                if (isLliurexOneDriveOpen){
+                                    setLliurexOneDriveOpen(true);
+                                }else{
+                                    setLliurexOneDriveOpen(false);
+
+                                }
+                            }
+                        }
+
+                    }
                 }
                 m_spacesModel->updateItems(items);
                 isPassiveStatus=false;
 
             }else{
                 m_spacesModel->clear();
+                isPassiveStatus=true;
             }
 
         }
@@ -79,16 +99,18 @@ void LliurexOneDriveWidget::worker(){
             setToolTip(tooltip);
             checkIfStartIsLocked();
             setStatus(ActiveStatus);
+            if ((spaceId!="")&&(!spaceIdMatch)){
+                manageNavigation(0);
+            }
         }else{
             setStatus(PassiveStatus);
             previousError=false;
             previousStatusError.clear();
             warning=false;
             isWorking=false;
+            manageNavigation(0);
         }
-    
     }
-
 }
 
 void LliurexOneDriveWidget::checkIfStartIsLocked(){
@@ -99,6 +121,7 @@ void LliurexOneDriveWidget::checkIfStartIsLocked(){
         warning=false;
         previousError=false;
         checkExecuted=false;
+        isLliurexOneDriveOpen=true;
         subtooltip=i18n("Synchronization of one or more spaces is stopped. Detected problems with local folder");
         updateWidget(subtooltip,"onedrive-error");
         if (showStartLockMessage){
@@ -110,6 +133,7 @@ void LliurexOneDriveWidget::checkIfStartIsLocked(){
             showStartLockMessage=false;
         }
     }else{
+        checkIsLliurexOneDriveOpen();
         showStartLockMessage=true;
         isWorking=false;
     }
@@ -134,13 +158,45 @@ void LliurexOneDriveWidget::checkIsRunning(){
             checkExecuted=false;
             isWorking=false;
         }              
+    }else{
+        isWorking=false;
     }
 }
+
+void LliurexOneDriveWidget::checkIsLliurexOneDriveOpen(){
+
+    if (m_isLliurexOneDriveOpen->state() != QProcess::NotRunning) {
+        m_isLliurexOneDriveOpen->kill();
+    }
+    QString cmd="ps -ef | grep '/usr/bin/lliurex-onedrive' | grep -v 'grep'";
+    m_isLliurexOneDriveOpen->start("/bin/sh", QStringList()<< "-c" 
+                       << cmd,QIODevice::ReadOnly);
+  
+}
+
+void LliurexOneDriveWidget::isLliurexOneDriveOpenProcessFinished(int exitCode, QProcess::ExitStatus exitStatus){
+
+    Q_UNUSED(exitCode);
+
+    if (exitStatus!=QProcess::NormalExit){
+        isLliurexOneDriveOpen=true;
+        return;
+    }
+    QString stdout=QString::fromLocal8Bit(m_isLliurexOneDriveOpen->readAllStandardOutput());
+    QStringList pout=stdout.split("\n");
+    
+    if (pout[0].size()>0){
+        isLliurexOneDriveOpen=true;
+    }else{
+        isLliurexOneDriveOpen=false;
+    }
+
+} 
 
 void LliurexOneDriveWidget::checkStatus(){
 
     lastCheck=lastCheck+5;
-    if (lastCheck>90){
+    if (lastCheck>15){
         bool showNotification=false;
         QString msgError;
         bool processError=true;
@@ -292,48 +348,43 @@ LliurexOneDriveWidgetSpacesModel *LliurexOneDriveWidget::spacesModel() const
 
 void LliurexOneDriveWidget::goToSpace(QString const &idSpace ){
 
-    spaceConfigPath="";
-    spaceLocalFolder="";
-    spaceSystemd="";
-
-    QStringList spaceInfo=m_utils->readSpaceInfo(idSpace);
-    if (spaceInfo.length()>0){
-        setSpaceMail(spaceInfo[0]);
-        setSpaceType(spaceInfo[1]);
-        setSpaceSharePoint(spaceInfo[2]);
-        setSpaceLibrary(spaceInfo[3]);
-        spaceLocalFolder=spaceInfo[4];
-        QFileInfo fi(spaceLocalFolder);
-        setOneDriveFolder(fi.baseName());
-        spaceConfigPath=spaceInfo[5];
-        spaceSystemd=spaceInfo[6];
-        getSpaceStatusDetails();
-   }
-
-}
-
-void LliurexOneDriveWidget::getSpaceStatusDetails(){
-
-    QFile spaceTokenStatus;
-    spaceTokenStatus.setFileName(spaceConfigPath+"/.statusToken");
-    if (spaceTokenStatus.exists()){
-        QStringList spaceDetails=m_utils->readStatusToken(spaceConfigPath);
-        QString freeSpace=m_utils->formatFreeSpace(spaceDetails[2]);
-        setFreeSpace(freeSpace);
-        setSyncStatus(true);
-        setLliurexOneDriveOpen(false);
-    }else{
-        setFreeSpace("");
-        setSyncStatus(false);
+    cleanSpaceInfoVars();
+    for (QVariantList::iterator j=oneDriveSpacesConfig.begin();j!=oneDriveSpacesConfig.end();j++){
+        QVariantList tmpList=(*j).toList();
+        if (idSpace==tmpList[0].toString()){
+            spaceId=idSpace;
+            setSpaceMail(tmpList[1].toString());
+            setSpaceType(tmpList[2].toString());
+            setSpaceSharePoint(tmpList[3].toString());
+            setSpaceLibrary(tmpList[4].toString());
+            spaceLocalFolder=tmpList[5].toString();
+            setOneDriveFolder(tmpList[6].toString());
+            spaceConfigPath=tmpList[7].toString();
+            spaceSystemd=tmpList[8].toString();
+            setFreeSpace(tmpList[10].toString());
+            setSyncStatus(tmpList[11].toBool());
+            if (tmpList[12].toBool()){
+                setLliurexOneDriveOpen(true);   
+            }else{
+                if (isLliurexOneDriveOpen){
+                    setLliurexOneDriveOpen(true);
+                }else{
+                    setLliurexOneDriveOpen(false);
+                }
+            }
+            manageNavigation(1);
+            break;
+        }
     }
-    setCurrentIndex(1);
-
+   
 }
 
 void LliurexOneDriveWidget::manageNavigation(int stackIndex){
 
     setCurrentIndex(stackIndex);
-
+    if (stackIndex==0){
+        cleanSpaceInfoVars();
+    }
 }
 
 void LliurexOneDriveWidget::openFolder()
@@ -347,7 +398,26 @@ void LliurexOneDriveWidget::openFolder()
 
 void LliurexOneDriveWidget::manageSync(){
 
-    qDebug()<<"Cambiando estado";
+    QString cmd;
+    if (m_syncStatus){
+        cmd="systemctl --user stop "+spaceSystemd; 
+    }else{
+        m_utils->restoreSyncListFile(spaceConfigPath);
+        cmd="systemctl --user start "+spaceSystemd;
+    }
+    
+    KIO::CommandLauncherJob *job = nullptr;
+    job = new KIO::CommandLauncherJob(cmd);
+    job->start();
+
+}
+
+void LliurexOneDriveWidget::cleanSpaceInfoVars(){
+
+    spaceConfigPath="";
+    spaceLocalFolder="";
+    spaceSystemd="";
+    spaceId="";
 }
 
 void LliurexOneDriveWidget::getLatestFiles(){

@@ -126,9 +126,16 @@ QVariantList LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPat
             totalSpaces+=1;
             QVariantList tmpItem;
             tmpItem.append(val.toObject().value("id").toString());
+            tmpItem.append(val.toObject().value("email").toString());
+            tmpItem.append(val.toObject().value("type").toString());
+            tmpItem.append(val.toObject().value("sharepoint").toString());
+            tmpItem.append(val.toObject().value("library").toString());
+            tmpItem.append(val.toObject().value("localFolder").toString());
             QFileInfo fi(val.toObject().value("localFolder").toString());
             tmpItem.append(fi.baseName());
             QString spaceConfigPath=val.toObject().value("configPath").toString();
+            tmpItem.append(spaceConfigPath);
+            tmpItem.append(val.toObject().value("systemd").toString());
             QStringList statusResult=readStatusToken(spaceConfigPath);
             tmpItem.append(statusResult[1].toInt());
             spacesStatusCode.append(statusResult[1].toInt());
@@ -136,6 +143,7 @@ QVariantList LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPat
             if (isSpaceRunning){
                 areSpacesSyncRunningCount+=1;
             }
+            tmpItem.append(formatFreeSpace(statusResult[2]));
             tmpItem.append(isSpaceRunning);
             QList<bool>checkFolder=checkLocalFolder(spaceConfigPath);
             if ((!checkFolder[0])&&(!checkFolder[1])){
@@ -208,32 +216,6 @@ QString LliurexOneDriveWidgetUtils::getGlobalStatus(){
 
 }
 
-QStringList LliurexOneDriveWidgetUtils::readSpaceInfo(QString idSpace){
-
-    QStringList spaceInfo;
-
-    foreach(const QJsonValue &val, onedriveConfig){
-        QString tmpId=val.toObject().value("id").toString();
-        if (idSpace==tmpId){
-            QString tmpTokenPath=val.toObject().value("configPath").toString()+"/refresh_token";
-            QFile tmpTokenFile;
-            tmpTokenFile.setFileName(tmpTokenPath);
-            if (tmpTokenFile.exists()){
-                spaceInfo.append(val.toObject().value("email").toString());
-                spaceInfo.append(val.toObject().value("type").toString());
-                spaceInfo.append(val.toObject().value("sharepoint").toString());
-                spaceInfo.append(val.toObject().value("library").toString());
-                spaceInfo.append(val.toObject().value("localFolder").toString());
-                spaceInfo.append(val.toObject().value("configPath").toString());
-                spaceInfo.append(val.toObject().value("systemd").toString());
-            }
-        break;
-        }
-    }    
-
-    return spaceInfo;
-}
-
 QList<QStringList> LliurexOneDriveWidgetUtils::getFiles(QStringList info, QString spaceLocalFolder){
 
     QList<QStringList> lastestFiles;
@@ -275,5 +257,20 @@ QString LliurexOneDriveWidgetUtils::formatFileDate(QString fileDate){
 
 }
 
+void LliurexOneDriveWidgetUtils::restoreSyncListFile(QString spaceConfigPath)
+{
+    
+    syncList.setFileName(spaceConfigPath+"/sync_list.back");
+    syncListHash.setFileName(spaceConfigPath+"/.sync_list.hash.back");
+
+    if (syncList.exists()){
+        syncList.rename(spaceConfigPath+"/sync_list");
+    }
+
+    if (syncListHash.exists()){
+        syncListHash.rename(spaceConfigPath+"/.sync_list.hash");
+    }
+
+}
 
 

@@ -140,7 +140,7 @@ private:
     void checkIfStartIsLocked();
     void checkIsRunning();
     void checkStatus();
-    void getSpaceStatusDetails();
+    void cleanSpaceInfoVars();
 
     QTimer *m_timer = nullptr;
     TrayStatus m_status = PassiveStatus;
@@ -150,7 +150,7 @@ private:
     QString m_subToolTip;
     QFile TARGET_FILE;
     bool isWorking=false;
-    int lastCheck=80;
+    int lastCheck=10;
     int countRepeatGeneralError;
     bool previousError=false;
     bool checkExecuted=false;
@@ -158,6 +158,8 @@ private:
     bool showStartLockMessage=true;
     QPointer<KNotification> m_errorNotification;
     QList <int> previousStatusError;
+    QVariantList oneDriveSpacesConfig;
+    QString spaceId;
     QString spaceConfigPath;
     QString spaceLocalFolder;
     QString spaceSystemd;
@@ -171,11 +173,16 @@ private:
     bool m_syncStatus=false;
     bool m_lliurexOneDriveOpen=false;
     LliurexOneDriveWidgetModel *m_model = nullptr;
+    QProcess *m_isLliurexOneDriveOpen=nullptr;
+    bool isLliurexOneDriveOpen=false;
     QProcess *m_getLatestFiles=nullptr;
     bool m_showSearchFiles=false;
     QFile recentFile;
 
 private slots:
+
+     void checkIsLliurexOneDriveOpen();
+     void isLliurexOneDriveOpenProcessFinished(int exitCode, QProcess::ExitStatus exitStatus);
      void getLatestFilesFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
 };
