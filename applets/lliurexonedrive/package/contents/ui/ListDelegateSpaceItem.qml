@@ -32,13 +32,39 @@ Components.ListItem {
 
     Item{
     	id:label
-    	height:30
-        Components.Label{
-            id:spaceName
-            text:nameSpace
-            width:265
-            elide:Text.ElideMiddle
+    	height:45
+        Column{
+            id:spaceRow
             anchors.verticalCenter: parent.verticalCenter
+
+    		Components.Label{
+    		    id:spaceName
+    		    text:nameSpace
+    		    width:270
+    		    elide:Text.ElideMiddle
+                font.bold:{
+                    if (spaceItem.ListView.isCurrentItem){
+                        true
+                    }else{
+                        false
+                    }
+                }	
+    		}
+    		Components.Label{
+    			id:spaceStatusText
+    			text:getStatusText(statusSpace)
+    			width:270
+    			elide:Text.ElideMiddle
+    			visible:spaceItem.ListView.isCurrentItem
+                font.italic:true
+                font.bold:{
+                    if (spaceItem.ListView.isCurrentItem){
+                        true
+                    }else{
+                        false
+                    }
+                }
+            }
         }
         Image {
             id:spaceStatusIcon
@@ -46,7 +72,7 @@ Components.ListItem {
             sourceSize.width:32
             sourceSize.height:32
             anchors.leftMargin:15
-            anchors.left:spaceName.right
+            anchors.left:spaceRow.right
             anchors.verticalCenter:parent.verticalCenter
         }  
         Image {
@@ -91,21 +117,64 @@ Components.ListItem {
 
     function getStatusIcon(statusSpace,localFolderWarning){
 
-        switch (statusSpace){
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-                if (!localFolderWarning){
+        if (localFolderWarning){
+            return "/usr/share/icons/breeze/status/16/state-warning.svg"
+        }else{
+            switch (statusSpace){
+                case 0:
+                case 3:
                     return "/usr/share/icons/breeze/status/16/state-ok.svg"
-                }else{
+                    break;
+                case 2:
+                case 4:
+                    return "/usr/share/icons/breeze/status/16/state-sync.svg"
+                    break;
+                default:
                     return "/usr/share/icons/breeze/status/16/state-warning.svg"
-                }
-                break;
-            default:
-                return "/usr/share/icons/breeze/status/16/state-warning.svg"
-                break
+                    break
+            }
+               
+     
         }
+
+    }
+
+    function getStatusText(statusSpace,localFolderWarning){
+
+        var msg=""
+        if (localFolderWarning){
+            msg=i18n("Local folder has been deleted or emptied")
+
+        }else{
+            switch (statusSpace){
+                case 0:
+                    msg=i18n("All remote content synchronized")
+                    break
+                case 2:
+                    msg=i18n("Remote content pending syncing")
+                    break;
+                case 4:
+                    msg=i18n("Uploading pending changes")
+                    break
+                case -1:
+                    msg=i18n("OneDrive API return an error")
+                    break
+                case -2:
+                    msg=i18n("Unable to connect with OneDrive")
+                    break
+                case -4:
+                    msg=i18n("Free space is 0")
+                    break
+                case -7:
+                    msg=i18n("Authorization has expired")
+                    break
+                case -9:
+                    msg=i18n("Microsoft OneDrive not available")
+                    break
+            }
+
+        }
+        return msg
 
     }
     

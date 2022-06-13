@@ -61,17 +61,17 @@ void LliurexOneDriveWidget::worker(){
                     QVariantList tmpList=(*j).toList();
                     LliurexOneDriveWidgetSpaceItem item;
                     item.setId(tmpList[0].toString());
-                    item.setName(tmpList[6].toString());
-                    item.setStatus(tmpList[9].toString());
-                    item.setIsRunning(tmpList[11].toBool());
-                    item.setLocalFolderWarning(tmpList[12].toBool());
+                    item.setName(tmpList[4].toString());
+                    item.setStatus(tmpList[7].toString());
+                    item.setIsRunning(tmpList[9].toBool());
+                    item.setLocalFolderWarning(tmpList[10].toBool());
                     items.append(item);
                     if ((m_currentIndex!=0)&&(spaceId!="")){
                         if (spaceId==tmpList[0].toString()){
                             spaceIdMatch=true;
-                            setFreeSpace(tmpList[10].toString());
-                            setSyncStatus(tmpList[11].toBool());
-                            if (tmpList[12].toBool()){
+                            setFreeSpace(tmpList[8].toString());
+                            setSyncStatus(tmpList[9].toBool());
+                            if (tmpList[10].toBool()){
                                 setLliurexOneDriveOpen(true);
                             }else{
                                 if (isLliurexOneDriveOpen){
@@ -355,15 +355,13 @@ void LliurexOneDriveWidget::goToSpace(QString const &idSpace ){
             spaceId=idSpace;
             setSpaceMail(tmpList[1].toString());
             setSpaceType(tmpList[2].toString());
-            setSpaceSharePoint(tmpList[3].toString());
-            setSpaceLibrary(tmpList[4].toString());
-            spaceLocalFolder=tmpList[5].toString();
-            setOneDriveFolder(tmpList[6].toString());
-            spaceConfigPath=tmpList[7].toString();
-            spaceSystemd=tmpList[8].toString();
-            setFreeSpace(tmpList[10].toString());
-            setSyncStatus(tmpList[11].toBool());
-            if (tmpList[12].toBool()){
+            spaceLocalFolder=tmpList[3].toString();
+            setOneDriveFolder(tmpList[4].toString());
+            spaceConfigPath=tmpList[5].toString();
+            spaceSystemd=tmpList[6].toString();
+            setFreeSpace(tmpList[8].toString());
+            setSyncStatus(tmpList[9].toBool());
+            if (tmpList[10].toBool()){
                 setLliurexOneDriveOpen(true);   
             }else{
                 if (isLliurexOneDriveOpen){
@@ -532,33 +530,6 @@ void LliurexOneDriveWidget::setSpaceType(const QString &spaceType)
     }
 }
 
-QString LliurexOneDriveWidget::spaceSharePoint() const
-{
-    return m_spaceSharePoint;
-}
-
-void LliurexOneDriveWidget::setSpaceSharePoint(const QString &spaceSharePoint)
-{
-    if (m_spaceSharePoint != spaceSharePoint) {
-        m_spaceSharePoint = spaceSharePoint;
-        emit spaceSharePointChanged();
-    }
-}
-
-QString LliurexOneDriveWidget::spaceLibrary() const
-{
-    return m_spaceLibrary;
-}
-
-void LliurexOneDriveWidget::setSpaceLibrary(const QString &spaceLibrary)
-{
-    if (m_spaceLibrary != spaceLibrary) {
-        m_spaceLibrary = spaceLibrary;
-        emit spaceLibraryChanged();
-    }
-}
-
-
 QString LliurexOneDriveWidget::oneDriveFolder() const
 {
     return m_oneDriveFolder;
@@ -597,7 +568,6 @@ void LliurexOneDriveWidget::setSyncStatus(bool syncStatus)
         emit syncStatusChanged();
     }
 }
-
 
 bool LliurexOneDriveWidget::lliurexOneDriveOpen()
 {

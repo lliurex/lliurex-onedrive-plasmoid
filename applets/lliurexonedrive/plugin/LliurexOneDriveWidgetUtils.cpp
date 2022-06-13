@@ -33,14 +33,16 @@ QString LliurexOneDriveWidgetUtils::getUserHome() {
 }
 bool LliurexOneDriveWidgetUtils::checkIfSpaceSyncIsRunning(QString spaceConfigPath){
 
-    QFile statusToken;
-    statusToken.setFileName(spaceConfigPath+"/.statusToken");
+    
+    QFile runToken;
+    runToken.setFileName(spaceConfigPath+"/.runToken");
 
-    if (statusToken.exists()){
+    if (runToken.exists()){
         return true;
     }else{
         return false;
     }
+    
 }
 
 QStringList LliurexOneDriveWidgetUtils::readStatusToken(QString spaceConfigPath){
@@ -128,8 +130,6 @@ QVariantList LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPat
             tmpItem.append(val.toObject().value("id").toString());
             tmpItem.append(val.toObject().value("email").toString());
             tmpItem.append(val.toObject().value("type").toString());
-            tmpItem.append(val.toObject().value("sharepoint").toString());
-            tmpItem.append(val.toObject().value("library").toString());
             tmpItem.append(val.toObject().value("localFolder").toString());
             QFileInfo fi(val.toObject().value("localFolder").toString());
             tmpItem.append(fi.baseName());

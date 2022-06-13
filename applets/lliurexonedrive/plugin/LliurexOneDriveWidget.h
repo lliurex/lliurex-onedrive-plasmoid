@@ -28,8 +28,6 @@ class LliurexOneDriveWidget : public QObject
     Q_PROPERTY(int currentIndex READ currentIndex NOTIFY currentIndexChanged)
     Q_PROPERTY(QString spaceMail READ spaceMail NOTIFY spaceMailChanged)
     Q_PROPERTY(QString spaceType READ spaceType NOTIFY spaceTypeChanged)
-    Q_PROPERTY(QString spaceSharePoint READ spaceSharePoint NOTIFY spaceSharePointChanged)
-    Q_PROPERTY(QString spaceLibrary READ spaceLibrary NOTIFY spaceLibraryChanged)
     Q_PROPERTY(QString oneDriveFolder READ oneDriveFolder NOTIFY oneDriveFolderChanged)
     Q_PROPERTY(bool syncStatus READ syncStatus NOTIFY syncStatusChanged)
     Q_PROPERTY(QString freeSpace READ freeSpace NOTIFY freeSpaceChanged)
@@ -77,12 +75,6 @@ public:
     QString spaceType() const;
     void setSpaceType(const QString &spaceType);
 
-    QString spaceSharePoint() const;
-    void setSpaceSharePoint(const QString &spaceSharePoint);
-
-    QString spaceLibrary() const;
-    void setSpaceLibrary(const QString &spaceLibrary);
-
     QString oneDriveFolder() const;
     void setOneDriveFolder(const QString &oneDriveFolder);
 
@@ -122,8 +114,6 @@ signals:
     void currentIndexChanged();
     void spaceMailChanged();
     void spaceTypeChanged();
-    void spaceSharePointChanged();
-    void spaceLibraryChanged();
     void oneDriveFolderChanged();
     void syncStatusChanged();
     void freeSpaceChanged();
@@ -166,8 +156,6 @@ private:
     int m_currentIndex=0;
     QString m_spaceMail;
     QString m_spaceType;
-    QString m_spaceSharePoint;
-    QString m_spaceLibrary;
     QString m_oneDriveFolder;
     QString m_freeSpace;
     bool m_syncStatus=false;

@@ -132,7 +132,7 @@ Item {
             
             GridLayout{
                 id: optionsAccount
-                rows: 9
+                rows: 7
                 flow: GridLayout.TopToBottom
                 rowSpacing:10
                 width:parent.width
@@ -142,17 +142,39 @@ Item {
                     Layout.fillWidth:true
                     QQC2.ToolButton {
                         height:35
-                        Layout.rightMargin:10
+                        width:35
+                        Layout.rightMargin:optionsAccount.width/3-35/2
                         icon.name:"arrow-left.svg"
-                        text:i18n("Back to main view")
+                        QQC2.ToolTip{
+                            text:i18n("Back to main view")
+                        }
                         onClicked:lliurexOneDriveWidget.manageNavigation(0)
                     } 
+
+                    Components.Label{
+                        id:headText
+                        text:i18n("Space details")
+                        font.italic:true
+                        font.pointSize:11
+                        Layout.fillWidth:true
+                        Layout.alignment:Qt.AlignHCenter
+                    }
+                    QQC2.ToolButton {
+                        id:configureBtn
+                        height:35
+                        width:35
+                        icon.name:"configure.svg"
+                        QQC2.ToolTip{
+                            text:i18n("Manage Space")
+                        }                        onClicked:lliurexOneDriveWidget.manageNavigation(0)
+                    } 
                 } 
-                RowLayout{
+                 RowLayout{
                     id:spaceMailRow
                     Layout.fillWidth:true
                     Layout.leftMargin:5
                     Layout.rightMargin:5
+                    Layout.bottomMargin:5
 
                     Components.Label{
                         id:spaceMail
@@ -353,20 +375,25 @@ Item {
                     Layout.fillWidth:true
                     QQC2.ToolButton {
                         height:35
-                        Layout.rightMargin:10
+                        width:35
                         icon.name:"arrow-left.svg"
-                        text:i18n("Back to space view")
+                        Layout.rightMargin:filesLayout.width/3-35/2
+                        QQC2.ToolTip{   
+                            text:i18n("Back to space view")
+                        }
                         onClicked:lliurexOneDriveWidget.manageNavigation(1) 
                     } 
-                    Rectangle{
+                   Components.Label{
+                        id:headFilesText
+                        text:i18n("Files details")
+                        font.italic:true
+                        font.pointSize:11
                         Layout.fillWidth:true
-                        color:"transparent"
-                        border.color:"transparent"
+                        Layout.alignment:Qt.AlignHCenter
                     }
                     QQC2.ToolButton {
                         width:35
                         height:35
-                        Layout.rightMargin:5
                         Layout.alignment:Qt.AlignRight
                         icon.name:"view-refresh"
                         QQC2.ToolTip{
