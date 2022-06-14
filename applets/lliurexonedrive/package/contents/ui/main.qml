@@ -165,8 +165,8 @@ Item {
                         width:35
                         icon.name:"configure.svg"
                         QQC2.ToolTip{
-                            text:i18n("Manage Space")
-                        }                        onClicked:lliurexOneDriveWidget.manageNavigation(0)
+                            text:i18n("Manage space")
+                        }                        onClicked:lliurexOneDriveWidget.launchOneDrive(true)
                     } 
                 } 
                  RowLayout{
@@ -211,46 +211,6 @@ Item {
                         Layout.fillWidth:true
                     }
                 }
-                RowLayout{
-                    id:spaceSharePointRow
-                    Layout.fillWidth:true
-                    Layout.leftMargin:5
-                    Layout.rightMargin:5
-                    visible:lliurexOneDriveWidget.spaceType=="onedrive"?false:true
-
-                    Components.Label{
-                        id:spaceSharePoint
-                        text:i18n("SharePoint:")
-                        Layout.rightMargin:5
-
-                    }
-                    Components.Label{
-                        id:spaceSharePointValue
-                        text:lliurexOneDriveWidget.spaceSharePoint
-                        Layout.preferredWidth:300
-                        elide:Text.ElideMiddle
-                    }
-                }    
-                RowLayout{
-                    id:spaceLibraryRow
-                    Layout.fillWidth:true
-                    Layout.leftMargin:5
-                    Layout.rightMargin:5
-                    visible:lliurexOneDriveWidget.spaceType=="onedrive"?false:true
-
-                    Components.Label{
-                        id:spaceLibrary
-                        text:i18n("Library:")
-                        Layout.rightMargin:5
-
-                    }
-                    Components.Label{
-                        id:spaceLibraryValue
-                        text:lliurexOneDriveWidget.spaceLibrary
-                        Layout.preferredWidth:300
-                        elide:Text.ElideMiddle
-                    }
-                }    
                 RowLayout {
                     id:folderRow
                     Layout.leftMargin:5
@@ -275,7 +235,7 @@ Item {
                         icon.name:"document-open-folder.svg"
                         onClicked:lliurexOneDriveWidget.openFolder()
                         QQC2.ToolTip{
-                            text:i18n("Click to open folder")
+                            text:i18n("Click to open")
                         }
                     } 
                 }
@@ -288,7 +248,7 @@ Item {
 
                     Components.Label{
                         id:freeSpace
-                        text:i18n("Free Space on OneDrive:")
+                        text:i18n("Free Space:")
                         Layout.rightMargin:5
                     }
                     Components.Label{
@@ -385,7 +345,7 @@ Item {
                     } 
                    Components.Label{
                         id:headFilesText
-                        text:i18n("Files details")
+                        text:i18n("List of files")
                         font.italic:true
                         font.pointSize:11
                         Layout.fillWidth:true
@@ -420,14 +380,14 @@ Item {
                     ListView{
                         id:listView
                         focus:true
-                        model:lliurexOneDriveWidget.model
+                        model:lliurexOneDriveWidget.filesModel
                         currentIndex: -1
                         boundsBehavior: Flickable.StopAtBounds
                         interactive: contentHeight > height
                         highlight: Rectangle { color: "#add8e6"; opacity:0.8;border.color:"#53a1c9" }
                         highlightMoveDuration: 0
                         highlightResizeDuration: 0
-                        delegate: ListDelegateItem {
+                        delegate: ListDelegateFileItem {
                             fileName: model.fileName
                             filePath: model.filePath
                             fileDate: model.fileDate
@@ -462,6 +422,6 @@ Item {
     
 
     function action_launchOneDrive() {
-        lliurexOneDriveWidget.launchOneDrive()
+        lliurexOneDriveWidget.launchOneDrive(false)
     }
 }   

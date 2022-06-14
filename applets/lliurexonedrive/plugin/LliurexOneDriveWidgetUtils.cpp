@@ -34,10 +34,9 @@ QString LliurexOneDriveWidgetUtils::getUserHome() {
 bool LliurexOneDriveWidgetUtils::checkIfSpaceSyncIsRunning(QString spaceConfigPath){
 
     
-    QFile runToken;
-    runToken.setFileName(spaceConfigPath+"/.runToken");
+    spaceRunToken.setFileName(spaceConfigPath+"/.runToken");
 
-    if (runToken.exists()){
+    if (spaceRunToken.exists()){
         return true;
     }else{
         return false;
@@ -111,6 +110,7 @@ QVariantList LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPat
     tmpConfig.close();
 
     QJsonParseError err;
+    
     auto doc=QJsonDocument::fromJson(contentFile,&err);
     if (err.error != QJsonParseError::NoError){
         qDebug()<<err.errorString();
@@ -162,6 +162,7 @@ QVariantList LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPat
         areSpacesSyncRunning=false;
     }
 
+    qDebug()<<"Warnings "<<localFolderWarningCount;
     if (localFolderWarningCount>0){
         isLocalFolderWarning=true;
     }else{
@@ -259,6 +260,7 @@ QString LliurexOneDriveWidgetUtils::formatFileDate(QString fileDate){
 
 void LliurexOneDriveWidgetUtils::restoreSyncListFile(QString spaceConfigPath)
 {
+    qDebug()<<"recibido"<<spaceConfigPath;
     
     syncList.setFileName(spaceConfigPath+"/sync_list.back");
     syncListHash.setFileName(spaceConfigPath+"/.sync_list.hash.back");

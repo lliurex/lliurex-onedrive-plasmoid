@@ -13,8 +13,8 @@ set(llxonedrivewidget_SRCS
     plugin/LliurexOneDriveWidget.cpp
     plugin/LliurexOneDriveWidgetSpaceItem.cpp
     plugin/LliurexOneDriveWidgetSpacesModel.cpp
-    plugin/LliurexOneDriveWidgetModel.cpp
-    plugin/LliurexOneDriveWidgetItem.cpp
+    plugin/LliurexOneDriveWidgetFilesModel.cpp
+    plugin/LliurexOneDriveWidgetFileItem.cpp
     plugin/LliurexOneDriveWidgetUtils.cpp
    
 )

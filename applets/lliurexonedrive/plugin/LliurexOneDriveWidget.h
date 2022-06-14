@@ -12,7 +12,7 @@
 
 class QTimer;
 class KNotification;
-class LliurexOneDriveWidgetModel;
+class LliurexOneDriveWidgetFilesModel;
 class LliurexOneDriveWidgetSpacesModel;
 
 class LliurexOneDriveWidget : public QObject
@@ -33,7 +33,7 @@ class LliurexOneDriveWidget : public QObject
     Q_PROPERTY(QString freeSpace READ freeSpace NOTIFY freeSpaceChanged)
     Q_PROPERTY(bool lliurexOneDriveOpen READ lliurexOneDriveOpen NOTIFY lliurexOneDriveOpenChanged)
     Q_PROPERTY(bool showSearchFiles READ showSearchFiles NOTIFY showSearchFilesChanged)
-    Q_PROPERTY(LliurexOneDriveWidgetModel* model READ model CONSTANT)
+    Q_PROPERTY(LliurexOneDriveWidgetFilesModel* filesModel READ filesModel CONSTANT)
 
     Q_ENUMS(TrayStatus)
 
@@ -88,13 +88,13 @@ public:
     bool showSearchFiles();
     void setShowSearchFiles(bool);
 
-    LliurexOneDriveWidgetModel *model() const;
+    LliurexOneDriveWidgetFilesModel *filesModel() const;
 
 
 public slots:
     
     void worker();
-    void launchOneDrive();
+    void launchOneDrive(bool seeSpace);
     void openHelp();
     void goToSpace(const QString &idSpace);
     void openFolder();
@@ -140,7 +140,7 @@ private:
     QString m_subToolTip;
     QFile TARGET_FILE;
     bool isWorking=false;
-    int lastCheck=10;
+    int lastCheck=5;
     int countRepeatGeneralError;
     bool previousError=false;
     bool checkExecuted=false;
@@ -160,7 +160,7 @@ private:
     QString m_freeSpace;
     bool m_syncStatus=false;
     bool m_lliurexOneDriveOpen=false;
-    LliurexOneDriveWidgetModel *m_model = nullptr;
+    LliurexOneDriveWidgetFilesModel *m_filesModel = nullptr;
     QProcess *m_isLliurexOneDriveOpen=nullptr;
     bool isLliurexOneDriveOpen=false;
     QProcess *m_getLatestFiles=nullptr;

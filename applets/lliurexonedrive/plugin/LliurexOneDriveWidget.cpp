@@ -1,8 +1,8 @@
 
 #include <iostream>
 #include "LliurexOneDriveWidget.h"
-#include "LliurexOneDriveWidgetItem.h"
-#include "LliurexOneDriveWidgetModel.h"
+#include "LliurexOneDriveWidgetFileItem.h"
+#include "LliurexOneDriveWidgetFilesModel.h"
 #include "LliurexOneDriveWidgetSpacesModel.h"
 #include "LliurexOneDriveWidgetSpaceItem.h"
 #include "LliurexOneDriveWidgetUtils.h"
@@ -25,7 +25,7 @@ LliurexOneDriveWidget::LliurexOneDriveWidget(QObject *parent)
     ,m_spacesModel(new LliurexOneDriveWidgetSpacesModel(this))
     ,m_isLliurexOneDriveOpen(new QProcess(this))
     ,m_getLatestFiles(new QProcess(this))
-    ,m_model(new LliurexOneDriveWidgetModel(this))
+    ,m_filesModel(new LliurexOneDriveWidgetFilesModel(this))
    
 {
     
@@ -68,9 +68,11 @@ void LliurexOneDriveWidget::worker(){
                     items.append(item);
                     if ((m_currentIndex!=0)&&(spaceId!="")){
                         if (spaceId==tmpList[0].toString()){
+                           qDebug()<<"Actualizando espacio";
                             spaceIdMatch=true;
                             setFreeSpace(tmpList[8].toString());
                             setSyncStatus(tmpList[9].toBool());
+                            qDebug()<<"Open :"<<isLliurexOneDriveOpen;
                             if (tmpList[10].toBool()){
                                 setLliurexOneDriveOpen(true);
                             }else{
@@ -100,6 +102,7 @@ void LliurexOneDriveWidget::worker(){
             checkIfStartIsLocked();
             setStatus(ActiveStatus);
             if ((spaceId!="")&&(!spaceIdMatch)){
+                qDebug()<<"Espacio eliminado";
                 manageNavigation(0);
             }
         }else{
@@ -117,6 +120,7 @@ void LliurexOneDriveWidget::checkIfStartIsLocked(){
 
     QString subtooltip="";
     checkIsRunning();
+    qDebug()<<"Comprobando bloqueos";
     if (m_utils->isLocalFolderWarning){
         warning=false;
         previousError=false;
@@ -133,6 +137,7 @@ void LliurexOneDriveWidget::checkIfStartIsLocked(){
             showStartLockMessage=false;
         }
     }else{
+        qDebug()<<"Sin Warnings";
         checkIsLliurexOneDriveOpen();
         showStartLockMessage=true;
         isWorking=false;
@@ -190,6 +195,7 @@ void LliurexOneDriveWidget::isLliurexOneDriveOpenProcessFinished(int exitCode, Q
     }else{
         isLliurexOneDriveOpen=false;
     }
+    qDebug()<<"Comprobando LlxOnedrive"<<isLliurexOneDriveOpen;
 
 } 
 
@@ -223,7 +229,7 @@ void LliurexOneDriveWidget::checkStatus(){
             if (globalStatus=="GeneralError"){
                 countRepeatGeneralError+=1;
                 msgError=i18n("Unable to connect with Microsoft OneDrive");
-                if (countRepeatGeneralError<2){
+                if (countRepeatGeneralError<6){
                     processError=false;
                 }
             }else if (globalStatus=="Error"){
@@ -259,6 +265,8 @@ void LliurexOneDriveWidget::checkStatus(){
         isWorking=false;
         lastCheck=0;
         checkExecuted=true;
+        qDebug()<<"Fin trabajo";
+
     }
 }
 
@@ -275,10 +283,16 @@ LliurexOneDriveWidget::TrayStatus LliurexOneDriveWidget::status() const
 }
 
 
-void LliurexOneDriveWidget::launchOneDrive()
+void LliurexOneDriveWidget::launchOneDrive(bool seeSpace)
 {
     KIO::CommandLauncherJob *job = nullptr;
-    job = new KIO::CommandLauncherJob(QStringLiteral("lliurex-onedrive"));
+    QString cmd="lliurex-onedrive";
+    if (seeSpace){
+        if (spaceId!=""){
+            cmd="lliurex-onedrive "+spaceId;
+        }
+    }
+    job = new KIO::CommandLauncherJob(cmd);
     job->start();
 
     if (m_errorNotification) { m_errorNotification->close(); }
@@ -404,6 +418,7 @@ void LliurexOneDriveWidget::manageSync(){
         cmd="systemctl --user start "+spaceSystemd;
     }
     
+    qDebug()<<cmd;
     KIO::CommandLauncherJob *job = nullptr;
     job = new KIO::CommandLauncherJob(cmd);
     job->start();
@@ -423,7 +438,7 @@ void LliurexOneDriveWidget::getLatestFiles(){
     if (m_getLatestFiles->state() != QProcess::NotRunning) {
         m_getLatestFiles->kill();
     }
-    m_model->clear();
+    m_filesModel->clear();
     setShowSearchFiles(true);
     QString cmd="find "+spaceLocalFolder+" -type f -mmin +1 -printf '%T+\t%s\t%p\n' 2>/dev/null | sort -r | more";
     m_getLatestFiles->start("/bin/sh", QStringList()<< "-c" 
@@ -437,7 +452,7 @@ void LliurexOneDriveWidget::getLatestFilesFinished(int exitCode, QProcess::ExitS
     QStringList searchFilesPout;
 
     if (exitStatus!=QProcess::NormalExit){
-        m_model->clear();
+        m_filesModel->clear();
         setShowSearchFiles(false);     
         return;
     }
@@ -447,11 +462,11 @@ void LliurexOneDriveWidget::getLatestFilesFinished(int exitCode, QProcess::ExitS
     if (stdout!=""){
         searchFilesPout=stdout.split("\n");
         if (searchFilesPout.size()>0){
-            QVector<LliurexOneDriveWidgetItem> items;
+            QVector<LliurexOneDriveWidgetFileItem> items;
             latestFiles=m_utils->getFiles(searchFilesPout,spaceLocalFolder);
             
             for (int i=0;i<latestFiles.length();i++){
-                LliurexOneDriveWidgetItem item;
+                LliurexOneDriveWidgetFileItem item;
                 item.setFileName(latestFiles[i][0]);
                 item.setFilePath(latestFiles[i][1]);
                 item.setFileDate(latestFiles[i][2]);
@@ -459,14 +474,14 @@ void LliurexOneDriveWidget::getLatestFilesFinished(int exitCode, QProcess::ExitS
                 items.append(item);
                 
             }
-            m_model->updateItems(items);
+            m_filesModel->updateItems(items);
 
         }else{
-            m_model->clear();
+            m_filesModel->clear();
 
         }
     }else{
-        m_model->clear();
+        m_filesModel->clear();
     }
     setShowSearchFiles(false);
 }
@@ -569,6 +584,7 @@ void LliurexOneDriveWidget::setSyncStatus(bool syncStatus)
     }
 }
 
+
 bool LliurexOneDriveWidget::lliurexOneDriveOpen()
 {
     return m_lliurexOneDriveOpen;
@@ -596,7 +612,7 @@ void LliurexOneDriveWidget::setShowSearchFiles(bool showSearchFiles)
     }
 }
 
-LliurexOneDriveWidgetModel *LliurexOneDriveWidget::model() const
+LliurexOneDriveWidgetFilesModel *LliurexOneDriveWidget::filesModel() const
 {
-    return m_model;
+    return m_filesModel;
 }

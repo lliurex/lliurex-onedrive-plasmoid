@@ -32,6 +32,7 @@ public:
     QFile localFolderEmptyToken;
     QFile localFolderRemovedToken;
     QFile spaceStatusToken;
+    QFile spaceRunToken;
     int totalSpaces;
     QList<int> spacesStatusCode;
     QList<int> spacesStatusErrorCode;
