@@ -113,7 +113,6 @@ QVariantList LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPat
     
     auto doc=QJsonDocument::fromJson(contentFile,&err);
     if (err.error != QJsonParseError::NoError){
-        qDebug()<<err.errorString();
     }
 
     QJsonObject obj=doc.object();
@@ -143,7 +142,12 @@ QVariantList LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPat
             if (isSpaceRunning){
                 areSpacesSyncRunningCount+=1;
             }
-            tmpItem.append(formatFreeSpace(statusResult[2]));
+            QString spaceFreeSpace=statusResult[2];
+            if (spaceFreeSpace!=""){
+                tmpItem.append(formatFreeSpace(spaceFreeSpace));
+            }else{
+                tmpItem.append(spaceFreeSpace);
+            }
             tmpItem.append(isSpaceRunning);
             QList<bool>checkFolder=checkLocalFolder(spaceConfigPath);
             if ((!checkFolder[0])&&(!checkFolder[1])){
@@ -162,7 +166,6 @@ QVariantList LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPat
         areSpacesSyncRunning=false;
     }
 
-    qDebug()<<"Warnings "<<localFolderWarningCount;
     if (localFolderWarningCount>0){
         isLocalFolderWarning=true;
     }else{
@@ -260,7 +263,6 @@ QString LliurexOneDriveWidgetUtils::formatFileDate(QString fileDate){
 
 void LliurexOneDriveWidgetUtils::restoreSyncListFile(QString spaceConfigPath)
 {
-    qDebug()<<"recibido"<<spaceConfigPath;
     
     syncList.setFileName(spaceConfigPath+"/sync_list.back");
     syncListHash.setFileName(spaceConfigPath+"/.sync_list.hash.back");

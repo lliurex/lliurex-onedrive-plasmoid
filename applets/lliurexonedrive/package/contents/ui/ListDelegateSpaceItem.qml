@@ -52,7 +52,7 @@ Components.ListItem {
     		}
     		Components.Label{
     			id:spaceStatusText
-    			text:getStatusText(statusSpace)
+    			text:getStatusText(statusSpace,localFolderWarning)
     			width:270
     			elide:Text.ElideMiddle
     			visible:spaceItem.ListView.isCurrentItem
@@ -148,19 +148,19 @@ Components.ListItem {
         }else{
             switch (statusSpace){
                 case 0:
-                    msg=i18n("All remote content synchronized")
+                    msg=i18n("All content synchronized")
                     break
                 case 2:
-                    msg=i18n("Remote content pending syncing")
+                    msg=i18n("Content pending syncing")
                     break;
                 case 4:
                     msg=i18n("Uploading pending changes")
                     break
                 case -1:
-                    msg=i18n("OneDrive API return an error")
+                    msg=i18n("OneDrive return an error")
                     break
                 case -2:
-                    msg=i18n("Unable to connect with OneDrive")
+                    msg=i18n("No connection with OneDrive")
                     break
                 case -4:
                     msg=i18n("Free space is 0")
@@ -169,7 +169,7 @@ Components.ListItem {
                     msg=i18n("Authorization has expired")
                     break
                 case -9:
-                    msg=i18n("Microsoft OneDrive not available")
+                    msg=i18n("OneDrive not available")
                     break
             }
 

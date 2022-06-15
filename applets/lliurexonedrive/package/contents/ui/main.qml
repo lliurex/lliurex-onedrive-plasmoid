@@ -142,8 +142,8 @@ Item {
                     Layout.fillWidth:true
                     QQC2.ToolButton {
                         height:35
-                        width:35
-                        Layout.rightMargin:optionsAccount.width/3-35/2
+                        width:355
+                        Layout.rightMargin:optionsAccount.width/3 - 50
                         icon.name:"arrow-left.svg"
                         QQC2.ToolTip{
                             text:i18n("Back to main view")
@@ -163,6 +163,7 @@ Item {
                         id:configureBtn
                         height:35
                         width:35
+                        Layout.rightMargin:5
                         icon.name:"configure.svg"
                         QQC2.ToolTip{
                             text:i18n("Manage space")
@@ -182,7 +183,7 @@ Item {
                         Layout.rightMargin:5
                     }
                     Components.Label{
-                        id:spaceMailValue
+                        id:spaceMailVa5lue
                         text:lliurexOneDriveWidget.spaceMail
                         Layout.fillWidth:true
                     }
@@ -221,12 +222,11 @@ Item {
                         id:oneDriveFolder
                         text:i18n("Local folder:")
                         Layout.rightMargin:5
-                        Layout.fillWidth:true
                     }
                     Components.Label{
                         id:oneDriveFolderValue
                         text:lliurexOneDriveWidget.oneDriveFolder
-                        Layout.preferredWidth:300
+                        Layout.preferredWidth:295
                         elide:Text.ElideMiddle
                     }
                     QQC2.ToolButton {
@@ -235,7 +235,7 @@ Item {
                         icon.name:"document-open-folder.svg"
                         onClicked:lliurexOneDriveWidget.openFolder()
                         QQC2.ToolTip{
-                            text:i18n("Click to open")
+                            text:i18n("Click to open folder")
                         }
                     } 
                 }
