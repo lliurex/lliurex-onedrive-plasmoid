@@ -131,6 +131,7 @@ private:
     void checkIsRunning();
     void checkStatus();
     void cleanSpaceInfoVars();
+    void showMigrationNotification();
 
     QTimer *m_timer = nullptr;
     TrayStatus m_status = PassiveStatus;
@@ -166,6 +167,8 @@ private:
     QProcess *m_getLatestFiles=nullptr;
     bool m_showSearchFiles=false;
     QFile recentFile;
+    QFile OLD_TARGET_FILE;
+    int lastMigrationCheck=20;
 
 private slots:
 

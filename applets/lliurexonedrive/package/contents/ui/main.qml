@@ -94,13 +94,6 @@ Item {
                                     return false
                                 } 
                             }    
-                            text: i18n("Information is not available")
-                        }
-                        Kirigami.PlaceholderMessage {
-                            id: showSpaceHint
-                            anchors.centerIn: parent
-                            width: parent.width - (units.largeSpacing * 4)
-                            visible: listSpaceView.count>0?false:true
                             text: i18n("No spaces configured")
                         }
                        
