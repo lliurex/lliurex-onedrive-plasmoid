@@ -33,3 +33,13 @@ Comment=Occurs when it is not possible to connect with OneDrive
 Comment[ca@valencia]=Ocorre quan no és possible connectar amb OneDrive
 Comment[es]=Ocurre cuando no es posible conectar con OneDrive
 Action=Popup
+
+[Event/MigrationWarning]
+Name=Old OneDrive configuration detected.It is necessary to migrate
+Name[ca@valencia]=S'ha detectat una configuracio antiga de OneDrive. És necessari migrar
+Name[es]=Se ha detectado una configuracion antigua de OneDrive. Es necesario migrar
+
+Comment=Occurs when and old OneDrive configuration is detected
+Comment[ca@valencia]=Ocorre quan es detecta una configuració antiga de OneDrive
+Comment[es]=Ocurre cuando se detecta una configuración antigua de OneDrive
+Action=Popup

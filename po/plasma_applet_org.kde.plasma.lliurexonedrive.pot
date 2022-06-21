@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lliurexonedrive \n"
 "Report-Msgid-Bugs-To: http://lliurex.net\n"
-"POT-Creation-Date: 2022-06-15 11:55+0200\n"
+"POT-Creation-Date: 2022-06-21 12:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -82,167 +82,178 @@ msgstr ""
 msgid "OneDrive not available"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:41 ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:129 ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:250
-#, kde-format
-msgid "Open Lliurex OneDrive"
-msgstr ""
-
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:97 ../applets/lliurexonedrive/package/contents/ui/main.qml:407
-#, kde-format
-msgid "Information is not available"
-msgstr ""
-
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:104
-#, kde-format
-msgid "No spaces configured"
-msgstr ""
-
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:117
-#, kde-format
-msgid "See help documentation"
-msgstr ""
-
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:127
-#, kde-format
-msgid "Click to see help"
-msgstr ""
-
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:149
-#, kde-format
-msgid "Back to main view"
-msgstr ""
-
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:156
-#, kde-format
-msgid "Space details"
-msgstr ""
-
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:169
-#, kde-format
-msgid "Manage space"
-msgstr ""
-
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:182
-#, kde-format
-msgid "Email associated:"
-msgstr ""
-
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:199
-#, kde-format
-msgid "Type:"
-msgstr ""
-
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:223
-#, kde-format
-msgid "Local folder:"
-msgstr ""
-
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:238
-#, kde-format
-msgid "Click to open folder"
-msgstr ""
-
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:251
-#, kde-format
-msgid "Free Space:"
-msgstr ""
-
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:260
+#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:175 ../applets/lliurexonedrive/package/contents/ui/main.qml:253
 #, kde-format
 msgid "Information not available"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:275
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:41 ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:134 ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:155
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:276
+#, kde-format
+msgid "Open Lliurex OneDrive"
+msgstr ""
+
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:97
+#, kde-format
+msgid "No spaces configured"
+msgstr ""
+
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:110
+#, kde-format
+msgid "See help documentation"
+msgstr ""
+
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:120
+#, kde-format
+msgid "Click to see help"
+msgstr ""
+
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:142
+#, kde-format
+msgid "Back to main view"
+msgstr ""
+
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:149
+#, kde-format
+msgid "Space details"
+msgstr ""
+
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:162
+#, kde-format
+msgid "Manage space"
+msgstr ""
+
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:175
+#, kde-format
+msgid "Email associated:"
+msgstr ""
+
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:192
+#, kde-format
+msgid "Type:"
+msgstr ""
+
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:216
+#, kde-format
+msgid "Local folder:"
+msgstr ""
+
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:231
+#, kde-format
+msgid "Click to open folder"
+msgstr ""
+
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:244
+#, kde-format
+msgid "Free Space:"
+msgstr ""
+
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:268
 #, kde-format
 msgid "Synchronization:"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:281
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:274
 #, kde-format
 msgid "Running"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:281
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:274
 #, kde-format
 msgid "Stopped"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:292
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:285
 #, kde-format
 msgid "Click to stop synchronization"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:292
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:285
 #, kde-format
 msgid "Click to start synchronization"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:304
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:297
 #, kde-format
 msgid "Recently modified files"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:321
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:314
 #, kde-format
 msgid "Click to see the list"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:342
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:335
 #, kde-format
 msgid "Back to space view"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:348
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:341
 #, kde-format
 msgid "List of files"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:360
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:353
 #, kde-format
 msgid "Click to refresh list"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/main.qml:414
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:400
+#, kde-format
+msgid "Information is not available"
+msgstr ""
+
+#: ../applets/lliurexonedrive/package/contents/ui/main.qml:407
 #, kde-format
 msgid "Searching information. Wait a moment..."
 msgstr ""
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:98
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:100 ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:117
 #, kde-format
 msgid "Lliurex OneDrive"
 msgstr ""
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:125
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:119
+#, kde-format
+msgid "Old OneDrive configuration detected. Access LliureX-OneDrive to run the migration process"
+msgstr ""
+
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:132
+#, kde-format
+msgid "Old OneDrive configuration detected.It is necessary to migrate"
+msgstr ""
+
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:151
 #, kde-format
 msgid "Detected problems with local folder of one or more spaces"
 msgstr ""
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:147
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:173
 #, kde-format
 msgid "Starting the synchronization"
 msgstr ""
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:152
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:178
 #, kde-format
 msgid "Synchronization is stopped"
 msgstr ""
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:206
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:232
 #, kde-format
 msgid "All remote changes are synchronized"
 msgstr ""
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:215
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:241
 #, kde-format
 msgid "One or more spaces have changes pending of synchronization"
 msgstr ""
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:224
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:250
 #, kde-format
 msgid "Unable to connect with Microsoft OneDrive"
 msgstr ""
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:229
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:255
 #, kde-format
 msgid "OneDrive has reported an error in one or more spaces"
 msgstr ""

@@ -168,7 +168,7 @@ private:
     bool m_showSearchFiles=false;
     QFile recentFile;
     QFile OLD_TARGET_FILE;
-    int lastMigrationCheck=20;
+    int lastMigrationCheck=350;
 
 private slots:
 

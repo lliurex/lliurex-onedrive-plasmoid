@@ -119,6 +119,7 @@ void LliurexOneDriveWidget::worker(){
             const QString subtooltip=i18n("Old OneDrive configuration detected. Access LliureX-OneDrive to run the migration process");
             updateWidget(subtooltip,"onedrive-error");
             showMigrationNotification();
+            isWorking=false;
 
         }
     }
@@ -127,7 +128,7 @@ void LliurexOneDriveWidget::worker(){
 void LliurexOneDriveWidget::showMigrationNotification(){
 
     lastMigrationCheck=lastMigrationCheck+5;
-    if (lastMigrationCheck>30){
+    if (lastMigrationCheck>360){
         QString msg=i18n("Old OneDrive configuration detected.It is necessary to migrate");
         m_errorNotification = KNotification::event(QStringLiteral("MigrationWarning"), msg, {}, "onedrive-widget", nullptr, KNotification::CloseOnTimeout , QStringLiteral("llxonedrive"));
         QString name = i18n("Open Lliurex OneDrive");
