@@ -25,6 +25,7 @@ public:
     QStringList readStatusToken(QString spaceConfigPath);
     bool checkIfSpaceSyncIsRunning(QString spaceConfigPath);
     QString getGlobalStatus();
+    QString checkLocalFreeSpace();
     QList<QStringList> getFiles(QStringList info,QString spaceLocalFolder);
     void restoreSyncListFile(QString spaceConfigPath);
     
@@ -33,6 +34,8 @@ public:
     QFile localFolderRemovedToken;
     QFile spaceStatusToken;
     QFile spaceRunToken;
+    QFile freeSpaceWarningToken;
+    QFile freeSpaceErrorToken;
     int totalSpaces;
     QList<int> spacesStatusCode;
     QList<int> spacesStatusErrorCode;

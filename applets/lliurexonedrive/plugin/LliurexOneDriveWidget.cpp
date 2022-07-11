@@ -281,11 +281,69 @@ void LliurexOneDriveWidget::checkStatus(){
             }
   
         }
+        checkHddFreeSpaceStatus();
         isWorking=false;
         lastCheck=0;
         checkExecuted=true;
 
     }
+}
+
+void LliurexOneDriveWidget::checkHddFreeSpaceStatus(){
+
+    setHddFreeSpaceStatus(m_utils->checkLocalFreeSpace());
+    lastHddCheck=lastHddCheck+5;
+    bool showNotification=false;
+    QString subtooltip="";
+    QString hddStatus="";
+    
+    if (m_hddFreeSpaceStatus!="HDD_OK"){
+        if (m_hddFreeSpaceStatus=="HDD_Warning"){
+            hddStatus="WarningHDD";
+            subtooltip=i18n("The available space in HDD is less than 2 GB");
+            updateWidget(subtooltip,"onedrive-waiting");
+            previousHddError=false;
+            if (previousHddWarning){
+                if (lastHddCheck>720){
+                    showNotification=true;
+                    lastHddCheck=0;
+                }
+            }else{
+                previousHddWarning=true;
+                showNotification=true;
+            }  
+
+        }else{
+            hddStatus="ErrorHDD";
+            subtooltip=i18n("The available space in HDD is less than 1 GB. No more files will be synced");
+            updateWidget(subtooltip,"onedrive-error");
+            previousHddWarning=false;
+            if (previousHddError){
+                if (lastHddCheck>360){
+                    showNotification=true;
+                    lastHddCheck=0;
+                }
+            }else{
+                previousHddError=true;
+                showNotification=true;
+            }
+        }
+
+        if (showNotification){
+            m_errorNotification = KNotification::event(hddStatus, subtooltip, {}, "onedrive-widget", nullptr, KNotification::CloseOnTimeout , QStringLiteral("llxonedrive"));
+            QString name = i18n("Open Lliurex OneDrive");
+            m_errorNotification->setDefaultAction(name);
+            m_errorNotification->setActions({name});
+            connect(m_errorNotification, QOverload<unsigned int>::of(&KNotification::activated), this, &LliurexOneDriveWidget::launchOneDrive);
+        }
+    }else{
+        previousHddError=false;
+        previousHddWarning=false;
+    }
+    isWorking=false;
+    lastCheck=0;
+    checkExecuted=true;
+
 }
 
 void LliurexOneDriveWidget::updateWidget(QString subtooltip,QString icon){
@@ -598,6 +656,19 @@ void LliurexOneDriveWidget::setSyncStatus(bool syncStatus)
     if (m_syncStatus != syncStatus) {
         m_syncStatus = syncStatus;
         emit syncStatusChanged();
+    }
+}
+
+QString LliurexOneDriveWidget::hddFreeSpaceStatus() const
+{
+    return m_hddFreeSpaceStatus;
+}
+
+void LliurexOneDriveWidget::setHddFreeSpaceStatus(const QString &hddFreeSpaceStatus)
+{
+    if (m_hddFreeSpaceStatus != hddFreeSpaceStatus) {
+        m_hddFreeSpaceStatus = hddFreeSpaceStatus;
+        emit hddFreeSpaceStatusChanged();
     }
 }
 

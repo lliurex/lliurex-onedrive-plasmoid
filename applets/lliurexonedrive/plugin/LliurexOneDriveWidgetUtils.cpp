@@ -277,4 +277,19 @@ void LliurexOneDriveWidgetUtils::restoreSyncListFile(QString spaceConfigPath)
 
 }
 
+QString LliurexOneDriveWidgetUtils::checkLocalFreeSpace(){
+
+    freeSpaceWarningToken.setFileName(getUserHome()+"/.config/lliurex-onedrive-config/.hddWarningToken");
+    freeSpaceErrorToken.setFileName(getUserHome()+"/.config/lliurex-onedrive-config/.hddErrorToken");
+
+    if (freeSpaceWarningToken.exists()){
+        return "HDD_Warning";
+    }else if (freeSpaceErrorToken.exists()){
+        return "HDD_Error";
+    }else{
+        return "HDD_OK";
+    }
+
+}
+
 

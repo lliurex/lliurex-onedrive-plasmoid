@@ -43,3 +43,22 @@ Comment=Occurs when and old OneDrive configuration is detected
 Comment[ca@valencia]=Ocorre quan es detecta una configuració antiga de OneDrive
 Comment[es]=Ocurre cuando se detecta una configuración antigua de OneDrive
 Action=Popup
+
+[Event/WarningHDD]
+Name=The available space in HDD is less than 2 GB
+Name[ca@valencia]=L'espaci disponible en el disc dur és menor de 2 GB
+Name[es]=El espacio disponible en el disco duro es menor de 2 GB
+
+Comment=Occurs when the HDD has less than 2 GB of free space
+Comment[ca@valencia]=Ocorre quan el disc dur té menys de 2 GB d'espai lliure
+Comment[es]=Ocurre cuando el disco duro tiene menos de 2 GB de espacio libre
+Action=Popup
+
+[Event/ErrorHDD]
+Name=The available space in HDD is less than 1 GB
+Name[ca@valencia]=L'espaci disponible en el disc dur és menor de 1 GB
+Name[es]=El espacio disponible en el disco duro es menor de 1 GB
+Comment=Occurs when the HDD has less than 1 GB of free space
+Comment[ca@valencia]=Ocorre quan el disc dur té menys de 1 GB d'espai lliure
+Comment[es]=Ocurre cuando el disco duro tiene menos de 1 GB de espacio libre
+Action=Popup

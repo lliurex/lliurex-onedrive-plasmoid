@@ -34,7 +34,7 @@ class LliurexOneDriveWidget : public QObject
     Q_PROPERTY(bool lliurexOneDriveOpen READ lliurexOneDriveOpen NOTIFY lliurexOneDriveOpenChanged)
     Q_PROPERTY(bool showSearchFiles READ showSearchFiles NOTIFY showSearchFilesChanged)
     Q_PROPERTY(LliurexOneDriveWidgetFilesModel* filesModel READ filesModel CONSTANT)
-
+    Q_PROPERTY(QString hddFreeSpaceStatus READ hddFreeSpaceStatus NOTIFY hddFreeSpaceStatusChanged)
     Q_ENUMS(TrayStatus)
 
 public:
@@ -81,6 +81,9 @@ public:
     QString freeSpace() const;
     void setFreeSpace(const QString &freeSpace);
 
+    QString hddFreeSpaceStatus() const;
+    void setHddFreeSpaceStatus(const QString &hddFreeSpaceStatus);
+
     bool syncStatus();
     void setSyncStatus(bool);
     bool lliurexOneDriveOpen();
@@ -119,6 +122,7 @@ signals:
     void freeSpaceChanged();
     void lliurexOneDriveOpenChanged();
     void showSearchFilesChanged();
+    void hddFreeSpaceStatusChanged();
 
 private:
 
@@ -132,6 +136,7 @@ private:
     void checkStatus();
     void cleanSpaceInfoVars();
     void showMigrationNotification();
+    void checkHddFreeSpaceStatus();
 
     QTimer *m_timer = nullptr;
     TrayStatus m_status = PassiveStatus;
@@ -142,8 +147,11 @@ private:
     QFile TARGET_FILE;
     bool isWorking=false;
     int lastCheck=5;
+    int lastHddCheck=0;
     int countRepeatGeneralError;
     bool previousError=false;
+    bool previousHddWarning=false;
+    bool previousHddError=false;
     bool checkExecuted=false;
     bool warning=false;
     bool showStartLockMessage=true;
@@ -159,6 +167,7 @@ private:
     QString m_spaceType;
     QString m_oneDriveFolder;
     QString m_freeSpace;
+    QString m_hddFreeSpaceStatus;
     bool m_syncStatus=false;
     bool m_lliurexOneDriveOpen=false;
     LliurexOneDriveWidgetFilesModel *m_filesModel = nullptr;
