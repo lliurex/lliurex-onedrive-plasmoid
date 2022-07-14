@@ -128,7 +128,8 @@ QVariantList LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPat
             QVariantList tmpItem;
             tmpItem.append(val.toObject().value("id").toString());
             tmpItem.append(val.toObject().value("email").toString());
-            tmpItem.append(val.toObject().value("type").toString());
+            tmpItem.append(val.toObject().value("accountType").toString());
+            tmpItem.append(val.toObject().value("spaceType").toString());
             tmpItem.append(val.toObject().value("localFolder").toString());
             QFileInfo fi(val.toObject().value("localFolder").toString());
             tmpItem.append(fi.baseName());

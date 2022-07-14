@@ -63,17 +63,17 @@ void LliurexOneDriveWidget::worker(){
                         QVariantList tmpList=(*j).toList();
                         LliurexOneDriveWidgetSpaceItem item;
                         item.setId(tmpList[0].toString());
-                        item.setName(tmpList[4].toString());
-                        item.setStatus(tmpList[7].toString());
-                        item.setIsRunning(tmpList[9].toBool());
-                        item.setLocalFolderWarning(tmpList[10].toBool());
+                        item.setName(tmpList[5].toString());
+                        item.setStatus(tmpList[8].toString());
+                        item.setIsRunning(tmpList[10].toBool());
+                        item.setLocalFolderWarning(tmpList[11].toBool());
                         items.append(item);
                         if ((m_currentIndex!=0)&&(spaceId!="")){
                             if (spaceId==tmpList[0].toString()){
                                 spaceIdMatch=true;
-                                setFreeSpace(tmpList[8].toString());
-                                setSyncStatus(tmpList[9].toBool());
-                                if (tmpList[10].toBool()){
+                                setFreeSpace(tmpList[9].toString());
+                                setSyncStatus(tmpList[10].toBool());
+                                if (tmpList[11].toBool()){
                                     setLliurexOneDriveOpen(true);
                                 }else{
                                     if (isLliurexOneDriveOpen){
@@ -444,14 +444,14 @@ void LliurexOneDriveWidget::goToSpace(QString const &idSpace ){
         if (idSpace==tmpList[0].toString()){
             spaceId=idSpace;
             setSpaceMail(tmpList[1].toString());
-            setSpaceType(tmpList[2].toString());
-            spaceLocalFolder=tmpList[3].toString();
-            setOneDriveFolder(tmpList[4].toString());
-            spaceConfigPath=tmpList[5].toString();
-            spaceSystemd=tmpList[6].toString();
-            setFreeSpace(tmpList[8].toString());
-            setSyncStatus(tmpList[9].toBool());
-            if (tmpList[10].toBool()){
+            setSpaceType(tmpList[3].toString());
+            spaceLocalFolder=tmpList[4].toString();
+            setOneDriveFolder(tmpList[5].toString());
+            spaceConfigPath=tmpList[6].toString();
+            spaceSystemd=tmpList[7].toString();
+            setFreeSpace(tmpList[9].toString());
+            setSyncStatus(tmpList[10].toBool());
+            if (tmpList[11].toBool()){
                 setLliurexOneDriveOpen(true);   
             }else{
                 if (isLliurexOneDriveOpen){
