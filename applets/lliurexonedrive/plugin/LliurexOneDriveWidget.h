@@ -167,7 +167,7 @@ private:
     QString m_spaceType;
     QString m_oneDriveFolder;
     QString m_freeSpace;
-    QString m_hddFreeSpaceStatus;
+    QString m_hddFreeSpaceStatus="HDD_OK";
     bool m_syncStatus=false;
     bool m_lliurexOneDriveOpen=false;
     LliurexOneDriveWidgetFilesModel *m_filesModel = nullptr;
