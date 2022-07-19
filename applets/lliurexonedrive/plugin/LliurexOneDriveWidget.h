@@ -35,6 +35,7 @@ class LliurexOneDriveWidget : public QObject
     Q_PROPERTY(bool showSearchFiles READ showSearchFiles NOTIFY showSearchFilesChanged)
     Q_PROPERTY(LliurexOneDriveWidgetFilesModel* filesModel READ filesModel CONSTANT)
     Q_PROPERTY(QString hddFreeSpaceStatus READ hddFreeSpaceStatus NOTIFY hddFreeSpaceStatusChanged)
+    Q_PROPERTY(bool clickedSyncBtn READ clickedSyncBtn NOTIFY clickedSyncBtnChanged)
     Q_ENUMS(TrayStatus)
 
 public:
@@ -90,6 +91,8 @@ public:
     void setLliurexOneDriveOpen(bool);
     bool showSearchFiles();
     void setShowSearchFiles(bool);
+    bool clickedSyncBtn();
+    void setClickedSyncBtn(bool);
 
     LliurexOneDriveWidgetFilesModel *filesModel() const;
 
@@ -123,6 +126,7 @@ signals:
     void lliurexOneDriveOpenChanged();
     void showSearchFilesChanged();
     void hddFreeSpaceStatusChanged();
+    void clickedSyncBtnChanged();
 
 private:
 
@@ -178,6 +182,7 @@ private:
     QFile recentFile;
     QFile OLD_TARGET_FILE;
     int lastMigrationCheck=350;
+    bool m_clickedSyncBtn=false;
 
 private slots:
 

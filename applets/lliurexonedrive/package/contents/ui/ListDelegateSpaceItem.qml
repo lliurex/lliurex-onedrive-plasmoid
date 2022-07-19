@@ -108,7 +108,7 @@ Components.ListItem {
             visible:spaceItem.ListView.isCurrentItem
             QQC2.ToolTip{
                 id:btnToolTip
-                text:i18n("Click to get details of this space")
+                text:i18n("Click to get details of:\n")+nameSpace
             }
             onClicked:lliurexOneDriveWidget.goToSpace(idSpace)
 

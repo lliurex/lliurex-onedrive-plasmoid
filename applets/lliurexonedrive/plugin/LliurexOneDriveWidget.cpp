@@ -83,6 +83,7 @@ void LliurexOneDriveWidget::worker(){
 
                                     }
                                 }
+                                setClickedSyncBtn(false);
                             }
 
                         }
@@ -487,6 +488,7 @@ void LliurexOneDriveWidget::openFolder()
 void LliurexOneDriveWidget::manageSync(){
 
     QString cmd;
+    setClickedSyncBtn(true);
     if (m_syncStatus){
         cmd="systemctl --user stop "+spaceSystemd; 
     }else{
@@ -669,6 +671,19 @@ void LliurexOneDriveWidget::setHddFreeSpaceStatus(const QString &hddFreeSpaceSta
     if (m_hddFreeSpaceStatus != hddFreeSpaceStatus) {
         m_hddFreeSpaceStatus = hddFreeSpaceStatus;
         emit hddFreeSpaceStatusChanged();
+    }
+}
+
+bool LliurexOneDriveWidget::clickedSyncBtn()
+{
+    return m_clickedSyncBtn;
+}
+
+void LliurexOneDriveWidget::setClickedSyncBtn(bool clickedSyncBtn)
+{
+    if (m_clickedSyncBtn != clickedSyncBtn) {
+        m_clickedSyncBtn = clickedSyncBtn;
+        emit clickedSyncBtnChanged();
     }
 }
 

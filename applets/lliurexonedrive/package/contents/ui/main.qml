@@ -281,7 +281,23 @@ Item {
 
                     Components.Label{
                         id:syncStatus
-                        text:lliurexOneDriveWidget.syncStatus?i18n("Running"):i18n("Stopped")
+                        text:{
+                            if (lliurexOneDriveWidget.syncStatus){
+                                if(lliurexOneDriveWidget.clickedSyncBtn){
+                                    i18n("Stopping...")
+                                }else{
+                                    i18n("Running")
+                                }
+                            }else{
+                                if(lliurexOneDriveWidget.clickedSyncBtn){
+                                    i18n("Starting...")
+                                }else{
+                                    i18n("Stopped")
+                                }
+
+                            }
+                        }
+
                         Layout.fillWidth:true
                     }
 
@@ -289,7 +305,7 @@ Item {
                         width:35
                         height:35
                         icon.name:lliurexOneDriveWidget.syncStatus?"kt-stop.svg":"kt-start.svg"
-                        enabled:!lliurexOneDriveWidget.lliurexOneDriveOpen
+                        enabled:!lliurexOneDriveWidget.lliurexOneDriveOpen && !lliurexOneDriveWidget.clickedSyncBtn
                         onClicked:lliurexOneDriveWidget.manageSync() 
                         QQC2.ToolTip{
                             text:lliurexOneDriveWidget.syncStatus?i18n("Click to stop synchronization"):i18n("Click to start synchronization")
