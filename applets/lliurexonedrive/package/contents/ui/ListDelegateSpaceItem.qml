@@ -40,7 +40,13 @@ Components.ListItem {
     		Components.Label{
     		    id:spaceName
     		    text:nameSpace
-    		    width:270
+    		    width:{
+                    if (spaceItem.ListView.isCurrentItem){
+                        260
+                    }else{
+                        310
+                    }
+                }
     		    elide:Text.ElideMiddle
                 font.bold:{
                     if (spaceItem.ListView.isCurrentItem){
@@ -53,7 +59,7 @@ Components.ListItem {
     		Components.Label{
     			id:spaceStatusText
     			text:getStatusText(statusSpace,localFolderWarning)
-    			width:270
+    			width:260
     			elide:Text.ElideMiddle
     			visible:spaceItem.ListView.isCurrentItem
                 font.italic:true
@@ -71,7 +77,7 @@ Components.ListItem {
             source:getStatusIcon(statusSpace,localFolderWarning)
             sourceSize.width:32
             sourceSize.height:32
-            anchors.leftMargin:15
+            anchors.leftMargin:10
             anchors.left:spaceRow.right
             anchors.verticalCenter:parent.verticalCenter
         }  

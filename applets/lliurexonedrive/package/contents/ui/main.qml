@@ -38,7 +38,8 @@ Item {
 
     Component.onCompleted: {
         plasmoid.removeAction("configure");
-        plasmoid.setAction("launchOneDrive", i18n("Open Lliurex OneDrive"), "configure"); 
+        plasmoid.setAction("launchOneDrive", i18n("Open Lliurex OneDrive"), "configure");
+        plasmoid.setAction("openHelp",i18n("See help"),"help-contents"); 
     }
 
     Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation
@@ -46,401 +47,56 @@ Item {
     Plasmoid.fullRepresentation: Item{
         id:root
         Layout.fillWidth:true
-        StackLayout{
+        QQC2.StackView{
             id:stackLayout
-            currentIndex:lliurexOneDriveWidget.currentIndex
+            property int currentIndex:lliurexOneDriveWidget.currentIndex
             width:parent.width
             height:parent.height
-
-            GridLayout{
-                id:spacesLayout
-                rows: 3
-                flow: GridLayout.TopToBottom
-                rowSpacing:10
-                width:parent.width
-
-                Kirigami.InlineMessage {
-                    id: warningMessage
-                    visible:lliurexOneDriveWidget.hddFreeSpaceStatus!="HDD_OK"?true:false
-                    text:lliurexOneDriveWidget.hddFreeSpaceStatus=="HDD_Error"?i18n("The available space in HDD is less than 1 GB. No more files will be synced"):i18n("The available space in HDD is less than 2 GB")
-                    type:lliurexOneDriveWidget.hddFreeSpaceStatus=="HDD_Error"?Kirigami.MessageType.Error:Kirigami.MessageType.Warning;
-                    implicitWidth:parent.width-10
-                    Layout.leftMargin:5
-                    Layout.rightMargin:5
-                    Layout.topMargin: 10
-                }                  
-                PlasmaExtras.ScrollArea {
-                    Layout.topMargin:10
-                    Layout.bottomMargin:10
-                    Layout.leftMargin:5
-                    Layout.rightMargin:5
-                    implicitWidth:parent.width-10
-                    implicitHeight:warningMessage.visible?240:300
-                    ListView{
-                        id:listSpaceView
-                        focus:true
-                        model:lliurexOneDriveWidget.spacesModel
-                        currentIndex: -1
-                        boundsBehavior: Flickable.StopAtBounds
-                        interactive: contentHeight > height
-                        highlight: Rectangle { color: "#add8e6"; opacity:0.8;border.color:"#53a1c9" }
-                        highlightMoveDuration: 0
-                        highlightResizeDuration: 0
-                        delegate: ListDelegateSpaceItem {
-                            idSpace: model.id
-                            nameSpace: model.name
-                            statusSpace: model.status
-                            isRunningSpace: model.isRunning
-                            localFolderWarning: model.localFolderWarning
-                        }
-                        Kirigami.PlaceholderMessage { 
-                            id: emptySpaceHint
-                            anchors.centerIn: parent
-                            width: parent.width - (units.largeSpacing * 4)
-                            visible: {
-                                if (listSpaceView.count === 0){
-                                    return true
-                                }else{
-                                    return false
-                                } 
-                            }    
-                            text: i18n("No spaces configured")
-                        }
-                       
-                    }
-                }
-                RowLayout{
-                    id:helpRow
-                    Layout.fillWidth:true
-                    Layout.leftMargin:5
-                    Layout.rightMargin:5
-
-                    Components.Label{
-                        id:helpText
-                        text:i18n("See help documentation")
-                        Layout.fillWidth:true
-                    }
-
-                   QQC2.ToolButton {
-                        width:35
-                        height:35
-                        icon.name:"help-contents.svg"
-                        onClicked:lliurexOneDriveWidget.openHelp() 
-                        QQC2.ToolTip{
-                            text:i18n("Click to see help")
-                        }
-                    } 
+            initialItem:spacesPanel
+            onCurrentIndexChanged:{
+                switch (currentIndex){
+                    case 0:
+                        stackLayout.replace(spacesPanel)
+                        break;
+                    case 1:
+                        stackLayout.replace(spacePanel)
+                        break;
+                    case 2:
+                        stackLayout.replace(filesPanel)
+                        break;
                 }
             }
             
-            GridLayout{
-                id: optionsAccount
-                rows: 7
-                flow: GridLayout.TopToBottom
-                rowSpacing:10
-                width:parent.width
 
-                RowLayout{
-                    id:head
-                    Layout.fillWidth:true
-                    QQC2.ToolButton {
-                        height:35
-                        width:355
-                        Layout.rightMargin:optionsAccount.width/3 - 50
-                        icon.name:"arrow-left.svg"
-                        QQC2.ToolTip{
-                            text:i18n("Back to main view")
-                        }
-                        onClicked:lliurexOneDriveWidget.manageNavigation(0)
-                    } 
-
-                    Components.Label{
-                        id:headText
-                        text:i18n("Space details")
-                        font.italic:true
-                        font.pointSize:11
-                        Layout.fillWidth:true
-                        Layout.alignment:Qt.AlignHCenter
-                    }
-                    QQC2.ToolButton {
-                        id:configureBtn
-                        height:35
-                        width:35
-                        Layout.rightMargin:5
-                        icon.name:"configure.svg"
-                        QQC2.ToolTip{
-                            text:i18n("Manage space")
-                        }                        onClicked:lliurexOneDriveWidget.launchOneDrive(true)
-                    } 
-                } 
-                 RowLayout{
-                    id:spaceMailRow
-                    Layout.fillWidth:true
-                    Layout.leftMargin:5
-                    Layout.rightMargin:5
-                    Layout.bottomMargin:5
-
-                    Components.Label{
-                        id:spaceMail
-                        text:i18n("Email associated:")
-                        Layout.rightMargin:5
-                    }
-                    Components.Label{
-                        id:spaceMailVa5lue
-                        text:lliurexOneDriveWidget.spaceMail
-                        Layout.fillWidth:true
-                    }
-                }
-                RowLayout{
-                    id:spaceTypeRow
-                    Layout.fillWidth:true
-                    Layout.leftMargin:5
-                    Layout.rightMargin:5
-
-                    Components.Label{
-                        id:spaceType
-                        text:i18n("Type:")
-                        Layout.rightMargin:5
-
-                    }
-                    Components.Label{
-                        id:spaceTypeValue
-                        text:{
-                            if (lliurexOneDriveWidget.spaceType=="onedrive"){
-                                "OneDrive"
-                            }else{
-                                "SharePoint"
-                            }
-                        }
-                        Layout.fillWidth:true
-                    }
-                }
-                RowLayout {
-                    id:folderRow
-                    Layout.leftMargin:5
-                    Layout.rightMargin:5
-                    Layout.fillWidth:true
-
-                    Components.Label{
-                        id:oneDriveFolder
-                        text:i18n("Local folder:")
-                        Layout.rightMargin:5
-                    }
-                    Components.Label{
-                        id:oneDriveFolderValue
-                        text:lliurexOneDriveWidget.oneDriveFolder
-                        Layout.preferredWidth:295
-                        elide:Text.ElideMiddle
-                    }
-                    QQC2.ToolButton {
-                        width:35
-                        height:35
-                        icon.name:"document-open-folder.svg"
-                        onClicked:lliurexOneDriveWidget.openFolder()
-                        QQC2.ToolTip{
-                            text:i18n("Click to open folder")
-                        }
-                    } 
-                }
-
-                RowLayout{
-                    id:freeSpaceRow
-                    Layout.fillWidth:true
-                    Layout.leftMargin:5
-                    Layout.rightMargin:5
-
-                    Components.Label{
-                        id:freeSpace
-                        text:i18n("Free Space:")
-                        Layout.rightMargin:5
-                    }
-                    Components.Label{
-                        id:freeSpaceValue
-                        text:{
-                            if (lliurexOneDriveWidget.freeSpace!=""){
-                                lliurexOneDriveWidget.freeSpace
-                            }else{
-                                i18n("Information not available")
-                            }
-                        }
-                        Layout.fillWidth:true
-                    }
-                }
-
-                RowLayout{
-                    id:syncRow
-                    Layout.fillWidth:true
-                    Layout.leftMargin:5
-                    Layout.rightMargin:5
-
-                    Components.Label{
-                        id:syncText
-                        text:i18n("Synchronization:")
-                        Layout.rightMargin:5
-                    }
-
-                    Components.Label{
-                        id:syncStatus
-                        text:{
-                            if (lliurexOneDriveWidget.syncStatus){
-                                if(lliurexOneDriveWidget.clickedSyncBtn){
-                                    i18n("Stopping...")
-                                }else{
-                                    i18n("Running")
-                                }
-                            }else{
-                                if(lliurexOneDriveWidget.clickedSyncBtn){
-                                    i18n("Starting...")
-                                }else{
-                                    i18n("Stopped")
-                                }
-
-                            }
-                        }
-
-                        Layout.fillWidth:true
-                    }
-
-                    QQC2.ToolButton {
-                        width:35
-                        height:35
-                        icon.name:lliurexOneDriveWidget.syncStatus?"kt-stop.svg":"kt-start.svg"
-                        enabled:!lliurexOneDriveWidget.lliurexOneDriveOpen && !lliurexOneDriveWidget.clickedSyncBtn
-                        onClicked:lliurexOneDriveWidget.manageSync() 
-                        QQC2.ToolTip{
-                            text:lliurexOneDriveWidget.syncStatus?i18n("Click to stop synchronization"):i18n("Click to start synchronization")
-                        }
-                    } 
-                } 
-                RowLayout{
-                    id:latestFiles
-                    Layout.fillWidth:true
-                    Layout.leftMargin:5
-                    Layout.rightMargin:5
-
-                    Components.Label{
-                        id:latestText
-                        text:i18n("Recently modified files")
-                        Layout.fillWidth:true
-                    }
-                   
-                    QQC2.ToolButton {
-                        width:35
-                        height:35
-                        icon.name:"arrow-right.svg"
-                        onClicked:{
-                            lliurexOneDriveWidget.getLatestFiles()
-                            listView.forceActiveFocus()
-                            if (listView.count > 0){
-                                listView.currentIndex=0
-                            }
-                            lliurexOneDriveWidget.manageNavigation(2)
-                        }
-                        QQC2.ToolTip{
-                            text:i18n("Click to see the list")
-                        }
-                    } 
-                }
-                  
-            } 
-            GridLayout{
-                id:filesLayout
-                rows: 2
-                flow: GridLayout.TopToBottom
-                rowSpacing:10
-                width:parent.width
-                RowLayout{
-                    id:headLatestFiles
-                    Layout.fillWidth:true
-                    QQC2.ToolButton {
-                        height:35
-                        width:35
-                        icon.name:"arrow-left.svg"
-                        Layout.rightMargin:filesLayout.width/3-35/2
-                        QQC2.ToolTip{   
-                            text:i18n("Back to space view")
-                        }
-                        onClicked:lliurexOneDriveWidget.manageNavigation(1) 
-                    } 
-                   Components.Label{
-                        id:headFilesText
-                        text:i18n("List of files")
-                        font.italic:true
-                        font.pointSize:11
-                        Layout.fillWidth:true
-                        Layout.alignment:Qt.AlignHCenter
-                    }
-                    QQC2.ToolButton {
-                        width:35
-                        height:35
-                        Layout.alignment:Qt.AlignRight
-                        icon.name:"view-refresh"
-                        QQC2.ToolTip{
-                            text:i18n("Click to refresh list")
-                        }
-                        onClicked:{
-                            lliurexOneDriveWidget.getLatestFiles()
-                            listView.forceActiveFocus()
-                            if (listView.count > 0){
-                                listView.currentIndex=0
-                            }
-
-                        }
- 
-                    } 
-                }
-               PlasmaExtras.ScrollArea {
-                    Layout.topMargin:10
-                    Layout.bottomMargin:10
-                    Layout.leftMargin:5
-                    Layout.rightMargin:5
-                    implicitWidth:parent.width-10
-                    implicitHeight:250
-                    ListView{
-                        id:listView
-                        focus:true
-                        model:lliurexOneDriveWidget.filesModel
-                        currentIndex: -1
-                        boundsBehavior: Flickable.StopAtBounds
-                        interactive: contentHeight > height
-                        highlight: Rectangle { color: "#add8e6"; opacity:0.8;border.color:"#53a1c9" }
-                        highlightMoveDuration: 0
-                        highlightResizeDuration: 0
-                        delegate: ListDelegateFileItem {
-                            fileName: model.fileName
-                            filePath: model.filePath
-                            fileDate: model.fileDate
-                            fileTime: model.fileTime
-                        }
-                         Kirigami.PlaceholderMessage { 
-                            id: emptyHint
-                            anchors.centerIn: parent
-                            width: parent.width - (units.largeSpacing * 4)
-                            visible: {
-                                if ((listView.count === 0)&&(!lliurexOneDriveWidget.showSearchFiles)){
-                                    return true
-                                }else{
-                                    return false
-                                } 
-                            }    
-                            text: i18n("Information is not available")
-                        }
-                         Kirigami.PlaceholderMessage {
-                            id: showHint
-                            anchors.centerIn: parent
-                            width: parent.width - (units.largeSpacing * 4)
-                            visible: lliurexOneDriveWidget.showSearchFiles
-                            text: i18n("Searching information. Wait a moment...")
-                        }
-                       
-                    }
+            Component{
+                id:spacesPanel
+                SpacesView{
+                    id:spacesView
                 }
             }
+            Component{
+                id:spacePanel
+                SpaceInfo{
+                    id:spaceInfo
+                }
+            }
+            Component{
+                id:filesPanel
+                LatestFiles{
+                    id:latestFiles
+                }
+            }
+       
         }
     }
-    
 
     function action_launchOneDrive() {
         lliurexOneDriveWidget.launchOneDrive(false)
     }
+
+    function action_openHelp(){
+        lliurexOneDriveWidget.openHelp()
+    }
+
+
 }   
