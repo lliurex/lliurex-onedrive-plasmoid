@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lliurexonedrive \n"
 "Report-Msgid-Bugs-To: http://lliurex.net\n"
-"POT-Creation-Date: 2022-07-19 11:25+0200\n"
+"POT-Creation-Date: 2022-07-20 12:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,109 +43,77 @@ msgid "Searching information. Wait a moment..."
 msgstr ""
 
 #: ../applets/lliurexonedrive/package/contents/ui/ListDelegateFileItem.qml:39
-#: ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/ListDelegateFileItem.qml:39
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/ListDelegateFileItem.qml:39
 #, kde-format
 msgid "Last modification: "
 msgstr ""
 
 #: ../applets/lliurexonedrive/package/contents/ui/ListDelegateFileItem.qml:71
-#: ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/ListDelegateFileItem.qml:71
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/ListDelegateFileItem.qml:71
 #, kde-format
 msgid "Click to access the file location"
 msgstr ""
 
 #: ../applets/lliurexonedrive/package/contents/ui/ListDelegateFileItem.qml:77
-#: ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/ListDelegateFileItem.qml:77
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/ListDelegateFileItem.qml:77
 #, kde-format
 msgid "File does not exist. Update the list"
 msgstr ""
 
 #: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:117
-#: ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/ListDelegateSpaceItem.qml:111
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/ListDelegateSpaceItem.qml:111
 #, kde-format
 msgid "Click to get details of:\n"
 msgstr ""
 
 #: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:152
-#: ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/ListDelegateSpaceItem.qml:146
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/ListDelegateSpaceItem.qml:146
 #, kde-format
 msgid "Local folder has been deleted or emptied"
 msgstr ""
 
 #: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:157
-#: ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/ListDelegateSpaceItem.qml:151
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/ListDelegateSpaceItem.qml:151
 #, kde-format
 msgid "All content synchronized"
 msgstr ""
 
 #: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:160
-#: ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/ListDelegateSpaceItem.qml:154
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/ListDelegateSpaceItem.qml:154
 #, kde-format
 msgid "Content pending syncing"
 msgstr ""
 
 #: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:163
-#: ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/ListDelegateSpaceItem.qml:157
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/ListDelegateSpaceItem.qml:157
 #, kde-format
 msgid "Uploading pending changes"
 msgstr ""
 
 #: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:166
-#: ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/ListDelegateSpaceItem.qml:160
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/ListDelegateSpaceItem.qml:160
 #, kde-format
 msgid "OneDrive return an error"
 msgstr ""
 
 #: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:169
-#: ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/ListDelegateSpaceItem.qml:163
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/ListDelegateSpaceItem.qml:163
 #, kde-format
 msgid "No connection with OneDrive"
 msgstr ""
 
 #: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:172
-#: ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/ListDelegateSpaceItem.qml:166
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/ListDelegateSpaceItem.qml:166
 #, kde-format
 msgid "Free space is 0"
 msgstr ""
 
 #: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:175
-#: ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/ListDelegateSpaceItem.qml:169
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/ListDelegateSpaceItem.qml:169
 #, kde-format
 msgid "Authorization has expired"
 msgstr ""
 
 #: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:178
-#: ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/ListDelegateSpaceItem.qml:172
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/ListDelegateSpaceItem.qml:172
 #, kde-format
 msgid "OneDrive not available"
 msgstr ""
 
 #: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:181 ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:143
-#: ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/ListDelegateSpaceItem.qml:175
-#: ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:143
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/ListDelegateSpaceItem.qml:175
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:143
 #, kde-format
 msgid "Information not available"
 msgstr ""
 
 #: ../applets/lliurexonedrive/package/contents/ui/main.qml:41 ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:135 ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:156
 #: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:277 ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:335
-#: ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/main.qml:41
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/main.qml:41
 #, kde-format
 msgid "Open Lliurex OneDrive"
 msgstr ""
@@ -155,124 +123,102 @@ msgstr ""
 msgid "See help"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:32 ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:32
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:32
+#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:32
 #, kde-format
 msgid "Back to main view"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:39 ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:39
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:39
+#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:39
 #, kde-format
 msgid "Space details"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:52 ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:52
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:52
+#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:52
 #, kde-format
 msgid "Manage space"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:65 ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:65
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:65
+#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:65
 #, kde-format
 msgid "Email associated:"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:82 ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:82
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:82
+#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:82
 #, kde-format
 msgid "Type:"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:106 ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:106
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:106
+#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:106
 #, kde-format
 msgid "Local folder:"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:121 ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:121
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:121
+#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:121
 #, kde-format
 msgid "Click to open folder"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:134 ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:134
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:134
+#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:134
 #, kde-format
 msgid "Free Space:"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:158 ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:158
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:158
+#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:158
 #, kde-format
 msgid "Synchronization:"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:167 ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:167
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:167
+#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:167
 #, kde-format
 msgid "Stopping..."
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:169 ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:169
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:169
+#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:169
 #, kde-format
 msgid "Running"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:173 ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:173
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:173
+#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:173
 #, kde-format
 msgid "Starting..."
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:175 ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:175
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:175
+#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:175
 #, kde-format
 msgid "Stopped"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:191 ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:191
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:191
+#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:191
 #, kde-format
 msgid "Click to stop synchronization"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:191 ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:191
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:191
+#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:191
 #, kde-format
 msgid "Click to start synchronization"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:203 ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:203
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:203
+#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:203
 #, kde-format
 msgid "Recently modified files"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:217 ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:220
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpaceInfo.qml:220
+#: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:217
 #, kde-format
 msgid "Click to see the list"
 msgstr ""
 
 #: ../applets/lliurexonedrive/package/contents/ui/SpacesView.qml:26 ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:319
-#: ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpacesView.qml:26
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpacesView.qml:26
 #, kde-format
 msgid "The available space in HDD is less than 1 GB. No more files will be synced"
 msgstr ""
 
 #: ../applets/lliurexonedrive/package/contents/ui/SpacesView.qml:26 ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:304
-#: ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpacesView.qml:26
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpacesView.qml:26
 #, kde-format
 msgid "The available space in HDD is less than 2 GB"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/SpacesView.qml:68 ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpacesView.qml:68
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpacesView.qml:68
+#: ../applets/lliurexonedrive/package/contents/ui/SpacesView.qml:68
 #, kde-format
 msgid "No spaces configured"
 msgstr ""
@@ -325,16 +271,4 @@ msgstr ""
 #: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:256
 #, kde-format
 msgid "OneDrive has reported an error in one or more spaces"
-msgstr ""
-
-#: ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpacesView.qml:81
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpacesView.qml:81
-#, kde-format
-msgid "See help documentation"
-msgstr ""
-
-#: ../debian/plasma-widget-lliurex-onedrive/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpacesView.qml:91
-#: ../debian/tmp/usr/share/plasma/plasmoids/org.kde.plasma.lliurexonedrive/contents/ui/SpacesView.qml:91
-#, kde-format
-msgid "Click to see help"
 msgstr ""
