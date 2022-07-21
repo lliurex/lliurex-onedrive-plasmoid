@@ -83,7 +83,7 @@ void LliurexOneDriveWidget::worker(){
 
                                     }
                                 }
-                                setClickedSyncBtn(false);
+                                
                             }
 
                         }
@@ -658,6 +658,7 @@ void LliurexOneDriveWidget::setSyncStatus(bool syncStatus)
     if (m_syncStatus != syncStatus) {
         m_syncStatus = syncStatus;
         emit syncStatusChanged();
+        setClickedSyncBtn(false);
     }
 }
 
