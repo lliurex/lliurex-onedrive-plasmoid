@@ -461,6 +461,7 @@ void LliurexOneDriveWidget::goToSpace(QString const &idSpace ){
                     setLliurexOneDriveOpen(false);
                 }
             }
+            setClickedSyncBtn(false);
             manageNavigation(1);
             break;
         }
