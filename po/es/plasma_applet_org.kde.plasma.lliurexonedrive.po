@@ -218,16 +218,16 @@ msgstr "Haga clic para consultar la lista"
 #: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:319
 #, kde-format
 msgid ""
-"The available space in HDD is less than 1 GB. No more files will be synced"
+"The available space in HDD is less than 5 GB. No more files will be synced"
 msgstr ""
-"El espacio disponible en el disco duro es menor de 1 GB. No se sincronizará "
+"El espacio disponible en el disco duro es menor de 5 GB. No se sincronizará "
 "más contenido"
 
 #: ../applets/lliurexonedrive/package/contents/ui/SpacesView.qml:26
 #: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:304
 #, kde-format
-msgid "The available space in HDD is less than 2 GB"
-msgstr "El espacio disponible en el disco duro es menor de 2 GB"
+msgid "The available space in HDD is less than 10 GB"
+msgstr "El espacio disponible en el disco duro es menor de 10 GB"
 
 #: ../applets/lliurexonedrive/package/contents/ui/SpacesView.qml:68
 #, kde-format

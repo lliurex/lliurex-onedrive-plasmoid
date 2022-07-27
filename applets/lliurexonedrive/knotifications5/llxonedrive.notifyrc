@@ -45,20 +45,20 @@ Comment[es]=Ocurre cuando se detecta una configuración antigua de OneDrive
 Action=Popup
 
 [Event/WarningHDD]
-Name=The available space in HDD is less than 2 GB
-Name[ca@valencia]=L'espaci disponible en el disc dur és menor de 2 GB
-Name[es]=El espacio disponible en el disco duro es menor de 2 GB
+Name=The available space in HDD is less than 10 GB
+Name[ca@valencia]=L'espaci disponible en el disc dur és menor de 10 GB
+Name[es]=El espacio disponible en el disco duro es menor de 10 GB
 
-Comment=Occurs when the HDD has less than 2 GB of free space
-Comment[ca@valencia]=Ocorre quan el disc dur té menys de 2 GB d'espai lliure
-Comment[es]=Ocurre cuando el disco duro tiene menos de 2 GB de espacio libre
+Comment=Occurs when the HDD has less than 10 GB of free space
+Comment[ca@valencia]=Ocorre quan el disc dur té menys de 10 GB d'espai lliure
+Comment[es]=Ocurre cuando el disco duro tiene menos de 10 GB de espacio libre
 Action=Popup
 
 [Event/ErrorHDD]
-Name=The available space in HDD is less than 1 GB
-Name[ca@valencia]=L'espaci disponible en el disc dur és menor de 1 GB
-Name[es]=El espacio disponible en el disco duro es menor de 1 GB
-Comment=Occurs when the HDD has less than 1 GB of free space
-Comment[ca@valencia]=Ocorre quan el disc dur té menys de 1 GB d'espai lliure
-Comment[es]=Ocurre cuando el disco duro tiene menos de 1 GB de espacio libre
+Name=The available space in HDD is less than 5 GB
+Name[ca@valencia]=L'espaci disponible en el disc dur és menor de 5 GB
+Name[es]=El espacio disponible en el disco duro es menor de 5 GB
+Comment=Occurs when the HDD has less than 5 GB of free space
+Comment[ca@valencia]=Ocorre quan el disc dur té menys de 5 GB d'espai lliure
+Comment[es]=Ocurre cuando el disco duro tiene menos de 5 GB de espacio libre
 Action=Popup

@@ -301,7 +301,7 @@ void LliurexOneDriveWidget::checkHddFreeSpaceStatus(){
     if (m_hddFreeSpaceStatus!="HDD_OK"){
         if (m_hddFreeSpaceStatus=="HDD_Warning"){
             hddStatus="WarningHDD";
-            subtooltip=i18n("The available space in HDD is less than 2 GB");
+            subtooltip=i18n("The available space in HDD is less than 10 GB");
             updateWidget(subtooltip,"onedrive-waiting");
             previousHddError=false;
             if (previousHddWarning){
@@ -316,7 +316,7 @@ void LliurexOneDriveWidget::checkHddFreeSpaceStatus(){
 
         }else{
             hddStatus="ErrorHDD";
-            subtooltip=i18n("The available space in HDD is less than 1 GB. No more files will be synced");
+            subtooltip=i18n("The available space in HDD is less than 5 GB. No more files will be synced");
             updateWidget(subtooltip,"onedrive-error");
             previousHddWarning=false;
             if (previousHddError){
