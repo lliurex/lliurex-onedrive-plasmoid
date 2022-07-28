@@ -567,7 +567,7 @@ void LliurexOneDriveWidget::getLatestFilesFinished(int exitCode, QProcess::ExitS
 void LliurexOneDriveWidget::goToFile(const QString &filePath)
 {
             
-    QString command="dolphin --select "+filePath;
+    QString command="dolphin --select '"+filePath+"'";
     KIO::CommandLauncherJob *job = nullptr;
     job = new KIO::CommandLauncherJob(command);
     job->start();
