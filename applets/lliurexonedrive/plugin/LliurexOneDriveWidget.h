@@ -162,6 +162,7 @@ private:
     QPointer<KNotification> m_errorNotification;
     QList <int> previousStatusError;
     QVariantList oneDriveSpacesConfig;
+    QVariantList oneDriveSpacesConfigPrev;
     QString spaceId;
     QString spaceConfigPath;
     QString spaceLocalFolder;

@@ -54,7 +54,7 @@ void LliurexOneDriveWidget::worker(){
         if (!LliurexOneDriveWidget::OLD_TARGET_FILE.exists()){
             if (LliurexOneDriveWidget::TARGET_FILE.exists() ) {
                 isWorking=true;
-                m_spacesModel->clear();
+                //m_spacesModel->clear();
                 QString onedriveConfigPath=userHome+"/.config/lliurex-onedrive-config/onedriveConfig.json";
                 oneDriveSpacesConfig=m_utils->getSpacesInfo(onedriveConfigPath);
                 if (oneDriveSpacesConfig.length()>0){
@@ -88,7 +88,11 @@ void LliurexOneDriveWidget::worker(){
 
                         }
                     }
-                    m_spacesModel->updateItems(items);
+                    if (oneDriveSpacesConfig!=oneDriveSpacesConfigPrev){
+                        m_spacesModel->clear();
+                        m_spacesModel->updateItems(items);
+                        oneDriveSpacesConfigPrev=oneDriveSpacesConfig;
+                    }
                     isPassiveStatus=false;
 
                 }else{
