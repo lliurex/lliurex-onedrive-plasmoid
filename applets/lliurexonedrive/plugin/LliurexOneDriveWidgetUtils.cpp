@@ -61,7 +61,7 @@ QStringList LliurexOneDriveWidgetUtils::readStatusToken(QString spaceConfigPath)
 
     }else{
         result.append("False");
-        result.append("0");
+        result.append("3");
         result.append("");
     }
     return result;

@@ -115,6 +115,7 @@ void LliurexOneDriveWidget::worker(){
                 previousStatusError.clear();
                 warning=false;
                 isWorking=false;
+                oneDriveSpacesConfigPrev.clear();
                 manageNavigation(0);
             }
         }else{
