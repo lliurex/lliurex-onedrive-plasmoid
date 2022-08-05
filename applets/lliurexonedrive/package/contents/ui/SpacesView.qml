@@ -23,7 +23,7 @@ Rectangle{
 	    Kirigami.InlineMessage {
 	        id: warningMessage
 	        visible:lliurexOneDriveWidget.hddFreeSpaceStatus!="HDD_OK"?true:false
-	        text:lliurexOneDriveWidget.hddFreeSpaceStatus=="HDD_Error"?i18n("The available space in HDD is less than 1 GB. No more files will be synced"):i18n("The available space in HDD is less than 2 GB")
+	        text:lliurexOneDriveWidget.hddFreeSpaceStatus=="HDD_Error"?i18n("The available space in HDD is less than 5 GB. No more files will be synced"):i18n("The available space in HDD is less than 10 GB")
 	        type:lliurexOneDriveWidget.hddFreeSpaceStatus=="HDD_Error"?Kirigami.MessageType.Error:Kirigami.MessageType.Warning;
 	        implicitWidth:parent.width-10
 	        Layout.leftMargin:5
