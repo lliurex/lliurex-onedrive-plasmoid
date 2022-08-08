@@ -227,7 +227,7 @@ void LliurexOneDriveWidget::isLliurexOneDriveOpenProcessFinished(int exitCode, Q
 void LliurexOneDriveWidget::checkStatus(){
 
     lastCheck=lastCheck+5;
-    if (lastCheck>12){
+    if (lastCheck>6){
         bool showNotification=false;
         QString msgError;
         bool processError=true;
