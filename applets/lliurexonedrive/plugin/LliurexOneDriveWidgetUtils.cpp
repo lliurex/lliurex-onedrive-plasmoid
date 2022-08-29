@@ -34,7 +34,7 @@ QString LliurexOneDriveWidgetUtils::getUserHome() {
 bool LliurexOneDriveWidgetUtils::checkIfSpaceSyncIsRunning(QString spaceConfigPath){
 
     
-    spaceRunToken.setFileName(spaceConfigPath+"/.runToken");
+    spaceRunToken.setFileName(spaceConfigPath+"/.run/runToken");
 
     if (spaceRunToken.exists()){
         return true;
@@ -48,7 +48,7 @@ QStringList LliurexOneDriveWidgetUtils::readStatusToken(QString spaceConfigPath)
 
     QStringList result;
 
-    spaceStatusToken.setFileName(spaceConfigPath+"/.statusToken");
+    spaceStatusToken.setFileName(spaceConfigPath+"/.run/statusToken");
 
     if (spaceStatusToken.exists()){
         if (spaceStatusToken.open(QIODevice::ReadOnly)){
@@ -75,8 +75,8 @@ QList<bool> LliurexOneDriveWidgetUtils::checkLocalFolder(QString spaceConfigPath
     bool localFolderRemoved=false;
 
     QDir spaceConfigFolder(spaceConfigPath);
-    localFolderEmptyToken.setFileName(spaceConfigPath+"/.localFolderEmptyToken");
-    localFolderRemovedToken.setFileName(spaceConfigPath+"/.localFolderRemovedToken");
+    localFolderEmptyToken.setFileName(spaceConfigPath+"/.run/localFolderEmptyToken");
+    localFolderRemovedToken.setFileName(spaceConfigPath+"/.run/localFolderRemovedToken");
 
     if (spaceConfigFolder.exists()){
         if (localFolderEmptyToken.exists()){
@@ -299,8 +299,8 @@ void LliurexOneDriveWidgetUtils::restoreSyncListFile(QString spaceConfigPath)
 
 QString LliurexOneDriveWidgetUtils::checkLocalFreeSpace(){
 
-    freeSpaceWarningToken.setFileName(getUserHome()+"/.config/lliurex-onedrive-config/.hddWarningToken");
-    freeSpaceErrorToken.setFileName(getUserHome()+"/.config/lliurex-onedrive-config/.hddErrorToken");
+    freeSpaceWarningToken.setFileName(getUserHome()+"/.config/lliurex-onedrive-config/.run/hddWarningToken");
+    freeSpaceErrorToken.setFileName(getUserHome()+"/.config/lliurex-onedrive-config/.run/hddErrorToken");
 
     if (freeSpaceWarningToken.exists()){
         return "HDD_Warning";

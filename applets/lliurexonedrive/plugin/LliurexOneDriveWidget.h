@@ -150,7 +150,7 @@ private:
     QString m_subToolTip;
     QFile TARGET_FILE;
     bool isWorking=false;
-    int lastCheck=5;
+    int lastCheck=80;
     int lastHddCheck=0;
     int countRepeatGeneralError;
     bool previousError=false;
@@ -184,6 +184,7 @@ private:
     QFile OLD_TARGET_FILE;
     int lastMigrationCheck=350;
     bool m_clickedSyncBtn=false;
+    bool updateGlobalStatus=false;
 
 private slots:
 

@@ -49,6 +49,7 @@ void LliurexOneDriveWidget::worker(){
 
     bool isPassiveStatus=true;
     bool spaceIdMatch=false;
+    updateGlobalStatus=false;
 
     if (!isWorking){
         if (!LliurexOneDriveWidget::OLD_TARGET_FILE.exists()){
@@ -92,6 +93,7 @@ void LliurexOneDriveWidget::worker(){
                         m_spacesModel->clear();
                         m_spacesModel->updateItems(items);
                         oneDriveSpacesConfigPrev=oneDriveSpacesConfig;
+                        updateGlobalStatus=true;
                     }
                     isPassiveStatus=false;
 
@@ -227,7 +229,7 @@ void LliurexOneDriveWidget::isLliurexOneDriveOpenProcessFinished(int exitCode, Q
 void LliurexOneDriveWidget::checkStatus(){
 
     lastCheck=lastCheck+5;
-    if (lastCheck>6){
+    if ((lastCheck>90) || (updateGlobalStatus)){
         bool showNotification=false;
         QString msgError;
         bool processError=true;
@@ -254,7 +256,7 @@ void LliurexOneDriveWidget::checkStatus(){
             if (globalStatus=="GeneralError"){
                 countRepeatGeneralError+=1;
                 msgError=i18n("Unable to connect with Microsoft OneDrive");
-                if (countRepeatGeneralError<6){
+                if (countRepeatGeneralError<2){
                     processError=false;
                 }
             }else if (globalStatus=="Error"){
@@ -262,11 +264,9 @@ void LliurexOneDriveWidget::checkStatus(){
                 countRepeatGeneralError=0;
   
             }
-
+            QString subtooltip(msgError);
+            updateWidget(subtooltip,"onedrive-error");
             if(processError){
-;               QString subtooltip(msgError);
-                updateWidget(subtooltip,"onedrive-error");
-                
                 if (previousError){
                     if (previousStatusError!=m_utils->spacesStatusErrorCode){
                         showNotification=true;
