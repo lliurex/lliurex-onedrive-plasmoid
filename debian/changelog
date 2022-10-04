@@ -1,3 +1,9 @@
+plasma-widget-lliurex-onedrive (0.1.5) bionic; urgency=medium
+
+  * New version with multi-space synchronization
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Tue, 04 Oct 2022 11:34:23 +0200
+
 plasma-widget-lliurex-onedrive (0.1.4) bionic-updates; urgency=medium
 
   * Updated to support onedrive v2.4.18
