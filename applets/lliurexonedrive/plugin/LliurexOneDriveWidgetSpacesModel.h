@@ -1,20 +1,20 @@
-#ifndef PLASMA_LLIUREX_ONEDRIVE_WIDGET_MODEL_H
-#define PLASMA_LLIUREX_ONEDRIVE_WIDGET_MODEL_H
+#ifndef PLASMA_LLIUREX_ONEDRIVE_WIDGET_SPACES_MODEL_H
+#define PLASMA_LLIUREX_ONEDRIVE_WIDGET_SPACES_MODEL_H
 
 #include <QAbstractListModel>
 #include <QVector>
 
-#include "LliurexOneDriveWidgetItem.h"
+#include "LliurexOneDriveWidgetSpaceItem.h"
 
 /**
- * Data model holding disk quota items.
+ * Data model holding spaces items.
  */
-class LliurexOneDriveWidgetModel : public QAbstractListModel
+class LliurexOneDriveWidgetSpacesModel : public QAbstractListModel
 {
     Q_OBJECT
 
 public:
-    LliurexOneDriveWidgetModel(QObject *parent = nullptr);
+    LliurexOneDriveWidgetSpacesModel(QObject *parent = nullptr);
 
 public: // QAbstractListModel overrides
     /**
@@ -52,7 +52,7 @@ public: // additional helper functions
      * Merges @p items into the existing quota item list. Old items that are
      * not available in @p items anymore are deleted.
      */
-    void updateItems(const QVector<LliurexOneDriveWidgetItem> &items);
+    void updateItems(const QVector<LliurexOneDriveWidgetSpaceItem> &items);
 
     /**
      * Clears all items in the model.
@@ -60,7 +60,7 @@ public: // additional helper functions
     void clear();
 
 private:
-    QVector<LliurexOneDriveWidgetItem> m_items;
+    QVector<LliurexOneDriveWidgetSpaceItem> m_items;
 };
 
-#endif // PLASMA_LLIUREX_ONEDRIVE_WIDGET_MODEL_H
+#endif // PLASMA_LLIUREX_ONEDRIVE_WIDGET_SPACES_MODEL_H

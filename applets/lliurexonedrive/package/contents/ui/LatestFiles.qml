@@ -1,0 +1,109 @@
+import QtQuick 2.6
+import QtQuick.Layouts 1.12
+import QtQuick.Controls 2.6 as QQC2
+import QtQml.Models 2.3
+import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.plasmoid 2.0
+import org.kde.plasma.components 2.0 as Components
+
+import org.kde.plasma.extras 2.0 as PlasmaExtras
+import org.kde.kirigami 2.12 as Kirigami
+import org.kde.plasma.private.lliurexonedrive 1.0
+
+Rectangle{
+	color:"transparent"
+	GridLayout{
+        id:filesLayout
+        rows: 2
+        flow: GridLayout.TopToBottom
+        rowSpacing:10
+        width:parent.width
+        RowLayout{
+            id:headLatestFiles
+            Layout.fillWidth:true
+            QQC2.ToolButton {
+                height:35
+                width:35
+                icon.name:"arrow-left.svg"
+                Layout.rightMargin:filesLayout.width/3-35/2
+                QQC2.ToolTip{   
+                    text:i18n("Back to space view")
+                }
+                onClicked:lliurexOneDriveWidget.manageNavigation(1) 
+            } 
+           Components.Label{
+                id:headFilesText
+                text:i18n("List of files")
+                font.italic:true
+                font.pointSize:11
+                Layout.fillWidth:true
+                Layout.alignment:Qt.AlignHCenter
+            }
+            QQC2.ToolButton {
+                width:35
+                height:35
+                Layout.alignment:Qt.AlignRight
+                icon.name:"view-refresh"
+                QQC2.ToolTip{
+                    text:i18n("Click to refresh list")
+                }
+                onClicked:{
+                    lliurexOneDriveWidget.getLatestFiles()
+                    listView.forceActiveFocus()
+                    if (listView.count > 0){
+                        listView.currentIndex=0
+                    }
+
+                }
+
+            } 
+        }
+       PlasmaExtras.ScrollArea {
+            Layout.topMargin:10
+            Layout.bottomMargin:10
+            Layout.leftMargin:5
+            Layout.rightMargin:5
+            implicitWidth:parent.width-10
+            implicitHeight:250
+            ListView{
+                id:listView
+                focus:true
+                model:lliurexOneDriveWidget.filesModel
+                currentIndex: -1
+                boundsBehavior: Flickable.StopAtBounds
+                interactive: contentHeight > height
+                highlight: Rectangle { color: "#add8e6"; opacity:0.8;border.color:"#53a1c9" }
+                highlightMoveDuration: 0
+                highlightResizeDuration: 0
+                delegate: ListDelegateFileItem {
+                    fileName: model.fileName
+                    filePath: model.filePath
+                    fileDate: model.fileDate
+                    fileTime: model.fileTime
+                }
+                 Kirigami.PlaceholderMessage { 
+                    id: emptyHint
+                    anchors.centerIn: parent
+                    width: parent.width - (units.largeSpacing * 4)
+                    visible: {
+                        if ((listView.count === 0)&&(!lliurexOneDriveWidget.showSearchFiles)){
+                            return true
+                        }else{
+                            return false
+                        } 
+                    }    
+                    text: i18n("Information is not available")
+                }
+                 Kirigami.PlaceholderMessage {
+                    id: showHint
+                    anchors.centerIn: parent
+                    width: parent.width - (units.largeSpacing * 4)
+                    visible: lliurexOneDriveWidget.showSearchFiles
+                    text: i18n("Searching information. Wait a moment...")
+                }
+               
+            }
+        }
+    }
+
+}

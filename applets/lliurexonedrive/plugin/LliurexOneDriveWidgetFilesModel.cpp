@@ -1,9 +1,9 @@
 
-#include "LliurexOneDriveWidgetModel.h"
+#include "LliurexOneDriveWidgetFilesModel.h"
 
 #include <QDebug>
 
-LliurexOneDriveWidgetModel::LliurexOneDriveWidgetModel(QObject *parent)
+LliurexOneDriveWidgetFilesModel::LliurexOneDriveWidgetFilesModel(QObject *parent)
     : QAbstractListModel(parent)
 {
 }
@@ -20,7 +20,7 @@ namespace {
     };
 }
 
-QHash<int, QByteArray> LliurexOneDriveWidgetModel::roleNames() const
+QHash<int, QByteArray> LliurexOneDriveWidgetFilesModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
     roles[FileNameRole] = "fileName";
@@ -31,7 +31,7 @@ QHash<int, QByteArray> LliurexOneDriveWidgetModel::roleNames() const
     return roles;
 }
 
-QVariant LliurexOneDriveWidgetModel::data(const QModelIndex &index, int role) const
+QVariant LliurexOneDriveWidgetFilesModel::data(const QModelIndex &index, int role) const
 {
     if (! index.isValid() || index.row() >= m_items.size()) {
         return QVariant();
@@ -50,7 +50,7 @@ QVariant LliurexOneDriveWidgetModel::data(const QModelIndex &index, int role) co
     return QVariant();
 }
 
-int LliurexOneDriveWidgetModel::rowCount(const QModelIndex &index) const
+int LliurexOneDriveWidgetFilesModel::rowCount(const QModelIndex &index) const
 {
     if (! index.isValid()) {
         return m_items.size();
@@ -59,13 +59,13 @@ int LliurexOneDriveWidgetModel::rowCount(const QModelIndex &index) const
     return 0;
 }
 
-bool LliurexOneDriveWidgetModel::setData(const QModelIndex &index, const QVariant &variant, int role)
+bool LliurexOneDriveWidgetFilesModel::setData(const QModelIndex &index, const QVariant &variant, int role)
 {
     Q_UNUSED(role)
 
     const int row = index.row();
     if (index.isValid() && row < m_items.size()) {
-        const LliurexOneDriveWidgetItem item = variant.value<LliurexOneDriveWidgetItem>();
+        const LliurexOneDriveWidgetFileItem item = variant.value<LliurexOneDriveWidgetFileItem>();
 
         // This assert makes sure that changing items modify the correct item:
         // therefore, the unique identifier 'filePath()' is used. If that
@@ -83,7 +83,7 @@ bool LliurexOneDriveWidgetModel::setData(const QModelIndex &index, const QVarian
     return false;
 }
 
-bool LliurexOneDriveWidgetModel::insertRows(int row, int count, const QModelIndex &parent)
+bool LliurexOneDriveWidgetFilesModel::insertRows(int row, int count, const QModelIndex &parent)
 {
     // only top-level items are supported
     if (parent.isValid()) {
@@ -91,13 +91,13 @@ bool LliurexOneDriveWidgetModel::insertRows(int row, int count, const QModelInde
     }
 
     beginInsertRows(QModelIndex(), row, row + count - 1);
-    m_items.insert(row, count, LliurexOneDriveWidgetItem());
+    m_items.insert(row, count, LliurexOneDriveWidgetFileItem());
     endInsertRows();
 
     return true;
 }
 
-bool LliurexOneDriveWidgetModel::removeRows(int row, int count, const QModelIndex &parent)
+bool LliurexOneDriveWidgetFilesModel::removeRows(int row, int count, const QModelIndex &parent)
 {
     // only top-level items are valid
     if (parent.isValid() || (row + count) >= m_items.size()) {
@@ -111,7 +111,7 @@ bool LliurexOneDriveWidgetModel::removeRows(int row, int count, const QModelInde
     return true;
 }
 
-void LliurexOneDriveWidgetModel::clear()
+void LliurexOneDriveWidgetFilesModel::clear()
 {
     beginResetModel();
     m_items.clear();
@@ -119,7 +119,7 @@ void LliurexOneDriveWidgetModel::clear()
 }
 
 namespace {
-    QStringList filePaths(const QVector<LliurexOneDriveWidgetItem> &items)
+    QStringList filePaths(const QVector<LliurexOneDriveWidgetFileItem> &items)
     {
         QStringList list;
         for (auto & item : items) {
@@ -128,7 +128,7 @@ namespace {
         return list;
     }
 
-    int indexOfFilePath(const QString &filePath, const QVector<LliurexOneDriveWidgetItem> &items)
+    int indexOfFilePath(const QString &filePath, const QVector<LliurexOneDriveWidgetFileItem> &items)
     {
         for (int i = 0; i < items.size(); ++i) {
             if (filePath == items[i].filePath()) {
@@ -139,7 +139,7 @@ namespace {
     }
 }
 
-void LliurexOneDriveWidgetModel::updateItems(const QVector<LliurexOneDriveWidgetItem> &items)
+void LliurexOneDriveWidgetFilesModel::updateItems(const QVector<LliurexOneDriveWidgetFileItem> &items)
 {
     QStringList unusedFilePaths = filePaths(m_items);
     // merge existing and new file paths
