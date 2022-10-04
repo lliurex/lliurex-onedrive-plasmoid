@@ -1,3 +1,9 @@
+plasma-widget-lliurex-onedrive (1.5) focal; urgency=medium
+
+  * New version with multi-spaces synchronization
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Tue, 04 Oct 2022 11:57:52 +0200
+
 plasma-widget-lliurex-onedrive (1.4.2) focal-updates; urgency=medium
 
   * Fixed changes to support onedrive v2.4.18
