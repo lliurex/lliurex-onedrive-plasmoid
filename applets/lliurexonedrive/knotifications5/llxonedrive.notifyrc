@@ -4,33 +4,61 @@ Comment=Lliurex OneDrive
 Comment[ca@valencia]=Lliurex OneDrive
 Comment[es]=Lliurex OneDrive
 
+[Event/ErrorFolder]
+Name=Detected problems with local folder of one or more spaces.
+Name[ca@valencia]=S'ha detectat problemes amb la carpeta local d'un o més espais
+Name[es]=Se ha detectado problemas con la carpeta local de uno o más espacios
 
-[Event/ErrorStatus]
-Name=OneDrive has reported an error
-Name[ca@valencia]=OneDrive ha notificat un error
-Name[es]=OneDrive ha notificado un error
+Comment=Occurs when the OneDrive health check detects a problem with local folder 
+Comment[ca@valencia]=Ocorre quan la comprovació de l'estat de OneDrive detecta un problema amb la carpeta local
+Comment[es]=Ocurre cuando la comprobación del estado de OneDrive detecta un problema con la carpeta local
+Action=Popup
+
+[Event/Error]
+Name=OneDrive has reported an error in one or more spaces
+Name[ca@valencia]=OneDrive ha notificat un error en un o més espais
+Name[es]=OneDrive ha notificado un error en uno o más espacios
 
 Comment=Occurs when the OneDrive health check detects an error 
 Comment[ca@valencia]=Ocorre quan la comprovació de l'estat de OneDrive detecta un error
 Comment[es]=Ocurre cuando la comprobación del estado de OneDrive detecta un error
 Action=Popup
 
-[Event/ErrorStart]
-Name=Unable to start synchronization
-Name[ca@valencia]=No és possible iniciar la sincronització
-Name[es]=No es posible iniciar la sincronización
+[Event/GeneralError]
+Name=Unable to connect with Microsoft OneDrive
+Name[ca@valencia]=No és possible connectar amb Microsoft OneDrive
+Name[es]=No es posible conectar con Microsoft OneDrive
 
-Comment=Occurs when synchronization cannot be started 
-Comment[ca@valencia]=Ocorre quan no és possible iniciar la sincronització
-Comment[es]=Ocurre cuando no es posible iniciar la sincronización
+Comment=Occurs when it is not possible to connect with OneDrive
+Comment[ca@valencia]=Ocorre quan no és possible connectar amb OneDrive
+Comment[es]=Ocurre cuando no es posible conectar con OneDrive
 Action=Popup
 
-[Event/ErrorStop]
-Name=Occurs when synchronization cannot be stopped 
-Name[ca@valencia]=Ocorre quan no és possible parar la sincronització
-Name[es]=Ocurre cuando no es posible parar la sincronización
+[Event/MigrationWarning]
+Name=Old OneDrive configuration detected.It is necessary to migrate
+Name[ca@valencia]=S'ha detectat una configuracio antiga de OneDrive. És necessari migrar
+Name[es]=Se ha detectado una configuracion antigua de OneDrive. Es necesario migrar
 
-Comment=Unable to stop synchronization
-Comment[ca@valencia]=No és possible parar la sincronització
-Comment[es]=No es posible parar la sincronización
+Comment=Occurs when and old OneDrive configuration is detected
+Comment[ca@valencia]=Ocorre quan es detecta una configuració antiga de OneDrive
+Comment[es]=Ocurre cuando se detecta una configuración antigua de OneDrive
+Action=Popup
+
+[Event/WarningHDD]
+Name=The available space in HDD is less than 10 GB
+Name[ca@valencia]=L'espaci disponible en el disc dur és menor de 10 GB
+Name[es]=El espacio disponible en el disco duro es menor de 10 GB
+
+Comment=Occurs when the HDD has less than 10 GB of free space
+Comment[ca@valencia]=Ocorre quan el disc dur té menys de 10 GB d'espai lliure
+Comment[es]=Ocurre cuando el disco duro tiene menos de 10 GB de espacio libre
+Action=Popup
+
+[Event/ErrorHDD]
+Name=The available space in HDD is less than 5 GB. No more files will be synced
+Name[ca@valencia]=L'espai disponible en el disc dur és menor de 5 GB. No se sincronitzarà mes contingut
+Name[es]=El espacio disponible en el disco duro es menor de 5 GB. No se sincronizará más contenido
+Comment=Occurs when the HDD has less than 5 GB of free space
+Comment[ca@valencia]=Ocorre quan el disc dur té menys de 5 GB d'espai lliure
+Comment[es]=Ocurre cuando el disco duro tiene menos de 5 GB de espacio libre
 Action=Popup

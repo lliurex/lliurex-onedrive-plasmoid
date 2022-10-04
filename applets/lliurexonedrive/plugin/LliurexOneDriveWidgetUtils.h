@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QProcess>
 #include <QFile>
+#include <QJsonArray>
 
 
 class QTimer;
@@ -19,47 +20,48 @@ public:
     LliurexOneDriveWidgetUtils(QObject *parent = nullptr);
 
     QString getUserHome();
-    void manageSync(bool isRunning);
-
-    QStringList getAccountStatus(int exitCode,QString poutProces,QString perrProcess);
-    QString getErrorMessage(QString code);
-    QList<QStringList> getFiles(QStringList info);
-    void checkIfLocalFolderExists();
-
-    QString UPLOADING_PENDING_CHANGES="416";
-    QString NETWORK_CONNECT_ERROR="-2";
-    QString ZERO_SPACE_AVAILABLE="-4";
-    QString UNAUTHORIZED_ERROR="-7";
-    QString GENERAL_ERROR="-1";
-    QString NO_PENDING_SYNC="0";
-    QString OUT_OF_SYNC="1";
-    QString SERVICE_UNAVAILABLE="-9";
-    bool startLocked=false;
+    QVariantList getSpacesInfo(QString onedriveConfig);
+    QList<bool> checkLocalFolder(QString spaceFolderPath);
+    QStringList readStatusToken(QString spaceConfigPath);
+    bool checkIfSpaceSyncIsRunning(QString spaceConfigPath);
+    QString getGlobalStatus();
+    QString checkLocalFreeSpace();
+    QList<QStringList> getFiles(QStringList info,QString spaceLocalFolder);
+    void restoreSyncListFile(QString spaceConfigPath);
+    
+    QJsonArray onedriveConfig;
     QFile localFolderEmptyToken;
     QFile localFolderRemovedToken;
+    QFile spaceStatusToken;
+    QFile spaceRunToken;
+    QFile freeSpaceWarningToken;
+    QFile freeSpaceErrorToken;
+    int totalSpaces;
+    QList<int> spacesStatusCode;
+    QList<int> spacesStatusErrorCode;
+    bool isLocalFolderWarning=false;
+    bool areSpacesSyncRunning=false;
+
+    int MICROSOFT_API_ERROR=-1;
+    int UNABLE_CONNECT_MICROSOFT_ERROR=-2;
+    int ZERO_SPACE_AVAILABLE_ERROR=-4;
+    int UNAUTHORIZED_ERROR=-7;
+    int SERVICE_UNAVAILABLE=-9;
+
+    int ALL_SYNCHRONIZE_MSG=0;
+    int OUT_OF_SYNC_MSG=2;
+    int WITH_OUT_CONFIG=1;
+    int INFORMATION_NOT_AVAILABLE=3;
+    int UPLOADING_PENDING_CHANGES=4;
+    QList <int> warningCode={UPLOADING_PENDING_CHANGES,OUT_OF_SYNC_MSG};
+    QList <int> errorCode={MICROSOFT_API_ERROR,UNABLE_CONNECT_MICROSOFT_ERROR,ZERO_SPACE_AVAILABLE_ERROR,UNAUTHORIZED_ERROR,SERVICE_UNAVAILABLE};
 
 private:
-    
+
     QString formatFreeSpace(QString freeSpace);
     QString formatFileDate(QString fileDate);
-
-    void restoreSyncListFile();
-    void managelocalFolderToken (bool remove, bool empty);
-    void manageLockAutoStart();
-
-    QProcess *m_isSystemdActive=nullptr;
-    QFile SYSTEMDTOKEN;
     QFile syncList;
     QFile syncListHash;
-    QFile lockAutoStartToken;
-
-  
-private slots:
-
-    void checkIsSystemdActive();
-    void checkIsSystemdActiveFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
 };
-
-
 #endif // PLASMA_LLIUREX_UP_INDICATOR_UTILS_H
