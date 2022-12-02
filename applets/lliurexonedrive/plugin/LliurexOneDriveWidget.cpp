@@ -228,8 +228,10 @@ void LliurexOneDriveWidget::isLliurexOneDriveOpenProcessFinished(int exitCode, Q
 void LliurexOneDriveWidget::checkStatus(){
 
     lastCheck=lastCheck+5;
+    lastErrorNotification=lastErrorNotification+5;
+
     if ((lastCheck>90) || (updateGlobalStatus)){
-        bool showNotification=false;
+        bool showErrorNotification=false;
         QString msgError;
         bool processError=true;
 
@@ -242,6 +244,7 @@ void LliurexOneDriveWidget::checkStatus(){
             previousError=false;
             previousStatusError.clear();
             countRepeatGeneralError=0;
+            lastErrorNotification=0;
 
         }else if (globalStatus=="Warning"){
             warning=true;
@@ -250,33 +253,37 @@ void LliurexOneDriveWidget::checkStatus(){
             previousError=false;
             previousStatusError.clear();
             countRepeatGeneralError=0;
+            lastErrorNotification=0;
         }else{
             warning=false;
+            countRepeatGeneralError+=1;
+            if (countRepeatGeneralError<2){
+                processError=false;
+            }
             if (globalStatus=="GeneralError"){
-                countRepeatGeneralError+=1;
                 msgError=i18n("Unable to connect with Microsoft OneDrive");
-                if (countRepeatGeneralError<2){
-                    processError=false;
-                }
             }else if (globalStatus=="Error"){
                 msgError=i18n("OneDrive has reported an error in one or more spaces");
-                countRepeatGeneralError=0;
-  
             }
             QString subtooltip(msgError);
             updateWidget(subtooltip,"onedrive-error");
             if(processError){
                 if (previousError){
                     if (previousStatusError!=m_utils->spacesStatusErrorCode){
-                        showNotification=true;
+                        showErrorNotification=true;
                         previousStatusError=m_utils->spacesStatusErrorCode;
+                    }else{
+                        if (lastErrorNotification>360){
+                            showErrorNotification=true;
+                        }    
                     }
                 }else{
                     previousError=true;
                     previousStatusError=m_utils->spacesStatusErrorCode;
-                    showNotification=true;
+                    showErrorNotification=true;
                 }
-                if (showNotification){
+                if (showErrorNotification){
+                    lastErrorNotification=0;
                     m_errorNotification = KNotification::event(globalStatus, subtooltip, {}, "onedrive-widget", nullptr, KNotification::CloseOnTimeout , QStringLiteral("llxonedrive"));
                     QString name = i18n("Open Lliurex OneDrive");
                     m_errorNotification->setDefaultAction(name);

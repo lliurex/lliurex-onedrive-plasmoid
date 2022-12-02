@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lliurexonedrive\n"
 "Report-Msgid-Bugs-To: http://lliurex.net\n"
-"POT-Creation-Date: 2022-07-20 12:52+0200\n"
-"PO-Revision-Date: 2022-07-27 14:39+0200\n"
+"POT-Creation-Date: 2022-12-02 11:05+0100\n"
+"PO-Revision-Date: 2022-12-02 11:09+0100\n"
 "Last-Translator: d33475574v <gimenez_angcam@gva.es>\n"
 "Language-Team: Valencian <https://weblate.gva.es/projects/lliurex-onedrive/"
 "onedrive-plamsoid/ca@valencia/>\n"
@@ -65,62 +65,67 @@ msgstr "L'arxiu no existeix. Actualitze la llista"
 msgid "Click to get details of:\n"
 msgstr "Feu clic per a vore els details de:\n"
 
-#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:152
+#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:154
 #, kde-format
 msgid "Local folder has been deleted or emptied"
 msgstr "La carpeta local ha sigut esborrada o buidada"
 
-#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:157
+#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:159
 #, kde-format
 msgid "All content synchronized"
 msgstr "Tot el contingut està sincronitzat"
 
-#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:160
+#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:162
 #, kde-format
 msgid "Content pending syncing"
 msgstr "Contingut pendent de sincronitzar"
 
-#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:163
+#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:165
 #, kde-format
 msgid "Uploading pending changes"
 msgstr "Pujant canvis pendents"
 
-#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:166
+#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:168
 #, kde-format
 msgid "OneDrive return an error"
 msgstr "OneDrive ha reportat un error"
 
-#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:169
+#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:171
 #, kde-format
 msgid "No connection with OneDrive"
 msgstr "No hi ha connexió amb OneDrive"
 
-#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:172
+#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:174
 #, kde-format
 msgid "Free space is 0"
 msgstr "El espai disponible és 0"
 
-#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:175
+#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:177
 #, kde-format
 msgid "Authorization has expired"
 msgstr "L'autorització ha caducat"
 
-#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:178
+#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:180
 #, kde-format
 msgid "OneDrive not available"
 msgstr "OneDrive no està disponible"
 
-#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:181
+#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:183
+#, kde-format
+msgid "Access denied"
+msgstr "Accés denegat"
+
+#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateSpaceItem.qml:185
 #: ../applets/lliurexonedrive/package/contents/ui/SpaceInfo.qml:143
 #, kde-format
 msgid "Information not available"
 msgstr "La Informació no està disponible"
 
 #: ../applets/lliurexonedrive/package/contents/ui/main.qml:41
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:135
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:156
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:277
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:335
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:141
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:162
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:288
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:346
 #, kde-format
 msgid "Open Lliurex OneDrive"
 msgstr "Obri el LliureX OneDrive"
@@ -216,7 +221,7 @@ msgid "Click to see the list"
 msgstr "Feu clic per a consultar la llista"
 
 #: ../applets/lliurexonedrive/package/contents/ui/SpacesView.qml:26
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:319
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:330
 #, kde-format
 msgid ""
 "The available space in HDD is less than 5 GB. No more files will be synced"
@@ -225,7 +230,7 @@ msgstr ""
 "contingut"
 
 #: ../applets/lliurexonedrive/package/contents/ui/SpacesView.qml:26
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:304
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:315
 #, kde-format
 msgid "The available space in HDD is less than 10 GB"
 msgstr "L'espai disponible en el disc dur és menor de 10 GB"
@@ -235,13 +240,13 @@ msgstr "L'espai disponible en el disc dur és menor de 10 GB"
 msgid "No spaces configured"
 msgstr "No hi ha espais configurats"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:101
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:118
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:106
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:124
 #, kde-format
 msgid "Lliurex OneDrive"
 msgstr "Lliurex OneDrive"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:120
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:126
 #, kde-format
 msgid ""
 "Old OneDrive configuration detected. Access LliureX-OneDrive to run the "
@@ -250,42 +255,42 @@ msgstr ""
 "S'ha detectat una configuració antiga de OneDrive. Executeu LliureX-OneDrive "
 "per a executar el procés de migració"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:133
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:139
 #, kde-format
 msgid "Old OneDrive configuration detected.It is necessary to migrate"
 msgstr "S'ha detectat una configuració antiga de OneDrive. És necessari migrar"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:152
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:158
 #, kde-format
 msgid "Detected problems with local folder of one or more spaces"
 msgstr "Detectat problemes amb la carpeta local d'un o més espais"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:174
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:180
 #, kde-format
 msgid "Starting the synchronization"
 msgstr "S'està iniciant la sincronització"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:179
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:185
 #, kde-format
 msgid "Synchronization is stopped"
 msgstr "La sincronització està parada"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:233
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:241
 #, kde-format
 msgid "All remote changes are synchronized"
 msgstr "Tots els canvis remots estan sincronitzats"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:242
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:251
 #, kde-format
 msgid "One or more spaces have changes pending of synchronization"
 msgstr "Un o més espais tenen canvis pendents de sincronitzar"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:251
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:264
 #, kde-format
 msgid "Unable to connect with Microsoft OneDrive"
 msgstr "No es pot connectar amb Microsoft OneDrive"
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:256
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:266
 #, kde-format
 msgid "OneDrive has reported an error in one or more spaces"
 msgstr "OneDrive ha informat d'un error en un o més espais"
