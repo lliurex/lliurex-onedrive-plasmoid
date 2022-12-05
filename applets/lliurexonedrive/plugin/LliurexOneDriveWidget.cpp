@@ -228,8 +228,7 @@ void LliurexOneDriveWidget::isLliurexOneDriveOpenProcessFinished(int exitCode, Q
 void LliurexOneDriveWidget::checkStatus(){
 
     lastCheck=lastCheck+5;
-    lastErrorNotification=lastErrorNotification+5;
-
+   
     if ((lastCheck>90) || (updateGlobalStatus)){
         bool showErrorNotification=false;
         QString msgError;
@@ -244,6 +243,7 @@ void LliurexOneDriveWidget::checkStatus(){
             previousError=false;
             previousStatusError.clear();
             countRepeatGeneralError=0;
+            countRepeatError=0;
             lastErrorNotification=0;
 
         }else if (globalStatus=="Warning"){
@@ -253,17 +253,22 @@ void LliurexOneDriveWidget::checkStatus(){
             previousError=false;
             previousStatusError.clear();
             countRepeatGeneralError=0;
+            countRepeatError=0;
             lastErrorNotification=0;
         }else{
             warning=false;
-            countRepeatGeneralError+=1;
-            if (countRepeatGeneralError<2){
-                processError=false;
-            }
             if (globalStatus=="GeneralError"){
+                countRepeatGeneralError+=1;
                 msgError=i18n("Unable to connect with Microsoft OneDrive");
+                countRepeatError=0;
             }else if (globalStatus=="Error"){
+                countRepeatError+=1;
                 msgError=i18n("OneDrive has reported an error in one or more spaces");
+                countRepeatGeneralError=0;
+        
+            }
+            if ((countRepeatGeneralError<2) && (countRepeatError<2)){
+                processError=false;
             }
             QString subtooltip(msgError);
             updateWidget(subtooltip,"onedrive-error");
@@ -273,7 +278,8 @@ void LliurexOneDriveWidget::checkStatus(){
                         showErrorNotification=true;
                         previousStatusError=m_utils->spacesStatusErrorCode;
                     }else{
-                        if (lastErrorNotification>360){
+                        lastErrorNotification+=1;
+                        if (lastErrorNotification>40){
                             showErrorNotification=true;
                         }    
                     }
@@ -304,19 +310,20 @@ void LliurexOneDriveWidget::checkStatus(){
 void LliurexOneDriveWidget::checkHddFreeSpaceStatus(){
 
     setHddFreeSpaceStatus(m_utils->checkLocalFreeSpace());
-    lastHddCheck=lastHddCheck+5;
+   
     bool showNotification=false;
     QString subtooltip="";
     QString hddStatus="";
     
     if (m_hddFreeSpaceStatus!="HDD_OK"){
+        lastHddCheck+=1;
         if (m_hddFreeSpaceStatus=="HDD_Warning"){
             hddStatus="WarningHDD";
             subtooltip=i18n("The available space in HDD is less than 10 GB");
             updateWidget(subtooltip,"onedrive-waiting");
             previousHddError=false;
             if (previousHddWarning){
-                if (lastHddCheck>720){
+                if (lastHddCheck>40){
                     showNotification=true;
                     lastHddCheck=0;
                 }
@@ -331,7 +338,7 @@ void LliurexOneDriveWidget::checkHddFreeSpaceStatus(){
             updateWidget(subtooltip,"onedrive-error");
             previousHddWarning=false;
             if (previousHddError){
-                if (lastHddCheck>360){
+                if (lastHddCheck>20){
                     showNotification=true;
                     lastHddCheck=0;
                 }

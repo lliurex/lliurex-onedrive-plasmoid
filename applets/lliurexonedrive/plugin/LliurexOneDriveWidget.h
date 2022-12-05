@@ -152,8 +152,9 @@ private:
     bool isWorking=false;
     int lastCheck=80;
     int lastHddCheck=0;
-    int lastErrorNotification=80;
+    int lastErrorNotification=0;
     int countRepeatGeneralError;
+    int countRepeatError;
     bool previousError=false;
     bool previousHddWarning=false;
     bool previousHddError=false;
