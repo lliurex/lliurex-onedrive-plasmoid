@@ -179,6 +179,8 @@ Components.ListItem {
                 case -9:
                     msg=i18n("OneDrive not available")
                     break
+                case -14:
+                    msg=i18n("Access denied")
                 default:
                     msg=i18n("Information not available")
                     break
