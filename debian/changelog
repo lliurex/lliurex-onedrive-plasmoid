@@ -1,3 +1,9 @@
+plasma-widget-lliurex-onedrive (1.5.1) focal; urgency=medium
+
+  * Improved mechanism to show notifications about errors
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Mon, 12 Dec 2022 10:09:49 +0100
+
 plasma-widget-lliurex-onedrive (1.5) focal; urgency=medium
 
   * New version with multi-spaces synchronization
