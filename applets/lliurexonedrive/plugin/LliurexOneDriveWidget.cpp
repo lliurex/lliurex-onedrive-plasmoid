@@ -73,6 +73,8 @@ void LliurexOneDriveWidget::worker(){
                                 spaceIdMatch=true;
                                 setFreeSpace(tmpList[9].toString());
                                 setSyncStatus(tmpList[10].toBool());
+                                getLogSize(tmpList[6].toString());
+
                                 if (tmpList[11].toBool()){
                                     setLliurexOneDriveOpen(true);
                                 }else{
@@ -479,6 +481,7 @@ void LliurexOneDriveWidget::goToSpace(QString const &idSpace ){
                     setLliurexOneDriveOpen(false);
                 }
             }
+            getLogSize(spaceConfigPath);
             setClickedSyncBtn(false);
             manageNavigation(1);
             break;
@@ -739,3 +742,40 @@ LliurexOneDriveWidgetFilesModel *LliurexOneDriveWidget::filesModel() const
 {
     return m_filesModel;
 }
+
+QString LliurexOneDriveWidget::logFileSize() const
+{
+    return m_logFileSize;
+}
+
+void LliurexOneDriveWidget::setLogFileSize(const QString &logFileSize)
+{
+    if (m_logFileSize != logFileSize) {
+        m_logFileSize = logFileSize;
+        emit logFileSizeChanged();
+    }
+}
+
+void LliurexOneDriveWidget::getLogSize(QString configPath)
+{
+
+     QString user=userHome.split("/")[2];
+     logFilePath=configPath+"/log/"+user+".onedrive.log";
+     QString logSize=m_utils->getLogFileSize(logFilePath);
+     setLogFileSize(logSize);
+
+}
+
+void LliurexOneDriveWidget::openLogFile()
+{
+            
+    recentFile.setFileName(logFilePath);
+    if (recentFile.exists()){
+        QString command="xdg-open "+logFilePath;
+        KIO::CommandLauncherJob *job = nullptr;
+        job = new KIO::CommandLauncherJob(command);
+        job->start();
+    }
+}
+
+

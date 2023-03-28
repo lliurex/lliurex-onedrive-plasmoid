@@ -15,7 +15,7 @@ Rectangle{
 
     GridLayout{
 	    id: optionsAccount
-	    rows: 7
+	    rows: 8
 	    flow: GridLayout.TopToBottom
 	    rowSpacing:10
 	    width:parent.width
@@ -215,6 +215,45 @@ Rectangle{
 	            }
 	            QQC2.ToolTip{
 	                text:i18n("Click to see the list")
+	            }
+	        } 
+	    }
+
+	    RowLayout{
+	        id: logFile
+	        Layout.fillWidth:true
+	        Layout.leftMargin:5
+	        Layout.rightMargin:5
+	        visible:{
+	        	if (lliurexOneDriveWidget.logFileSize!=""){
+	        		true
+	        	}else{
+	        		false
+	        	}
+	        }
+
+	        Components.Label{
+	            id:logSizeT
+	            text:i18n("Current log file size:")
+	            Layout.rightMargin:5
+	            
+	        }
+
+	        Components.Label{
+	            id:logSizeValue
+	            text:lliurexOneDriveWidget.logFileSize
+	            Layout.fillWidth:true
+	        }
+	       
+	        QQC2.ToolButton {
+	            width:35
+	            height:35
+	            icon.name:"document-open-file.svg"
+	            onClicked:{
+	                lliurexOneDriveWidget.openLogFile()
+	            }
+	            QQC2.ToolTip{
+	                text:i18n("Click to see log file")
 	            }
 	        } 
 	    }
