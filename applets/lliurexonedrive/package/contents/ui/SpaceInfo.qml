@@ -234,7 +234,7 @@ Rectangle{
 
 	        Components.Label{
 	            id:logSizeT
-	            text:i18n("Current log file size:")
+	            text:i18n("Log file size:")
 	            Layout.rightMargin:5
 	            
 	        }
