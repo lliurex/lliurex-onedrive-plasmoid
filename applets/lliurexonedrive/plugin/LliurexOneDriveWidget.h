@@ -36,6 +36,7 @@ class LliurexOneDriveWidget : public QObject
     Q_PROPERTY(LliurexOneDriveWidgetFilesModel* filesModel READ filesModel CONSTANT)
     Q_PROPERTY(QString hddFreeSpaceStatus READ hddFreeSpaceStatus NOTIFY hddFreeSpaceStatusChanged)
     Q_PROPERTY(bool clickedSyncBtn READ clickedSyncBtn NOTIFY clickedSyncBtnChanged)
+    Q_PROPERTY(QString logFileSize READ logFileSize NOTIFY logFileSizeChanged )
     Q_ENUMS(TrayStatus)
 
 public:
@@ -85,6 +86,9 @@ public:
     QString hddFreeSpaceStatus() const;
     void setHddFreeSpaceStatus(const QString &hddFreeSpaceStatus);
 
+    QString logFileSize() const;
+    void setLogFileSize(const QString &logFileSize);
+
     bool syncStatus();
     void setSyncStatus(bool);
     bool lliurexOneDriveOpen();
@@ -109,6 +113,7 @@ public slots:
     void getLatestFiles();
     void goToFile(const QString &filePath);
     bool checkIfFileExists(const QString &filePath);
+    void openLogFile();
 
 
 signals:
@@ -127,6 +132,7 @@ signals:
     void showSearchFilesChanged();
     void hddFreeSpaceStatusChanged();
     void clickedSyncBtnChanged();
+    void logFileSizeChanged();
 
 private:
 
@@ -141,6 +147,7 @@ private:
     void cleanSpaceInfoVars();
     void showMigrationNotification();
     void checkHddFreeSpaceStatus();
+    void getLogSize(QString configPath);
 
     QTimer *m_timer = nullptr;
     TrayStatus m_status = PassiveStatus;
@@ -187,6 +194,8 @@ private:
     int lastMigrationCheck=350;
     bool m_clickedSyncBtn=false;
     bool updateGlobalStatus=false;
+    QString logFilePath;
+    QString m_logFileSize;
 
 private slots:
 
