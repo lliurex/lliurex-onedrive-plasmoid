@@ -1,3 +1,9 @@
+plasma-widget-lliurex-onedrive (1.5.2) focal; urgency=medium
+
+  * Added option to see log
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Wed, 14 Jun 2023 17:43:28 +0200
+
 plasma-widget-lliurex-onedrive (1.5.1) focal; urgency=medium
 
   * Improved mechanism to show notifications about errors
