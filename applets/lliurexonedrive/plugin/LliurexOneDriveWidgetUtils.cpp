@@ -312,4 +312,16 @@ QString LliurexOneDriveWidgetUtils::checkLocalFreeSpace(){
 
 }
 
+QString LliurexOneDriveWidgetUtils::getLogFileSize(QString logFileSize){
+
+    logFile.setFileName(logFileSize);
+    QString logSize=QString::number(logFile.size());
+    if (logFile.exists()){
+        return formatFreeSpace(logSize);
+    }else{
+        return "";
+    }
+
+}
+
 

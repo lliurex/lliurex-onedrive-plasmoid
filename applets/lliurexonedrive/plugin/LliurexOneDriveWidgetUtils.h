@@ -28,6 +28,7 @@ public:
     QString checkLocalFreeSpace();
     QList<QStringList> getFiles(QStringList info,QString spaceLocalFolder);
     void restoreSyncListFile(QString spaceConfigPath);
+    QString getLogFileSize(QString logFilePath);
     
     QJsonArray onedriveConfig;
     QFile localFolderEmptyToken;
@@ -56,7 +57,8 @@ public:
     int UPLOADING_PENDING_CHANGES=4;
     QList <int> warningCode={UPLOADING_PENDING_CHANGES,OUT_OF_SYNC_MSG};
     QList <int> errorCode={MICROSOFT_API_ERROR,UNABLE_CONNECT_MICROSOFT_ERROR,ZERO_SPACE_AVAILABLE_ERROR,UNAUTHORIZED_ERROR,SERVICE_UNAVAILABLE,FORBIDDEN_USER};
-
+    QFile logFile;
+    
 private:
 
     QString formatFreeSpace(QString freeSpace);
