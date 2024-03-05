@@ -1,11 +1,9 @@
 import QtQuick 2.6
 import QtQuick.Layouts 1.12
-import QtQuick.Controls 2.6 as QQC2
-import QtQml.Models 2.3
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.components 2.0 as Components
-
+import org.kde.plasma.components 3.0 as PC3
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 
 import org.kde.plasma.private.lliurexonedrive 1.0
@@ -23,15 +21,19 @@ Rectangle{
 	    RowLayout{
 	        id:head
 	        Layout.fillWidth:true
-	        QQC2.ToolButton {
+	        PC3.ToolButton {
 	            height:35
 	            width:355
 	            Layout.rightMargin:optionsAccount.width/3 - 50
 	            icon.name:"arrow-left.svg"
-	            QQC2.ToolTip{
+	            PC3.ToolTip{
+	            	id:backTP
 	                text:i18n("Back to main view")
 	            }
-	            onClicked:lliurexOneDriveWidget.manageNavigation(0)
+	            onClicked:{
+	            	backTP.hide()
+	            	lliurexOneDriveWidget.manageNavigation(0)
+	            }
 	        } 
 
 	        Components.Label{
@@ -42,15 +44,20 @@ Rectangle{
 	            Layout.fillWidth:true
 	            Layout.alignment:Qt.AlignHCenter
 	        }
-	        QQC2.ToolButton {
+	        PC3.ToolButton {
 	            id:configureBtn
 	            height:35
 	            width:35
 	            Layout.rightMargin:5
 	            icon.name:"configure.svg"
-	            QQC2.ToolTip{
+	            PC3.ToolTip{
+	            	id:configureTP
 	                text:i18n("Manage space")
-	            }                        onClicked:lliurexOneDriveWidget.launchOneDrive(true)
+	            }
+	            onClicked:{
+	            	configureTP.hide()
+	            	lliurexOneDriveWidget.launchOneDrive(true)
+	            }
 	        } 
 	    } 
      	RowLayout{
@@ -112,13 +119,17 @@ Rectangle{
 	            Layout.preferredWidth:295
 	            elide:Text.ElideMiddle
 	        }
-	        QQC2.ToolButton {
+	        PC3.ToolButton {
 	            width:35
 	            height:35
 	            icon.name:"document-open-folder.svg"
-	            onClicked:lliurexOneDriveWidget.openFolder()
-	            QQC2.ToolTip{
+	            PC3.ToolTip{
+	            	id:folderTP
 	                text:i18n("Click to open folder")
+	            }
+	            onClicked:{
+	            	folderTP.hide()
+	            	lliurexOneDriveWidget.openFolder()
 	            }
 	        } 
 	    }
@@ -181,15 +192,19 @@ Rectangle{
 	            Layout.fillWidth:true
 	        }
 
-	        QQC2.ToolButton {
+	        PC3.ToolButton {
 	            width:35
 	            height:35
 	            icon.name:lliurexOneDriveWidget.syncStatus?"kt-stop.svg":"kt-start.svg"
 	            enabled:!lliurexOneDriveWidget.lliurexOneDriveOpen && !lliurexOneDriveWidget.clickedSyncBtn
-	            onClicked:lliurexOneDriveWidget.manageSync() 
-	            QQC2.ToolTip{
+	            PC3.ToolTip{
+	            	id:syncTP
 	                text:lliurexOneDriveWidget.syncStatus?i18n("Click to stop synchronization"):i18n("Click to start synchronization")
 	            }
+	            onClicked:{
+	            	syncTP.hide()
+	            	lliurexOneDriveWidget.manageSync()
+	            } 
 	        } 
 	    } 
 	    RowLayout{
@@ -204,18 +219,20 @@ Rectangle{
 	            Layout.fillWidth:true
 	        }
 	       
-	        QQC2.ToolButton {
+	        PC3.ToolButton {
 	            width:35
 	            height:35
 	            icon.name:"arrow-right.svg"
-	            onClicked:{
-	                lliurexOneDriveWidget.getLatestFiles()
-	                
-	                lliurexOneDriveWidget.manageNavigation(2)
-	            }
-	            QQC2.ToolTip{
+	            PC3.ToolTip{
+	            	id:filesTP
 	                text:i18n("Click to see the list")
 	            }
+	           	onClicked:{
+	           		filesTP.hide()
+	                lliurexOneDriveWidget.getLatestFiles()
+	                lliurexOneDriveWidget.manageNavigation(2)
+	            }
+
 	        } 
 	    }
 
@@ -245,16 +262,19 @@ Rectangle{
 	            Layout.fillWidth:true
 	        }
 	       
-	        QQC2.ToolButton {
+	        PC3.ToolButton {
 	            width:35
 	            height:35
 	            icon.name:"document-open-file.svg"
-	            onClicked:{
-	                lliurexOneDriveWidget.openLogFile()
-	            }
-	            QQC2.ToolTip{
+	            PC3.ToolTip{
+	            	id:logTP
 	                text:i18n("Click to see log file")
 	            }
+	            onClicked:{
+	            	logTP.hide()
+	                lliurexOneDriveWidget.openLogFile()
+	            }
+
 	        } 
 	    }
 	}

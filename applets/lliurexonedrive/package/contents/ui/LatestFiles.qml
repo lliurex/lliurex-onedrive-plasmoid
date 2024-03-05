@@ -1,12 +1,10 @@
 import QtQuick 2.6
 import QtQuick.Layouts 1.12
-import QtQuick.Controls 2.6 as QQC2
 import QtQml.Models 2.3
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.components 2.0 as Components
-
-import org.kde.plasma.extras 2.0 as PlasmaExtras
+import org.kde.plasma.components 3.0 as PC3
 import org.kde.kirigami 2.12 as Kirigami
 import org.kde.plasma.private.lliurexonedrive 1.0
 
@@ -21,17 +19,21 @@ Rectangle{
         RowLayout{
             id:headLatestFiles
             Layout.fillWidth:true
-            QQC2.ToolButton {
+            PC3.ToolButton {
                 height:35
                 width:35
                 icon.name:"arrow-left.svg"
                 Layout.rightMargin:filesLayout.width/3-35/2
-                QQC2.ToolTip{   
+                PC3.ToolTip{
+                    id:backTP   
                     text:i18n("Back to space view")
                 }
-                onClicked:lliurexOneDriveWidget.manageNavigation(1) 
+                onClicked:{
+                    id:backTP.hide()
+                    lliurexOneDriveWidget.manageNavigation(1)
+                } 
             } 
-           Components.Label{
+            Components.Label{
                 id:headFilesText
                 text:i18n("List of files")
                 font.italic:true
@@ -39,15 +41,17 @@ Rectangle{
                 Layout.fillWidth:true
                 Layout.alignment:Qt.AlignHCenter
             }
-            QQC2.ToolButton {
+            PC3.ToolButton {
                 width:35
                 height:35
                 Layout.alignment:Qt.AlignRight
                 icon.name:"view-refresh"
-                QQC2.ToolTip{
+                PC3.ToolTip{
+                    id:filesTP
                     text:i18n("Click to refresh list")
                 }
                 onClicked:{
+                    filesTP.hide()
                     lliurexOneDriveWidget.getLatestFiles()
                     listView.forceActiveFocus()
                     if (listView.count > 0){
@@ -58,7 +62,7 @@ Rectangle{
 
             } 
         }
-       PlasmaExtras.ScrollArea {
+       PC3.ScrollView {
             Layout.topMargin:10
             Layout.bottomMargin:10
             Layout.leftMargin:5
@@ -81,7 +85,7 @@ Rectangle{
                     fileDate: model.fileDate
                     fileTime: model.fileTime
                 }
-                 Kirigami.PlaceholderMessage { 
+                Kirigami.PlaceholderMessage { 
                     id: emptyHint
                     anchors.centerIn: parent
                     width: parent.width - (units.largeSpacing * 4)
@@ -94,7 +98,7 @@ Rectangle{
                     }    
                     text: i18n("Information is not available")
                 }
-                 Kirigami.PlaceholderMessage {
+                Kirigami.PlaceholderMessage {
                     id: showHint
                     anchors.centerIn: parent
                     width: parent.width - (units.largeSpacing * 4)
