@@ -144,11 +144,14 @@ QVariantList LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPat
                 areSpacesSyncRunningCount+=1;
             }
             QString spaceFreeSpace=statusResult[2];
+            /*
             if (spaceFreeSpace!=""){
                 tmpItem.append(formatFreeSpace(spaceFreeSpace));
             }else{
                 tmpItem.append(spaceFreeSpace);
             }
+            */
+            tmpItem.append(spaceFreeSpace);
             tmpItem.append(isSpaceRunning);
             QList<bool>checkFolder=checkLocalFolder(spaceConfigPath);
             if ((!checkFolder[0])&&(!checkFolder[1])){
