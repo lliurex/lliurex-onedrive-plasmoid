@@ -167,7 +167,7 @@ private:
     bool previousHddError=false;
     bool checkExecuted=false;
     bool warning=false;
-    bool showStartLockMessage=true;
+    bool showLocalFolderWarning=true;
     QPointer<KNotification> m_errorNotification;
     QList <int> previousStatusError;
     QVariantList oneDriveSpacesConfig;
@@ -192,6 +192,7 @@ private:
     QFile recentFile;
     QFile OLD_TARGET_FILE;
     int lastMigrationCheck=350;
+    int lastUpdateCheck=350;
     bool m_clickedSyncBtn=false;
     bool updateGlobalStatus=false;
     QString logFilePath;

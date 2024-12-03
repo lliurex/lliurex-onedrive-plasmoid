@@ -67,6 +67,7 @@ void LliurexOneDriveWidget::worker(){
                         item.setStatus(tmpList[8].toString());
                         item.setIsRunning(tmpList[10].toBool());
                         item.setLocalFolderWarning(tmpList[11].toBool());
+                        item.setUpdateRequiredWarning(tmpList[12].toBool());
                         items.append(item);
                         if ((m_currentIndex!=0)&&(spaceId!="")){
                             if (spaceId==tmpList[0].toString()){
@@ -75,7 +76,7 @@ void LliurexOneDriveWidget::worker(){
                                 setSyncStatus(tmpList[10].toBool());
                                 getLogSize(tmpList[6].toString());
 
-                                if (tmpList[11].toBool()){
+                                if (tmpList[11].toBool() || tmpList[12].toBool()){
                                     setLliurexOneDriveOpen(true);
                                 }else{
                                     if (isLliurexOneDriveOpen){
@@ -153,22 +154,39 @@ void LliurexOneDriveWidget::checkIfStartIsLocked(){
     QString subtooltip="";
     checkIsLliurexOneDriveOpen();
     checkIsRunning();
-    if (m_utils->isLocalFolderWarning){
-        warning=false;
-        previousError=false;
-        checkExecuted=false;
-        subtooltip=i18n("Detected problems with local folder of one or more spaces");
-        updateWidget(subtooltip,"onedrive-error");
-        if (showStartLockMessage){
-            m_errorNotification = KNotification::event(QStringLiteral("ErrorFolder"), subtooltip, {}, "onedrive-widget", nullptr, KNotification::CloseOnTimeout , QStringLiteral("llxonedrive"));
-            QString name = i18n("Open Lliurex OneDrive");
-            m_errorNotification->setDefaultAction(name);
-            m_errorNotification->setActions({name});
-            connect(m_errorNotification, QOverload<unsigned int>::of(&KNotification::activated), this, &LliurexOneDriveWidget::launchOneDrive);
-            showStartLockMessage=false;
+
+    if (m_utils->isLocalFolderWarning || m_utils->isUpdateRequiredWarning){
+        if (m_utils->isLocalFolderWarning){
+            warning=false;
+            previousError=false;
+            checkExecuted=false;
+            subtooltip=i18n("Detected problems with local folder of one or more spaces");
+            updateWidget(subtooltip,"onedrive-error");
+            if (showLocalFolderWarning){
+                m_errorNotification = KNotification::event(QStringLiteral("ErrorFolder"), subtooltip, {}, "onedrive-widget", nullptr, KNotification::CloseOnTimeout , QStringLiteral("llxonedrive"));
+                QString name = i18n("Open Lliurex OneDrive");
+                m_errorNotification->setDefaultAction(name);
+                m_errorNotification->setActions({name});
+                connect(m_errorNotification, QOverload<unsigned int>::of(&KNotification::activated), this, &LliurexOneDriveWidget::launchOneDrive);
+            }
+            showLocalFolderWarning=false;
         }
+        if (m_utils->isUpdateRequiredWarning){
+            subtooltip=i18n("New version of OneDrive client detected. Your attention is required");
+            updateWidget(subtooltip,"onedrive-waiting");
+            lastUpdateCheck=lastUpdateCheck+5;
+            if (lastUpdateCheck>360){
+                m_errorNotification = KNotification::event(QStringLiteral("UpdateWarning"), subtooltip, {}, "onedrive-widget", nullptr, KNotification::CloseOnTimeout , QStringLiteral("llxonedrive"));
+                QString name = i18n("Open Lliurex OneDrive");
+                m_errorNotification->setDefaultAction(name);
+                m_errorNotification->setActions({name});
+                connect(m_errorNotification, QOverload<unsigned int>::of(&KNotification::activated), this, &LliurexOneDriveWidget::launchOneDrive);
+                lastUpdateCheck=0;
+            }
+        }
+        isWorking=false;
     }else{
-        showStartLockMessage=true;
+        showLocalFolderWarning=true;
         isWorking=false;
     }
 
@@ -472,7 +490,7 @@ void LliurexOneDriveWidget::goToSpace(QString const &idSpace ){
             spaceSystemd=tmpList[7].toString();
             setFreeSpace(tmpList[9].toString());
             setSyncStatus(tmpList[10].toBool());
-            if (tmpList[11].toBool()){
+            if (tmpList[11].toBool() || tmpList[12].toBool()){
                 setLliurexOneDriveOpen(true);   
             }else{
                 if (isLliurexOneDriveOpen){

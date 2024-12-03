@@ -17,7 +17,8 @@ namespace {
         NameRole,
         StatusRole,
         IsRunningRole,
-        LocalFolderWarningRole
+        LocalFolderWarningRole,
+        UpdateRequiredWarningRole
     };
 }
 
@@ -29,6 +30,7 @@ QHash<int, QByteArray> LliurexOneDriveWidgetSpacesModel::roleNames() const
     roles[StatusRole] = "status";
     roles[IsRunningRole] = "isRunning";
     roles[LocalFolderWarningRole] = "localFolderWarning";
+    roles[UpdateRequiredWarningRole] = "updateRequiredWarning";
 
     return roles;
 }
@@ -47,6 +49,7 @@ QVariant LliurexOneDriveWidgetSpacesModel::data(const QModelIndex &index, int ro
         case StatusRole: return item.status();
         case IsRunningRole: return item.isRunning();
         case LocalFolderWarningRole: return item.localFolderWarning();
+        case UpdateRequiredWarningRole: return item.updateRequiredWarning();
        
     }
 
