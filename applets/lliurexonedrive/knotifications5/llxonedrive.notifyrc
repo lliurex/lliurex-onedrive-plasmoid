@@ -58,7 +58,19 @@ Action=Popup
 Name=The available space in HDD is less than 5 GB. No more files will be synced
 Name[ca@valencia]=L'espai disponible en el disc dur és menor de 5 GB. No se sincronitzarà mes contingut
 Name[es]=El espacio disponible en el disco duro es menor de 5 GB. No se sincronizará más contenido
+
 Comment=Occurs when the HDD has less than 5 GB of free space
 Comment[ca@valencia]=Ocorre quan el disc dur té menys de 5 GB d'espai lliure
 Comment[es]=Ocurre cuando el disco duro tiene menos de 5 GB de espacio libre
 Action=Popup
+
+[Event/UpdateWarning]
+Name=New version of OneDrive client detected. Your attention is required
+Name[es]=Se ha detectado una nueva versión del cliente de OneDrive. Se requiere su atención
+Name[ca@valencia]=S'ha detectat una nova versió del client de OneDrive. Es requerix la seua atenció
+
+Comment=Occurs when the OneDrive client is update to version 2.5
+Comment[es]=Ocurre cuando la versión del cliente de OneDrive se actualiza  la 2.5
+Comment[ca@valencia]=Ocorre quan la versió del client de OneDrive s'actualitza la 2.5
+Action=Popup
+

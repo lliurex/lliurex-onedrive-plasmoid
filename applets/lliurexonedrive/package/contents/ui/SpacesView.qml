@@ -51,6 +51,7 @@ Rectangle{
 	                statusSpace: model.status
 	                isRunningSpace: model.isRunning
 	                localFolderWarning: model.localFolderWarning
+	                updateRequiredWarning:model.updateRequiredWarning
 	            }
 	            Kirigami.PlaceholderMessage { 
 	                id: emptySpaceHint
