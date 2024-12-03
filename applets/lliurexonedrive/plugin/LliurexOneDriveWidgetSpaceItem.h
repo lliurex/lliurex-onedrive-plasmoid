@@ -26,6 +26,8 @@ public:
 
     bool localFolderWarning() const;
     void setLocalFolderWarning(const bool &localFolderWarning);
+    bool updateRequiredWarning() const;
+    void setUpdateRequiredWarning(const bool &updateRequiredWarning);
 
     bool operator==(const LliurexOneDriveWidgetSpaceItem &other) const;
     bool operator!=(const LliurexOneDriveWidgetSpaceItem &other) const;
@@ -36,6 +38,7 @@ private:
     QString m_status;
     bool m_isRunning;
     bool m_localFolderWarning;
+    bool m_updateRequiredWarning;
 };
 
 Q_DECLARE_METATYPE(LliurexOneDriveWidgetSpaceItem)
