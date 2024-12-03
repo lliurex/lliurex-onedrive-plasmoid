@@ -99,6 +99,7 @@ QVariantList LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPat
     QVariantList spacesInfo;
     int localFolderWarningCount=0;
     int areSpacesSyncRunningCount=0;
+    int updateRequiredCount=0;
     totalSpaces=0;
 
     QFile tmpConfig;
@@ -146,6 +147,10 @@ QVariantList LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPat
             QString spaceFreeSpace=statusResult[2];
             /*
             if (spaceFreeSpace!=""){
+                if (spaceFreeSpace.contains("(")){
+                    QStringList tmpSpace=spaceFreeSpace.split(" ");
+                    spaceFreeSpace=tmpSpace[2].replace("(","");
+                }
                 tmpItem.append(formatFreeSpace(spaceFreeSpace));
             }else{
                 tmpItem.append(spaceFreeSpace);
@@ -159,6 +164,11 @@ QVariantList LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPat
             }else{
                 tmpItem.append(true);
                 localFolderWarningCount+=1;
+            }
+            bool updateRequired=checkUpdateRequired(spaceConfigPath);
+            tmpItem.append(updateRequired);
+            if (updateRequired){
+                updateRequiredCount+=1;
             }
             spacesInfo.push_back(tmpItem);
         }
@@ -174,6 +184,12 @@ QVariantList LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPat
         isLocalFolderWarning=true;
     }else{
         isLocalFolderWarning=false;
+    }
+
+    if (updateRequiredCount>0){
+        isUpdateRequiredWarning=true;
+    }else{
+        isUpdateRequiredWarning=false;
     }
     return spacesInfo;
 
@@ -327,4 +343,18 @@ QString LliurexOneDriveWidgetUtils::getLogFileSize(QString logFileSize){
 
 }
 
+bool LliurexOneDriveWidgetUtils::checkUpdateRequired(QString spaceConfigPath){
 
+    QList<bool> result;
+    bool updateRequired=false;
+
+    QDir spaceConfigFolder(spaceConfigPath);
+    updateRequiredToken.setFileName(spaceConfigPath+"/.run/updateRequiredToken");
+
+    if (spaceConfigFolder.exists()){
+        if (updateRequiredToken.exists()){
+            updateRequired=true;
+        }
+     }
+    return updateRequired;
+}

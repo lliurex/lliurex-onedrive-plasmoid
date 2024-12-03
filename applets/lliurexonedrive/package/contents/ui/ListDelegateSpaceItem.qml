@@ -15,6 +15,7 @@ Components.ListItem {
     property int statusSpace
     property bool isRunningSpace
     property bool localFolderWarning
+    property bool updateRequiredWarning
     readonly property bool isTall: height > Math.round(PlasmaCore.Units.gridUnit * 2.5)
 
 	enabled:true
@@ -57,7 +58,7 @@ Components.ListItem {
     		}
     		Components.Label{
     			id:spaceStatusText
-    			text:getStatusText(statusSpace,localFolderWarning)
+    			text:getStatusText(statusSpace,localFolderWarning,updateRequiredWarning)
     			width:260
     			elide:Text.ElideMiddle
     			visible:spaceItem.ListView.isCurrentItem
@@ -73,7 +74,7 @@ Components.ListItem {
         }
         Image {
             id:spaceStatusIcon
-            source:getStatusIcon(statusSpace,localFolderWarning)
+            source:getStatusIcon(statusSpace,localFolderWarning,updateRequiredWarning)
             sourceSize.width:32
             sourceSize.height:32
             anchors.leftMargin:10
@@ -123,9 +124,8 @@ Components.ListItem {
        }
    } 
 
-    function getStatusIcon(statusSpace,localFolderWarning){
-
-        if (localFolderWarning){
+    function getStatusIcon(statusSpace,localFolderWarning,updateRequiredWarning){
+        if (localFolderWarning || updateRequiredWarning){
             return "/usr/share/icons/breeze/status/16/state-warning.svg"
         }else{
             switch (statusSpace){
@@ -149,45 +149,49 @@ Components.ListItem {
 
     }
 
-    function getStatusText(statusSpace,localFolderWarning){
+    function getStatusText(statusSpace,localFolderWarning,updateRequiredWarning){
 
         var msg=""
         if (localFolderWarning){
             msg=i18n("Local folder has been deleted or emptied")
 
         }else{
-            switch (statusSpace){
-                case 0:
-                    msg=i18n("All content synchronized")
-                    break
-                case 2:
-                    msg=i18n("Content pending syncing")
-                    break;
-                case 4:
-                    msg=i18n("Uploading pending changes")
-                    break
-                case -1:
-                    msg=i18n("OneDrive return an error")
-                    break
-                case -2:
-                    msg=i18n("No connection with OneDrive")
-                    break
-                case -4:
-                    msg=i18n("Free space is 0")
-                    break
-                case -7:
-                    msg=i18n("Authorization has expired")
-                    break
-                case -9:
-                    msg=i18n("OneDrive not available")
-                    break
-                case -14:
-                    msg=i18n("Access denied")
-                default:
-                    msg=i18n("Information not available")
-                    break
-            }
+            if (updateRequiredWarning){
+                msg=i18n("Your attention is required")
+            }else{
+                switch (statusSpace){
+                    case 0:
+                        msg=i18n("All content synchronized")
+                        break
+                    case 2:
+                        msg=i18n("Content pending syncing")
+                        break;
+                    case 4:
+                        msg=i18n("Uploading pending changes")
+                        break
+                    case -1:
+                        msg=i18n("OneDrive return an error")
+                        break
+                    case -2:
+                        msg=i18n("No connection with OneDrive")
+                        break
+                    case -4:
+                        msg=i18n("Free space is 0")
+                        break
+                    case -7:
+                        msg=i18n("Authorization has expired")
+                        break
+                    case -9:
+                        msg=i18n("OneDrive not available")
+                        break
+                    case -14:
+                        msg=i18n("Access denied")
+                    default:
+                        msg=i18n("Information not available")
+                        break
+                }
 
+            }
         }
         return msg
 

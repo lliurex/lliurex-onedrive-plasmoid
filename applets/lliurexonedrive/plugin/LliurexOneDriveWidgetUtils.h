@@ -29,6 +29,7 @@ public:
     QList<QStringList> getFiles(QStringList info,QString spaceLocalFolder);
     void restoreSyncListFile(QString spaceConfigPath);
     QString getLogFileSize(QString logFilePath);
+    bool checkUpdateRequired(QString spaceConfigPath);
     
     QJsonArray onedriveConfig;
     QFile localFolderEmptyToken;
@@ -37,11 +38,13 @@ public:
     QFile spaceRunToken;
     QFile freeSpaceWarningToken;
     QFile freeSpaceErrorToken;
+    QFile updateRequiredToken;
     int totalSpaces;
     QList<int> spacesStatusCode;
     QList<int> spacesStatusErrorCode;
     bool isLocalFolderWarning=false;
     bool areSpacesSyncRunning=false;
+    bool isUpdateRequiredWarning=false;
 
     int MICROSOFT_API_ERROR=-1;
     int UNABLE_CONNECT_MICROSOFT_ERROR=-2;
