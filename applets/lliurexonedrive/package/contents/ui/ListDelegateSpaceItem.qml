@@ -1,14 +1,16 @@
-import QtQuick 2.6
-import QtQuick.Layouts 1.12
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.components 2.0 as Components
-import org.kde.plasma.components 3.0 as PC3
-import org.kde.kquickcontrolsaddons 2.0 as KQuickControlsAddons
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.plasmoid
+import org.kde.plasma.components as Components
+import org.kde.plasma.components as PC3
+import org.kde.kquickcontrolsaddons as KQuickControlsAddons
+import org.kde.kirigami as Kirigami
 
 import org.kde.plasma.private.lliurexonedrive 1.0
 
-Components.ListItem {
+Components.ItemDelegate {
     id: spaceItem
     property string idSpace
     property string nameSpace
@@ -16,11 +18,12 @@ Components.ListItem {
     property bool isRunningSpace
     property bool localFolderWarning
     property bool updateRequiredWarning
-    readonly property bool isTall: height > Math.round(PlasmaCore.Units.gridUnit * 2.5)
+    readonly property bool isTall: height > Math.round(Kirigami.Units.gridUnit * 2.5)
 
 	enabled:true
+    height:55
 
-	onContainsMouseChanged: {
+	/*onContainsMouseChanged: {
         if (containsMouse) {
             listSpaceView.currentIndex = index
         } else {
@@ -28,11 +31,24 @@ Components.ListItem {
         }
         listSpaceView.forceActiveFocus()
 
-    }
+    }*/
 
     Item{
     	id:label
     	height:45
+        width:parent.width-loadSpaceBtn.width
+
+        MouseArea {
+           id: mouseAreaOption
+           anchors.fill: parent
+           hoverEnabled:true
+           propagateComposedEvents:true
+
+           onEntered: {
+                console.log("Dentro")
+                listSpaceView.currentIndex = index
+           }
+        }
         Column{
             id:spaceRow
             anchors.verticalCenter: parent.verticalCenter
@@ -42,9 +58,9 @@ Components.ListItem {
     		    text:nameSpace
     		    width:{
                     if (spaceItem.ListView.isCurrentItem){
-                        260
+                       250
                     }else{
-                        310
+                        300
                     }
                 }
     		    elide:Text.ElideMiddle

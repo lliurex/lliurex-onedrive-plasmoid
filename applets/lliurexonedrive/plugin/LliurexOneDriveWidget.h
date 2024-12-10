@@ -8,6 +8,8 @@
 #include <QDir>
 #include <QFile>
 #include <KIO/CommandLauncherJob>
+#include "LliurexOneDriveWidgetFilesModel.h"
+#include "LliurexOneDriveWidgetSpacesModel.h"
 #include "LliurexOneDriveWidgetUtils.h"
 
 class QTimer;

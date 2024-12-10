@@ -120,23 +120,24 @@ QVariantList LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPat
     onedriveConfig=obj.value("spacesList").toArray();
 
 
-    foreach(const QJsonValue &val, onedriveConfig){
-        QString tmpTokenPath=val.toObject().value("configPath").toString()+"/refresh_token";
+    //foreach(const QJsonValue &val, onedriveConfig){
+    for (int i=0;i<onedriveConfig.count();i++){
+        QString tmpTokenPath=onedriveConfig.at(i).toObject().value("configPath").toString()+"/refresh_token";
         QFile tmpTokenFile;
         tmpTokenFile.setFileName(tmpTokenPath);
         if (tmpTokenFile.exists()){
             totalSpaces+=1;
             QVariantList tmpItem;
-            tmpItem.append(val.toObject().value("id").toString());
-            tmpItem.append(val.toObject().value("email").toString());
-            tmpItem.append(val.toObject().value("accountType").toString());
-            tmpItem.append(val.toObject().value("spaceType").toString());
-            tmpItem.append(val.toObject().value("localFolder").toString());
-            QFileInfo fi(val.toObject().value("localFolder").toString());
+            tmpItem.append(onedriveConfig.at(i).toObject().value("id").toString());
+            tmpItem.append(onedriveConfig.at(i).toObject().value("email").toString());
+            tmpItem.append(onedriveConfig.at(i).toObject().value("accountType").toString());
+            tmpItem.append(onedriveConfig.at(i).toObject().value("spaceType").toString());
+            tmpItem.append(onedriveConfig.at(i).toObject().value("localFolder").toString());
+            QFileInfo fi(onedriveConfig.at(i).toObject().value("localFolder").toString());
             tmpItem.append(fi.baseName());
-            QString spaceConfigPath=val.toObject().value("configPath").toString();
+            QString spaceConfigPath=onedriveConfig.at(i).toObject().value("configPath").toString();
             tmpItem.append(spaceConfigPath);
-            tmpItem.append(val.toObject().value("systemd").toString());
+            tmpItem.append(onedriveConfig.at(i).toObject().value("systemd").toString());
             QStringList statusResult=readStatusToken(spaceConfigPath);
             tmpItem.append(statusResult[1].toInt());
             spacesStatusCode.append(statusResult[1].toInt());

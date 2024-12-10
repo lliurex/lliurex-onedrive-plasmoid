@@ -1,0 +1,29 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "juapesai@hotmail.com",
+                "Name": "Juan Ramon Pelegrina"
+            }
+        ],
+        "Category": "Internet",
+        "Description": "Show information and warnings about OneDrive Syncronization",
+        "Description[ca@valencia]": "Mostra informació i avisos sobre la sincronització amb OneDrive",
+        "Description[ca]": "Mostra informació i avisos sobre la sincronització amb OneDrive",
+        "Description[en_GB]":"Show information and warnings about OneDrive Syncronization",
+        "Description[es]": "Muestra información y avisos sobre la sincronización con OneDrive",
+        "EnabledByDefault": true,
+        "Icon": "lliurex-onedrive",
+        "Id": "org.kde.plasma.lliurexonedrive",
+        "License": "LGPL",
+        "Name": "LliureX OneDrive",
+        "Name[ca@valencia]": "LliureX OneDrive",
+        "Name[ca]": "LliureX OneDrive",
+        "Name[en_GB]": "LliureX OneDrive",
+        "Name[es]": "LliureX OneDrive",
+        "Website": "https://lliurex.net/"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0",
+    "X-Plasma-NotificationAreaCategory": "SystemServices"
+}
