@@ -20,50 +20,43 @@ Components.ItemDelegate {
     property bool updateRequiredWarning
     readonly property bool isTall: height > Math.round(Kirigami.Units.gridUnit * 2.5)
 
-	enabled:true
-    height:55
-
-	/*onContainsMouseChanged: {
-        if (containsMouse) {
-            listSpaceView.currentIndex = index
-        } else {
-            listSpaceView.currentIndex = -1
-        }
-        listSpaceView.forceActiveFocus()
-
-    }*/
+    enabled:true
+    height:65
+    width:parent.width
 
     Item{
-    	id:label
-    	height:45
-        width:parent.width-loadSpaceBtn.width
-
+        id:label
+        height:45
+        width:310
+        anchors.fill:parent
         MouseArea {
-           id: mouseAreaOption
-           anchors.fill: parent
-           hoverEnabled:true
-           propagateComposedEvents:true
+            id: mouseAreaOption
+            anchors.fill: parent
+            hoverEnabled:true
+            propagateComposedEvents:true
 
-           onEntered: {
-                console.log("Dentro")
+            onEntered: {
                 listSpaceView.currentIndex = index
-           }
+            }
         }
+
         Column{
             id:spaceRow
             anchors.verticalCenter: parent.verticalCenter
+            anchors.left:parent.left
+            anchors.leftMargin:10
 
-    		Components.Label{
-    		    id:spaceName
-    		    text:nameSpace
-    		    width:{
+            Components.Label{
+                id:spaceName
+                text:nameSpace
+                width:{
                     if (spaceItem.ListView.isCurrentItem){
-                       250
+                        260
                     }else{
-                        300
+                        310
                     }
                 }
-    		    elide:Text.ElideMiddle
+                elide:Text.ElideMiddle
                 font.bold:{
                     if (spaceItem.ListView.isCurrentItem){
                         true
@@ -71,13 +64,14 @@ Components.ItemDelegate {
                         false
                     }
                 }	
-    		}
-    		Components.Label{
-    			id:spaceStatusText
-    			text:getStatusText(statusSpace,localFolderWarning,updateRequiredWarning)
-    			width:260
-    			elide:Text.ElideMiddle
-    			visible:spaceItem.ListView.isCurrentItem
+            }
+            Components.Label{
+                id:spaceStatusText
+                text:getStatusText
+                (statusSpace,localFolderWarning,updateRequiredWarning)
+                width:260
+                elide:Text.ElideMiddle
+                visible:spaceItem.ListView.isCurrentItem
                 font.italic:true
                 font.bold:{
                     if (spaceItem.ListView.isCurrentItem){
@@ -88,6 +82,7 @@ Components.ItemDelegate {
                 }
             }
         }
+
         Image {
             id:spaceStatusIcon
             source:getStatusIcon(statusSpace,localFolderWarning,updateRequiredWarning)
@@ -96,7 +91,8 @@ Components.ItemDelegate {
             anchors.leftMargin:10
             anchors.left:spaceRow.right
             anchors.verticalCenter:parent.verticalCenter
-        }  
+        }
+
         Image {
             id:spaceRunningIcon
             source:{
@@ -105,27 +101,25 @@ Components.ItemDelegate {
                 }else{
                     "/usr/share/icons/breeze/status/16/media-playback-stopped.svg"
                 }
-
             }
             sourceSize.width:32
             sourceSize.height:32
             anchors.leftMargin:15
             anchors.left:spaceStatusIcon.right
             anchors.verticalCenter:parent.verticalCenter
-
-        }     
+        }
         PC3.ToolButton {
-        	id:loadSpaceBtn
-        	width:35
-        	height:35
-                      
+            id:loadSpaceBtn
+            width:35
+            height:35
+
             anchors{
                 left: spaceRunningIcon.right
                 top: spaceName.isTall? parent.top : undefined
-	            verticalCenter: parent.verticalCenter
-	            leftMargin:10
-	            rightMargin:10
-	        }
+                verticalCenter: parent.verticalCenter
+                leftMargin:10
+                rightMargin:10
+            }
             icon.name:"configure"
             visible:spaceItem.ListView.isCurrentItem
             PC3.ToolTip{
@@ -136,11 +130,10 @@ Components.ItemDelegate {
                 detailsTP.hide()
                 lliurexOneDriveWidget.goToSpace(idSpace)
             }
-
        }
-   } 
+   }
 
-    function getStatusIcon(statusSpace,localFolderWarning,updateRequiredWarning){
+   function getStatusIcon(statusSpace,localFolderWarning,updateRequiredWarning){
         if (localFolderWarning || updateRequiredWarning){
             return "/usr/share/icons/breeze/status/16/state-warning.svg"
         }else{
@@ -159,10 +152,8 @@ Components.ItemDelegate {
                     return "/usr/share/icons/breeze/status/16/state-warning.svg"
                     break
             }
-               
-     
+      
         }
-
     }
 
     function getStatusText(statusSpace,localFolderWarning,updateRequiredWarning){
@@ -212,6 +203,5 @@ Components.ItemDelegate {
         return msg
 
     }
-    
-    
+
 }
