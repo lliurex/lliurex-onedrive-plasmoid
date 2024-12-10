@@ -5,17 +5,16 @@ Uploaders: lliurex <lliurex@gva.es>
 Maintainer: lliurex <lliurex@gva.es>
 Build-Depends: cmake (>= 2.8.12),
                debhelper (>= 9),
-               extra-cmake-modules (>= 5.18.0~),
-               pkg-kde-tools (>= 0.15.18~),
-               libkf5plasma-dev (>= 5.17.0~),
-               libkf5i18n-dev (>= 5.17.0~),
-               libqt5x11extras5-dev (>= 5.4),
+               extra-cmake-modules,
+               pkgconf,
+               libkf6plasma-dev,
+               libkf6i18n-dev,
                pkg-config,
-               qtbase5-dev (>= 5.4),
-               qtdeclarative5-dev (>= 5.4),
-	       libkf5runner-dev,
-	       libkf5notifications-dev,
-          kio-dev
+               qt6-base-dev,
+               qt6-declarative-dev,
+               libkf6runner-dev,
+               libkf6notifications-dev,
+               libkf6kio-dev
 Standards-Version: 4.4.1
 Homepage: http://lliurex.net
 Vcs-Browser: https://svn.lliurex.net/focal/lliurex-onedrive-plasmoid
@@ -23,8 +22,8 @@ Vcs-Git: https://github.com/lliurex/lliurex-onedrive-plasmoid
 
 Package: plasma-widget-lliurex-onedrive
 Architecture: any
-Depends: kpackagetool5,
-         libkf5purpose5,
+Depends: kpackagetool6,
+         libkf6purpose6,
          plasma-framework,
          plasma-workspace,
          qml-module-org-kde-kcoreaddons,
