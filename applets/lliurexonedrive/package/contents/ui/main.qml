@@ -1,18 +1,18 @@
-import QtQuick 2.6
-import QtQuick.Layouts 1.12
-import QtQuick.Controls 2.6 as QQC2
-import QtQml.Models 2.3
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.components 2.0 as Components
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls as QQC2
+import QtQml.Models
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.plasmoid 
+import org.kde.plasma.components as Components
 
-import org.kde.plasma.extras 2.0 as PlasmaExtras
-import org.kde.kirigami 2.12 as Kirigami
+import org.kde.plasma.extras as PlasmaExtras
+import org.kde.kirigami as Kirigami
 
 import org.kde.plasma.private.lliurexonedrive 1.0
 // Item - the most basic plasmoid component, an empty container.
 
-Item {
+PlasmoidItem {
 
     id:lliurexonedriveApplet
     LliurexOneDriveWidget{
@@ -30,21 +30,21 @@ Item {
         return  PlasmaCore.Types.ActiveStatus
     }
 
-    Plasmoid.switchWidth: units.gridUnit * 5
-    Plasmoid.switchHeight: units.gridUnit * 5
+    switchWidth: Kirigami.Units.gridUnit * 5
+    switchHeight: Kirigami.Units.gridUnit * 5
     Plasmoid.icon:lliurexOneDriveWidget.iconName
-    Plasmoid.toolTipMainText: lliurexOneDriveWidget.toolTip
-    Plasmoid.toolTipSubText: lliurexOneDriveWidget.subToolTip
+    toolTipMainText: lliurexOneDriveWidget.toolTip
+    toolTipSubText: lliurexOneDriveWidget.subToolTip
 
     Component.onCompleted: {
-        plasmoid.removeAction("configure");
+        /*plasmoid.removeAction("configure");
         plasmoid.setAction("launchOneDrive", i18n("Open Lliurex OneDrive"), "configure");
-        plasmoid.setAction("openHelp",i18n("See help"),"help-contents"); 
+        plasmoid.setAction("openHelp",i18n("See help"),"help-contents"); */
+        Plasmoid.setInternalAction("configure", configureAction)
     }
 
-    Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation
     
-    Plasmoid.fullRepresentation: Item{
+    fullRepresentation: PlasmaExtras.Representation{
         id:root
         Layout.fillWidth:true
         QQC2.StackView{
@@ -96,6 +96,22 @@ Item {
 
     function action_openHelp(){
         lliurexOneDriveWidget.openHelp()
+    }
+
+    Plasmoid.contextualActions: [
+        PlasmaCore.Action{
+            text: i18n("See help")
+            icon.name:"help-contents.svg"
+           onTriggered:action_openHelp()
+        }
+
+    ]
+
+    PlasmaCore.Action {
+        id: configureAction
+        text: i18n("Open Lliurex OneDrive")
+        icon.name:"lliurex-onedrive.svg"
+        onTriggered:action_launchOneDrive()
     }
 
 
