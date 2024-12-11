@@ -68,7 +68,7 @@ Rectangle{
             Layout.leftMargin:5
             Layout.rightMargin:5
             implicitWidth:parent.width-10
-            implicitHeight:250
+            implicitHeight:290
             ListView{
                 id:listView
                 focus:true

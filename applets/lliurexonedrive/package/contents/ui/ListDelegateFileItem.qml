@@ -18,7 +18,7 @@ Components.ItemDelegate {
     readonly property bool isTall: height > Math.round(Kirigami.Units.gridUnit * 2.5)
 
     enabled:true
-    height:40
+    height:50
     width:parent?parent.width:310
 
     Item{
@@ -52,7 +52,7 @@ Components.ItemDelegate {
                     false
                 }
             }	
-            width:listView.width-(searchBtn.width*1.6)
+            width:listView.width-(searchBtn.width*1.6+10)
             anchors.left:parent.left
             anchors.leftMargin:10
             anchors.verticalCenter: parent.verticalCenter

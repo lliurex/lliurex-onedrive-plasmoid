@@ -21,7 +21,7 @@ Components.ItemDelegate {
     readonly property bool isTall: height > Math.round(Kirigami.Units.gridUnit * 2.5)
 
     enabled:true
-    height:55
+    height:60
     width:parent?parent.width:310
 
     Item{
