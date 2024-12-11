@@ -17,65 +17,58 @@ Components.ItemDelegate {
     property string fileTime
     readonly property bool isTall: height > Math.round(Kirigami.Units.gridUnit * 2.5)
 
-	enabled:true
+    enabled:true
     height:40
-
-	/*onContainsMouseChanged: {
-        if (containsMouse) {
-            listView.currentIndex = index
-        } else {
-            listView.currentIndex = -1
-        }
-        listView.forceActiveFocus()
-
-    }*/
+    width:parent?parent.width:310
 
     Item{
-    	id:label
-    	height:30
-
+        id:label
+        height:30
+        width:310
+        anchors.fill:parent
         MouseArea {
-           id: mouseAreaOption
-           anchors.fill: parent
-           hoverEnabled:true
-           propagateComposedEvents:true
+            id: mouseAreaOption
+            anchors.fill: parent
+            hoverEnabled:true
+            propagateComposedEvents:true
 
-           onEntered: {
+            onEntered: {
                 listView.currentIndex = index
-           }
+            }
         }
         Components.Label{
             id:fileText
             text:{
-            	if (fileItem.ListView.isCurrentItem){
-            		fileName+"\n"+i18n("Last modification: ")+fileDate+"-"+fileTime
-            	}else{
-            		fileName
-            	}
+                if (fileItem.ListView.isCurrentItem){
+                    fileName+"\n"+i18n("Last modification: ")+fileDate+"-"+fileTime
+                }else{
+                    fileName
+                }
             }
             font.bold:{
-            	if (fileItem.ListView.isCurrentItem){
-            		true
-            	}else{
-            		false
-            	}
-
+                if (fileItem.ListView.isCurrentItem){
+                    true
+                }else{
+                    false
+                }
             }	
             width:listView.width-(searchBtn.width*1.6)
+            anchors.left:parent.left
+            anchors.leftMargin:10
             anchors.verticalCenter: parent.verticalCenter
         }
+
         PC3.ToolButton {
-        	id:searchBtn
-        	width:35
-        	height:35
-                      
+            id:searchBtn
+            width:35
+            height:35
             anchors{
                 left: fileText.right
-	            top: fileText.isTall? parent.top : undefined
-	            verticalCenter: parent.verticalCenter
-	            leftMargin:10
-	            rightMargin:10
-	        }
+                top: fileText.isTall? parent.top : undefined
+                verticalCenter: parent.verticalCenter
+                leftMargin:10
+                rightMargin:10
+            }
             icon.name:"document-open-recent"
             visible:fileItem.ListView.isCurrentItem
             PC3.ToolTip{
@@ -85,13 +78,11 @@ Components.ItemDelegate {
             onClicked:{
                 searchTP.hide()
                 if (lliurexOneDriveWidget.checkIfFileExists(filePath)){
-                   lliurexOneDriveWidget.goToFile(filePath)
+                    lliurexOneDriveWidget.goToFile(filePath)
                 }else{
                     btnToolTip.text=i18n("File does not exist. Update the list")
                 }   
             } 
-
-       }
-   }     
-    
+        }
+    }     
 }

@@ -140,17 +140,14 @@ void LliurexOneDriveWidget::showMigrationNotification(){
     lastMigrationCheck=lastMigrationCheck+5;
     if (lastMigrationCheck>360){
         QString msg=i18n("Old OneDrive configuration detected.It is necessary to migrate");
-       /*m_errorNotification = KNotification::event(QStringLiteral("MigrationWarning"), msg, {}, "onedrive-widget", nullptr, KNotification::CloseOnTimeout , QStringLiteral("llxonedrive"));*/
         m_errorNotification = new KNotification(QStringLiteral("MigrationWarning"),KNotification::CloseOnTimeout,this);
         m_errorNotification->setComponentName(QStringLiteral("llxonedrive"));
         m_errorNotification->setTitle(msg);
         m_errorNotification->setIconName("onedrive-widget");
         const QString name = i18n("Open Lliurex OneDrive");
-        /*m_errorNotification->setDefaultAction(name);
-        m_errorNotification->setActions({name});
-        connect(m_errorNotification, QOverload<unsigned int>::of(&KNotification::activated), this, &LliurexOneDriveWidget::launchOneDrive);*/
         auto migrationAction=m_errorNotification->addAction(name);
-        /*connect(migrationAction,&KNotificationAction::activated,this,&LliurexOneDriveWidget::launchOneDrive);*/
+        connect(migrationAction,&KNotificationAction::activated,this,[this](){
+            launchOneDrive(false);});
         m_errorNotification->sendEvent();
         lastMigrationCheck=0;
     }
@@ -175,7 +172,9 @@ void LliurexOneDriveWidget::checkIfStartIsLocked(){
                 m_errorNotification->setTitle(subtooltip);
                 m_errorNotification->setIconName("onedrive-widget");
                 QString name = i18n("Open Lliurex OneDrive");
-                m_errorNotification->addAction(name);
+                auto folderAction=m_errorNotification->addAction(name);
+                connect(folderAction,&KNotificationAction::activated,this,[this](){
+                    launchOneDrive(false);});
                 m_errorNotification->sendEvent();
                 
             }
@@ -191,7 +190,9 @@ void LliurexOneDriveWidget::checkIfStartIsLocked(){
                 m_errorNotification->setTitle(subtooltip);
                 m_errorNotification->setIconName("onedrive-widget");
                 QString name = i18n("Open Lliurex OneDrive");
-                m_errorNotification->addAction(name);
+                auto updateAction=m_errorNotification->addAction(name);
+                connect(updateAction,&KNotificationAction::activated,this,[this](){
+                    launchOneDrive(false);});
                 m_errorNotification->sendEvent();
 
                 lastUpdateCheck=0;
@@ -328,7 +329,9 @@ void LliurexOneDriveWidget::checkStatus(){
                     m_errorNotification->setTitle(subtooltip);
                     m_errorNotification->setIconName("onedrive-widget");
                     QString name = i18n("Open Lliurex OneDrive");
-                    m_errorNotification->addAction(name);
+                    auto errorAction=m_errorNotification->addAction(name);
+                    connect(errorAction,&KNotificationAction::activated,this,[this](){
+                        launchOneDrive(false);});
                     m_errorNotification->sendEvent();
   
                 }
@@ -391,7 +394,9 @@ void LliurexOneDriveWidget::checkHddFreeSpaceStatus(){
             m_errorNotification->setIconName("onedrive-widget");
       
             QString name = i18n("Open Lliurex OneDrive");
-            m_errorNotification->addAction(name);
+            auto hddAction=m_errorNotification->addAction(name);
+            connect(hddAction,&KNotificationAction::activated,this,[this](){
+                launchOneDrive(false);});
             m_errorNotification->sendEvent();
         }
     }else{
