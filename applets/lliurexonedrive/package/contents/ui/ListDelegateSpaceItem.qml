@@ -42,9 +42,9 @@ Components.ListItem {
     		    text:nameSpace
     		    width:{
                     if (spaceItem.ListView.isCurrentItem){
-                        260
+                        listSpaceView.width-(spaceStatusIcon.width*1.6 +spaceRunningIcon.width*1.6+loadSpaceBtn.width*1.6)
                     }else{
-                        310
+                       listSpaceView.width-(spaceStatusIcon.width*1.6 +spaceRunningIcon.width*1.6)
                     }
                 }
     		    elide:Text.ElideMiddle
@@ -59,7 +59,7 @@ Components.ListItem {
     		Components.Label{
     			id:spaceStatusText
     			text:getStatusText(statusSpace,localFolderWarning,updateRequiredWarning)
-    			width:260
+    			width:spaceName.width
     			elide:Text.ElideMiddle
     			visible:spaceItem.ListView.isCurrentItem
                 font.italic:true
