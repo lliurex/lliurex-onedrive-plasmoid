@@ -21,8 +21,8 @@ Components.ItemDelegate {
     readonly property bool isTall: height > Math.round(Kirigami.Units.gridUnit * 2.5)
 
     enabled:true
-    height:65
-    width:parent.width
+    height:55
+    width:parent?parent.width:310
 
     Item{
         id:label
@@ -51,9 +51,9 @@ Components.ItemDelegate {
                 text:nameSpace
                 width:{
                     if (spaceItem.ListView.isCurrentItem){
-                        260
+                        listSpaceView.width-(spaceStatusIcon.width*1.6 +spaceRunningIcon.width*1.6+loadSpaceBtn.width*1.6)
                     }else{
-                        310
+                       listSpaceView.width-(spaceStatusIcon.width*1.6 +spaceRunningIcon.width*1.6)
                     }
                 }
                 elide:Text.ElideMiddle
@@ -69,7 +69,7 @@ Components.ItemDelegate {
                 id:spaceStatusText
                 text:getStatusText
                 (statusSpace,localFolderWarning,updateRequiredWarning)
-                width:260
+                width:spaceName.width
                 elide:Text.ElideMiddle
                 visible:spaceItem.ListView.isCurrentItem
                 font.italic:true

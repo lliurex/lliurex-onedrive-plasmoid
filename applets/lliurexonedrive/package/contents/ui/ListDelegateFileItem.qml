@@ -19,7 +19,7 @@ Components.ItemDelegate {
 
     enabled:true
     height:40
-    width:parent.width
+    width:parent?parent.width:310
 
     Item{
         id:label

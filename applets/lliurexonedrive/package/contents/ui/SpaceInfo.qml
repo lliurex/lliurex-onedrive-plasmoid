@@ -116,7 +116,7 @@ Rectangle{
 	        Components.Label{
 	            id:oneDriveFolderValue
 	            text:lliurexOneDriveWidget.oneDriveFolder
-	            Layout.preferredWidth:295
+	            Layout.fillWidth:true
 	            elide:Text.ElideMiddle
 	        }
 	        PC3.ToolButton {
