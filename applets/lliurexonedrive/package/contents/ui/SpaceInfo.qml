@@ -93,11 +93,18 @@ Rectangle{
 	        Components.Label{
 	            id:spaceTypeValue
 	            text:{
-	                if (lliurexOneDriveWidget.spaceType=="onedrive"){
-	                    "OneDrive"
-	                }else{
-	                    "SharePoint"
-	                }
+	            	switch (lliurexOneDriveWidget.spaceType){
+	            		case "onedrive":
+	            			var msg=i18n("OneDrive-Sync")
+	            			break;
+	            		case "onedriveBackup":
+	            			var msg=i18n("Onedrive-Backup")
+	            			break;
+	            		case "sharepoint":
+	            			var msg="SharePoint"
+	            			break;
+	            	}
+	            	return msg
 	            }
 	            Layout.fillWidth:true
 	        }
