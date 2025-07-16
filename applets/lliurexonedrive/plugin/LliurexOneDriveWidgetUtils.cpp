@@ -292,6 +292,28 @@ QList<QStringList> LliurexOneDriveWidgetUtils::getFiles(QStringList info, QStrin
 
 }
 
+QList<QStringList> LliurexOneDriveWidgetUtils::getUploadedFiles(QStringList info){
+
+    QList<QStringList> lastestFiles;
+    info.removeLast();
+    if (!info.isEmpty()){
+        for (int i=0;i<info.length();i++){
+            QStringList tmpLine=info[i].split(" ");
+            QStringList tmpItem;
+            tmpItem.append(tmpLine[9].split("LLIUREX_BACKUP/")[1].split("/").last());
+            tmpItem.append(tmpLine[9].split("LLIUREX_BACKUP/")[1]);
+            QString tmpDate;
+            tmpDate=tmpLine[1];
+            tmpItem.append(formatFileDate(tmpDate));
+            tmpItem.append(tmpLine[2]);
+            lastestFiles.append(tmpItem);
+        }
+
+    }
+    return lastestFiles;
+
+}
+
 QString LliurexOneDriveWidgetUtils::formatFileDate(QString fileDate){
 
     QDate myDate;

@@ -27,6 +27,7 @@ public:
     QString getGlobalStatus();
     QString checkLocalFreeSpace();
     QList<QStringList> getFiles(QStringList info,QString spaceLocalFolder);
+    QList<QStringList> getUploadedFiles(QStringList info);
     void restoreSyncListFile(QString spaceConfigPath);
     QString getLogFileSize(QString logFilePath);
     bool checkUpdateRequired(QString spaceConfigPath);

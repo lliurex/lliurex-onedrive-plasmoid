@@ -13,7 +13,7 @@ Rectangle{
 
     GridLayout{
 	    id: optionsAccount
-	    rows: 8
+	    rows: 7
 	    flow: GridLayout.TopToBottom
 	    rowSpacing:10
 	    width:parent.width
@@ -239,6 +239,36 @@ Rectangle{
 	           		filesTP.hide()
 	                lliurexOneDriveWidget.getLatestFiles()
 	                lliurexOneDriveWidget.manageNavigation(2)
+	            }
+
+	        } 
+	    }
+
+	     RowLayout{
+	        id:latestUploadedFiles
+	        Layout.fillWidth:true
+	        Layout.leftMargin:5
+	        Layout.rightMargin:5
+	        visible:lliurexOneDriveWidget.spaceType=="onedriveBackup"?true:false
+
+	        Components.Label{
+	            id:latestUploadedText
+	            text:i18n("Recently uploaded files")
+	            Layout.fillWidth:true
+	        }
+	       
+	        PC3.ToolButton {
+	            width:35
+	            height:35
+	            icon.name:"arrow-right.svg"
+	            PC3.ToolTip{
+	            	id:uploadedFilesTP
+	                text:i18n("Click to see the list")
+	            }
+	           	onClicked:{
+	           		uploadedFilesTP.hide()
+	                lliurexOneDriveWidget.getLatestUploadedFiles()
+	                lliurexOneDriveWidget.manageNavigation(3)
 	            }
 
 	        } 
