@@ -63,6 +63,8 @@ QStringList LliurexOneDriveWidgetUtils::readStatusToken(QString spaceConfigPath)
         result.append("False");
         result.append("3");
         result.append("");
+        result.append(" ");
+        result.append("0");
     }
     return result;
 
@@ -170,6 +172,7 @@ QVariantList LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPat
             if (updateRequired){
                 updateRequiredCount+=1;
             }
+            tmpItem.append(statusResult[4].toInt());
             spacesInfo.push_back(tmpItem);
         }
     }

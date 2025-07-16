@@ -68,6 +68,7 @@ void LliurexOneDriveWidget::worker(){
                         item.setIsRunning(tmpList[10].toBool());
                         item.setLocalFolderWarning(tmpList[11].toBool());
                         item.setUpdateRequiredWarning(tmpList[12].toBool());
+                        item.setFilesPendingUpload(tmpList[13].toString());
                         items.append(item);
                         if ((m_currentIndex!=0)&&(spaceId!="")){
                             if (spaceId==tmpList[0].toString()){

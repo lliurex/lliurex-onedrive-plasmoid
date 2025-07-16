@@ -219,6 +219,7 @@ Rectangle{
 	        Layout.fillWidth:true
 	        Layout.leftMargin:5
 	        Layout.rightMargin:5
+	        visible:lliurexOneDriveWidget.spaceType=="onedriveBackup"?false:true
 
 	        Components.Label{
 	            id:latestText
