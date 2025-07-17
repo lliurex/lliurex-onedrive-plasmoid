@@ -9,46 +9,46 @@ import org.kde.kquickcontrolsaddons 2.0 as KQuickControlsAddons
 import org.kde.plasma.private.lliurexonedrive 1.0
 
 Components.ListItem {
-    id: fileItem
+    id: uploadedFileItem
     property string fileName
     property string filePath
     property string fileDate
     property string fileTime
     readonly property bool isTall: height > Math.round(PlasmaCore.Units.gridUnit * 2.5)
 
-	enabled:true
+    enabled:true
 
-	onContainsMouseChanged: {
+    onContainsMouseChanged: {
         if (containsMouse) {
-            listView.currentIndex = index
+            uploadedListView.currentIndex = index
         } else {
-            listView.currentIndex = -1
+            uploadedListView.currentIndex = -1
         }
-        listView.forceActiveFocus()
+        uploadedListView.forceActiveFocus()
 
     }
 
     Item{
-    	id:label
-    	height:30
+        id:label
+        height:30
         Components.Label{
             id:fileText
             text:{
-            	if (fileItem.ListView.isCurrentItem){
-            		filePath+"\n"+i18n("Last upload: ")+fileDate+"-"+fileTime
-            	}else{
-            		filePath
-            	}
+                if (uploadedFileItem.ListView.isCurrentItem){
+                    filePath+"\n"+i18n("Uploaded on: ")+fileDate+"-"+fileTime
+                }else{
+                    filePath
+                }
             }
             font.bold:{
-            	if (fileItem.ListView.isCurrentItem){
-            		true
-            	}else{
-            		false
-            	}
+                if (uploadedFileItem.ListView.isCurrentItem){
+                    true
+                }else{
+                    false
+                }
 
-            }	
-            width:listView.width-(searchBtn.width*1.6)
+            }   
+            width:uploadedListView.width-50
             anchors.verticalCenter: parent.verticalCenter
         }
         

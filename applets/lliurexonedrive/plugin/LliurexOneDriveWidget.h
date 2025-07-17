@@ -100,7 +100,6 @@ public:
 
     LliurexOneDriveWidgetFilesModel *filesModel() const;
 
-
 public slots:
     
     void worker();

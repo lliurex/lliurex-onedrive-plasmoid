@@ -296,20 +296,24 @@ QList<QStringList> LliurexOneDriveWidgetUtils::getUploadedFiles(QStringList info
 
     QList<QStringList> lastestFiles;
     info.removeLast();
+
     if (!info.isEmpty()){
         for (int i=0;i<info.length();i++){
-            QStringList tmpLine=info[i].split(" ");
+            QStringList tmpLine=info[i].split("Uploading new file: " );
             QStringList tmpItem;
-            tmpItem.append(tmpLine[9].split("LLIUREX_BACKUP/")[1].split("/").last());
-            tmpItem.append(tmpLine[9].split("LLIUREX_BACKUP/")[1]);
+            QStringList tmpTimeInfo=tmpLine[0].split(" ");
+            QStringList tmpNameInfo=tmpLine[1].split(" ... done");
+            tmpItem.append(tmpNameInfo[0].split("LLIUREX_BACKUP/")[1].split("/").last());
+            tmpItem.append(tmpNameInfo[0].split("LLIUREX_BACKUP/")[1]);
             QString tmpDate;
-            tmpDate=tmpLine[1];
+            tmpDate=tmpTimeInfo[1];
             tmpItem.append(formatFileDate(tmpDate));
-            tmpItem.append(tmpLine[2]);
+            tmpItem.append(tmpTimeInfo[2]);
             lastestFiles.append(tmpItem);
         }
 
     }
+    
     return lastestFiles;
 
 }
