@@ -47,8 +47,9 @@ Components.ListItem {
                     false
                 }
 
-            }   
+            } 
             width:uploadedListView.width-50
+            elide:Text.ElideMiddle  
             anchors.verticalCenter: parent.verticalCenter
         }
         
