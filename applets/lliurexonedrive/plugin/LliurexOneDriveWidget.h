@@ -176,6 +176,7 @@ private:
     QString spaceConfigPath;
     QString spaceLocalFolder;
     QString spaceSystemd;
+    QString spaceCreated;
     int m_currentIndex=0;
     QString m_spaceMail;
     QString m_spaceType;

@@ -492,6 +492,11 @@ void LliurexOneDriveWidget::goToSpace(QString const &idSpace ){
             setOneDriveFolder(tmpList[5].toString());
             spaceConfigPath=tmpList[6].toString();
             spaceSystemd=tmpList[7].toString();
+            try{
+                spaceCreated=tmpList[14].toString();
+            }catch(...){
+                spaceCreated="";
+            }
             setFreeSpace(tmpList[9].toString());
             setSyncStatus(tmpList[10].toBool());
             if (tmpList[11].toBool() || tmpList[12].toBool()){
@@ -552,6 +557,7 @@ void LliurexOneDriveWidget::cleanSpaceInfoVars(){
     spaceLocalFolder="";
     spaceSystemd="";
     spaceId="";
+    spaceCreated="";
 }
 
 void LliurexOneDriveWidget::getLatestFiles(){
@@ -614,7 +620,7 @@ void LliurexOneDriveWidget::getLatestUploadedFiles(){
     }
     m_filesModel->clear();
     setShowSearchFiles(true);
-    QString cmd="journalctl --user-unit="+spaceSystemd+" -r -o short-full | grep 'Uploading new file' | grep '...done' | head -15";
+    QString cmd="journalctl --user-unit="+spaceSystemd+" -r -o short-full --since '"+spaceCreated+"' | grep 'Uploading new file' | grep '...done' | head -15";
     m_getLatestUploadedFiles->start("/bin/sh", QStringList()<< "-c" 
                        << cmd,QIODevice::ReadOnly);
 }

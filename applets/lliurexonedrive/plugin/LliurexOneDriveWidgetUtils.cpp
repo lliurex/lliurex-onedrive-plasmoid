@@ -173,6 +173,12 @@ QVariantList LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPat
                 updateRequiredCount+=1;
             }
             tmpItem.append(statusResult[4].toInt());
+            try{
+                tmpItem.append(val.toObject().value("created").toString());
+            }catch(...){
+                tmpItem.append("");
+            }
+            qDebug()<<"INFO"<<tmpItem;
             spacesInfo.push_back(tmpItem);
         }
     }
