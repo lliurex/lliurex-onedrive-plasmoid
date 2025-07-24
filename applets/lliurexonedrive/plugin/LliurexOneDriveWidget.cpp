@@ -598,6 +598,7 @@ void LliurexOneDriveWidget::getLatestFilesFinished(int exitCode, QProcess::ExitS
                 item.setFilePath(latestFiles[i][1]);
                 item.setFileDate(latestFiles[i][2]);
                 item.setFileTime(latestFiles[i][3]);
+                item.setFileId(latestFiles[i][1]+"_"+latestFiles[i][2]+"_"+latestFiles[i][3]);
                 items.append(item);
                 
             }
@@ -620,7 +621,7 @@ void LliurexOneDriveWidget::getLatestUploadedFiles(){
     }
     m_filesModel->clear();
     setShowSearchFiles(true);
-    QString cmd="journalctl --user-unit="+spaceSystemd+" -r -o short-full --since '"+spaceCreated+"' | grep 'Uploading new file' | grep '...done' | head -15";
+    QString cmd="journalctl --user-unit="+spaceSystemd+" -r -o short-full --since '"+spaceCreated+"' | grep 'Uploading' | grep '...done' | head -30";
     m_getLatestUploadedFiles->start("/bin/sh", QStringList()<< "-c" 
                        << cmd,QIODevice::ReadOnly);
 }
@@ -650,6 +651,7 @@ void LliurexOneDriveWidget::getLatestUploadedFilesFinished(int exitCode, QProces
                 item.setFilePath(latestFiles[i][1]);
                 item.setFileDate(latestFiles[i][2]);
                 item.setFileTime(latestFiles[i][3]);
+                item.setFileId(latestFiles[i][1]+"_"+latestFiles[i][2]+"_"+latestFiles[i][3]);
                 items.append(item);
                 
             }

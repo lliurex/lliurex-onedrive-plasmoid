@@ -178,7 +178,6 @@ QVariantList LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPat
             }catch(...){
                 tmpItem.append("");
             }
-            qDebug()<<"INFO"<<tmpItem;
             spacesInfo.push_back(tmpItem);
         }
     }
@@ -306,7 +305,7 @@ QList<QStringList> LliurexOneDriveWidgetUtils::getUploadedFiles(QStringList info
     if (!info.isEmpty()){
         for (int i=0;i<info.length();i++){
             try{
-                QStringList tmpLine=info[i].split("Uploading new file: " );
+                QStringList tmpLine=info[i].split("Uploading" );
                 QStringList tmpItem;
                 QStringList tmpTimeInfo=tmpLine[0].split(" ");
                 QStringList tmpNameInfo=tmpLine[1].split(" ... done");
