@@ -309,8 +309,8 @@ QList<QStringList> LliurexOneDriveWidgetUtils::getUploadedFiles(QStringList info
                 QStringList tmpItem;
                 QStringList tmpTimeInfo=tmpLine[0].split(" ");
                 QStringList tmpNameInfo=tmpLine[1].split(" ... done");
-                tmpItem.append(tmpNameInfo[0].split("LLIUREX_BACKUP/")[1].split("/").last());
-                tmpItem.append(tmpNameInfo[0].split("LLIUREX_BACKUP/")[1]);
+                tmpItem.append(tmpNameInfo[0].split("LLIUREX_ONEDRIVE_BACKUP/")[1].split("/").last());
+                tmpItem.append(tmpNameInfo[0].split("LLIUREX_ONEDRIVE_BACKUP/")[1]);
                 QString tmpDate;
                 tmpDate=tmpTimeInfo[1];
                 tmpItem.append(formatFileDate(tmpDate));
