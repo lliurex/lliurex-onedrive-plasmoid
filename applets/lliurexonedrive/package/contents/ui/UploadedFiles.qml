@@ -23,7 +23,7 @@ Rectangle{
                 height:35
                 width:35
                 icon.name:"arrow-left.svg"
-                Layout.rightMargin:filesLayout.width/3-35/2
+                Layout.rightMargin:filesLayout.width/3-35-headFilesText.text.length  
                 PC3.ToolTip{
                     id:backTP   
                     text:i18n("Back to space view")
@@ -53,9 +53,9 @@ Rectangle{
                 onClicked:{
                     filesTP.hide()
                     lliurexOneDriveWidget.getLatestUploadedFiles()
-                    listView.forceActiveFocus()
-                    if (listView.count > 0){
-                        listView.currentIndex=0
+                    uploadedListView.forceActiveFocus()
+                    if (uploadedListView.count > 0){
+                        uploadedListView.currentIndex=0
                     }
 
                 }

@@ -24,7 +24,7 @@ Rectangle{
 	        PC3.ToolButton {
 	            height:35
 	            width:355
-	            Layout.rightMargin:optionsAccount.width/3 - 50
+	            Layout.rightMargin:optionsAccount.width/3-35-headText.text.length
 	            icon.name:"arrow-left.svg"
 	            PC3.ToolTip{
 	            	id:backTP
