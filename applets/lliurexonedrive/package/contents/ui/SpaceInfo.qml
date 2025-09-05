@@ -95,7 +95,7 @@ Rectangle{
 	            text:{
 	            	switch (lliurexOneDriveWidget.spaceType){
 	            		case "onedrive":
-	            			var msg=i18n("OneDrive-Sync")
+	            			var msg=i18n("OneDrive")
 	            			break;
 	            		case "onedriveBackup":
 	            			var msg=i18n("Onedrive-Backup")
