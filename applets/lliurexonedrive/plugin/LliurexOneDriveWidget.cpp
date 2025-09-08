@@ -34,6 +34,7 @@ LliurexOneDriveWidget::LliurexOneDriveWidget(QObject *parent)
     TARGET_FILE.setFileName(userHome+"/.config/lliurex-onedrive-config/onedriveConfig.json");
     OLD_TARGET_FILE.setFileName(userHome+"/.config/onedrive/refresh_token");
 
+    m_utils->cleanCache();
     //initPlasmoid();
 
     connect(m_timer, &QTimer::timeout, this, &LliurexOneDriveWidget::worker);

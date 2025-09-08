@@ -25,10 +25,74 @@ LliurexOneDriveWidgetUtils::LliurexOneDriveWidgetUtils(QObject *parent)
 
 QString LliurexOneDriveWidgetUtils::getUserHome() {
 
-    QString user=qgetenv("USER");
+    user=qgetenv("USER");
     QString userHome="/home/"+user;
 
     return userHome;
+
+}
+
+void LliurexOneDriveWidgetUtils::cleanCache(){
+
+    QFile CURRENT_VERSION_TOKEN;
+    QDir cacheDir("/home/"+user+"/.cache/plasmashell/qmlcache");
+    QString currentVersion="";
+    bool clear=false;
+
+    qDebug()<<"LIMPIANDO user"<<user;
+
+    CURRENT_VERSION_TOKEN.setFileName("/home/"+user+"/.config/plasma-widget-lliurex-onedrive.conf");
+    QString installedVersion=getInstalledVersion();
+
+    if (!CURRENT_VERSION_TOKEN.exists()){
+        qDebug()<<"NO EXISTE TOKEN";
+        if (CURRENT_VERSION_TOKEN.open(QIODevice::WriteOnly)){
+            QTextStream data(&CURRENT_VERSION_TOKEN);
+            data<<installedVersion;
+            CURRENT_VERSION_TOKEN.close();
+            clear=true;
+        }
+    }else{
+        if (CURRENT_VERSION_TOKEN.open(QIODevice::ReadOnly)){
+            QTextStream content(&CURRENT_VERSION_TOKEN);
+            currentVersion=content.readLine();
+            CURRENT_VERSION_TOKEN.close();
+        }
+
+        if (currentVersion!=installedVersion){
+            if (CURRENT_VERSION_TOKEN.open(QIODevice::WriteOnly)){
+                QTextStream data(&CURRENT_VERSION_TOKEN);
+                data<<installedVersion;
+                CURRENT_VERSION_TOKEN.close();
+                clear=true;
+            }
+        }
+    } 
+    if (clear){
+        qDebug()<<"LIMPIANDO CACHE";
+        if (cacheDir.exists()){
+            cacheDir.removeRecursively();
+        }
+    }   
+
+}
+
+QString LliurexOneDriveWidgetUtils::getInstalledVersion(){
+
+    QFile INSTALLED_VERSION_TOKEN;
+    QString installedVersion="";
+    
+    INSTALLED_VERSION_TOKEN.setFileName("/var/lib/plasma-widget-lliurex-onedrive/version");
+
+    if (INSTALLED_VERSION_TOKEN.exists()){
+        if (INSTALLED_VERSION_TOKEN.open(QIODevice::ReadOnly)){
+            QTextStream content(&INSTALLED_VERSION_TOKEN);
+            installedVersion=content.readLine();
+            INSTALLED_VERSION_TOKEN.close();
+        }
+    }
+    qDebug()<<"VERSION: "<<installedVersion;
+    return installedVersion;
 
 }
 bool LliurexOneDriveWidgetUtils::checkIfSpaceSyncIsRunning(QString spaceConfigPath){

@@ -31,7 +31,10 @@ public:
     void restoreSyncListFile(QString spaceConfigPath);
     QString getLogFileSize(QString logFilePath);
     bool checkUpdateRequired(QString spaceConfigPath);
+
+    void cleanCache();
     
+    QString user;
     QJsonArray onedriveConfig;
     QFile localFolderEmptyToken;
     QFile localFolderRemovedToken;
@@ -70,6 +73,7 @@ private:
     QString formatFileDate(QString fileDate);
     QFile syncList;
     QFile syncListHash;
+    QString getInstalledVersion();
 
 };
 #endif // PLASMA_LLIUREX_UP_INDICATOR_UTILS_H
