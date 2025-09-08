@@ -39,13 +39,10 @@ void LliurexOneDriveWidgetUtils::cleanCache(){
     QString currentVersion="";
     bool clear=false;
 
-    qDebug()<<"LIMPIANDO user"<<user;
-
     CURRENT_VERSION_TOKEN.setFileName("/home/"+user+"/.config/plasma-widget-lliurex-onedrive.conf");
     QString installedVersion=getInstalledVersion();
 
     if (!CURRENT_VERSION_TOKEN.exists()){
-        qDebug()<<"NO EXISTE TOKEN";
         if (CURRENT_VERSION_TOKEN.open(QIODevice::WriteOnly)){
             QTextStream data(&CURRENT_VERSION_TOKEN);
             data<<installedVersion;
@@ -69,7 +66,6 @@ void LliurexOneDriveWidgetUtils::cleanCache(){
         }
     } 
     if (clear){
-        qDebug()<<"LIMPIANDO CACHE";
         if (cacheDir.exists()){
             cacheDir.removeRecursively();
         }
@@ -91,7 +87,6 @@ QString LliurexOneDriveWidgetUtils::getInstalledVersion(){
             INSTALLED_VERSION_TOKEN.close();
         }
     }
-    qDebug()<<"VERSION: "<<installedVersion;
     return installedVersion;
 
 }
