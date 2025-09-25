@@ -13,7 +13,7 @@ Rectangle{
 
     GridLayout{
 	    id: optionsAccount
-	    rows: 7
+	    rows: 8
 	    flow: GridLayout.TopToBottom
 	    rowSpacing:10
 	    width:parent.width
