@@ -1,3 +1,9 @@
+plasma-widget-lliurex-onedrive (3.5.4.1) noble-testing; urgency=medium
+
+  * Test backup mode
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Wed, 01 Oct 2025 12:07:24 +0200
+
 plasma-widget-lliurex-onedrive (3.5.4) noble; urgency=medium
 
   * Initial release for noble
