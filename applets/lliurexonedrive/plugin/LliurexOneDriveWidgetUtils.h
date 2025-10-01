@@ -27,10 +27,14 @@ public:
     QString getGlobalStatus();
     QString checkLocalFreeSpace();
     QList<QStringList> getFiles(QStringList info,QString spaceLocalFolder);
+    QList<QStringList> getUploadedFiles(QStringList info);
     void restoreSyncListFile(QString spaceConfigPath);
     QString getLogFileSize(QString logFilePath);
     bool checkUpdateRequired(QString spaceConfigPath);
+
+    void cleanCache();
     
+    QString user;
     QJsonArray onedriveConfig;
     QFile localFolderEmptyToken;
     QFile localFolderRemovedToken;
@@ -58,7 +62,8 @@ public:
     int WITH_OUT_CONFIG=1;
     int INFORMATION_NOT_AVAILABLE=3;
     int UPLOADING_PENDING_CHANGES=4;
-    QList <int> warningCode={UPLOADING_PENDING_CHANGES,OUT_OF_SYNC_MSG};
+    int UPLOADING_PENDING_CHANGES_BACKUP=5;
+    QList <int> warningCode={UPLOADING_PENDING_CHANGES,OUT_OF_SYNC_MSG,UPLOADING_PENDING_CHANGES_BACKUP};
     QList <int> errorCode={MICROSOFT_API_ERROR,UNABLE_CONNECT_MICROSOFT_ERROR,ZERO_SPACE_AVAILABLE_ERROR,UNAUTHORIZED_ERROR,SERVICE_UNAVAILABLE,FORBIDDEN_USER};
     QFile logFile;
     
@@ -68,6 +73,7 @@ private:
     QString formatFileDate(QString fileDate);
     QFile syncList;
     QFile syncListHash;
+    QString getInstalledVersion();
 
 };
 #endif // PLASMA_LLIUREX_UP_INDICATOR_UTILS_H

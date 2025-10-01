@@ -23,7 +23,7 @@ Rectangle{
                 height:35
                 width:35
                 icon.name:"arrow-left.svg"
-                Layout.rightMargin:filesLayout.width/3-35/2
+                Layout.rightMargin:filesLayout.width/3-35-headFilesText.text.length
                 PC3.ToolTip{
                     id:backTP   
                     text:i18n("Back to space view")

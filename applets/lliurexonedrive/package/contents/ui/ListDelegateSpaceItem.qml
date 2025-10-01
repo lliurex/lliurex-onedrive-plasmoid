@@ -146,6 +146,7 @@ Components.ItemDelegate {
                     break;
                 case 2:
                 case 4:
+                case 5:
                     return "/usr/share/icons/breeze/status/16/state-sync.svg"
                     break;
                 default:
@@ -176,6 +177,9 @@ Components.ItemDelegate {
                     case 4:
                         msg=i18n("Uploading pending changes")
                         break
+                    case 5:
+                        msg=filesPendingUpload + " "+ i18n("files pending to upload")
+                        break;
                     case -1:
                         msg=i18n("OneDrive return an error")
                         break

@@ -8,8 +8,6 @@
 #include <QDir>
 #include <QFile>
 #include <KIO/CommandLauncherJob>
-#include "LliurexOneDriveWidgetFilesModel.h"
-#include "LliurexOneDriveWidgetSpacesModel.h"
 #include "LliurexOneDriveWidgetUtils.h"
 
 class QTimer;
@@ -116,6 +114,7 @@ public slots:
     void goToFile(const QString &filePath);
     bool checkIfFileExists(const QString &filePath);
     void openLogFile();
+    void getLatestUploadedFiles();
 
 
 signals:
@@ -178,6 +177,7 @@ private:
     QString spaceConfigPath;
     QString spaceLocalFolder;
     QString spaceSystemd;
+    QString spaceCreated;
     int m_currentIndex=0;
     QString m_spaceMail;
     QString m_spaceType;
@@ -190,6 +190,7 @@ private:
     QProcess *m_isLliurexOneDriveOpen=nullptr;
     bool isLliurexOneDriveOpen=false;
     QProcess *m_getLatestFiles=nullptr;
+    QProcess *m_getLatestUploadedFiles=nullptr;
     bool m_showSearchFiles=false;
     QFile recentFile;
     QFile OLD_TARGET_FILE;
@@ -205,6 +206,7 @@ private slots:
      void checkIsLliurexOneDriveOpen();
      void isLliurexOneDriveOpenProcessFinished(int exitCode, QProcess::ExitStatus exitStatus);
      void getLatestFilesFinished(int exitCode, QProcess::ExitStatus exitStatus);
+     void getLatestUploadedFilesFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
 };
 

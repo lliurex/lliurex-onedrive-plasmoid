@@ -25,10 +25,69 @@ LliurexOneDriveWidgetUtils::LliurexOneDriveWidgetUtils(QObject *parent)
 
 QString LliurexOneDriveWidgetUtils::getUserHome() {
 
-    QString user=qgetenv("USER");
+    user=qgetenv("USER");
     QString userHome="/home/"+user;
 
     return userHome;
+
+}
+
+void LliurexOneDriveWidgetUtils::cleanCache(){
+
+    QFile CURRENT_VERSION_TOKEN;
+    QDir cacheDir("/home/"+user+"/.cache/plasmashell/qmlcache");
+    QString currentVersion="";
+    bool clear=false;
+
+    CURRENT_VERSION_TOKEN.setFileName("/home/"+user+"/.config/plasma-widget-lliurex-onedrive.conf");
+    QString installedVersion=getInstalledVersion();
+
+    if (!CURRENT_VERSION_TOKEN.exists()){
+        if (CURRENT_VERSION_TOKEN.open(QIODevice::WriteOnly)){
+            QTextStream data(&CURRENT_VERSION_TOKEN);
+            data<<installedVersion;
+            CURRENT_VERSION_TOKEN.close();
+            clear=true;
+        }
+    }else{
+        if (CURRENT_VERSION_TOKEN.open(QIODevice::ReadOnly)){
+            QTextStream content(&CURRENT_VERSION_TOKEN);
+            currentVersion=content.readLine();
+            CURRENT_VERSION_TOKEN.close();
+        }
+
+        if (currentVersion!=installedVersion){
+            if (CURRENT_VERSION_TOKEN.open(QIODevice::WriteOnly)){
+                QTextStream data(&CURRENT_VERSION_TOKEN);
+                data<<installedVersion;
+                CURRENT_VERSION_TOKEN.close();
+                clear=true;
+            }
+        }
+    } 
+    if (clear){
+        if (cacheDir.exists()){
+            cacheDir.removeRecursively();
+        }
+    }   
+
+}
+
+QString LliurexOneDriveWidgetUtils::getInstalledVersion(){
+
+    QFile INSTALLED_VERSION_TOKEN;
+    QString installedVersion="";
+    
+    INSTALLED_VERSION_TOKEN.setFileName("/var/lib/plasma-widget-lliurex-onedrive/version");
+
+    if (INSTALLED_VERSION_TOKEN.exists()){
+        if (INSTALLED_VERSION_TOKEN.open(QIODevice::ReadOnly)){
+            QTextStream content(&INSTALLED_VERSION_TOKEN);
+            installedVersion=content.readLine();
+            INSTALLED_VERSION_TOKEN.close();
+        }
+    }
+    return installedVersion;
 
 }
 bool LliurexOneDriveWidgetUtils::checkIfSpaceSyncIsRunning(QString spaceConfigPath){
@@ -63,6 +122,8 @@ QStringList LliurexOneDriveWidgetUtils::readStatusToken(QString spaceConfigPath)
         result.append("False");
         result.append("3");
         result.append("");
+        result.append(" ");
+        result.append("0");
     }
     return result;
 
@@ -170,6 +231,12 @@ QVariantList LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPat
             tmpItem.append(updateRequired);
             if (updateRequired){
                 updateRequiredCount+=1;
+            }
+            tmpItem.append(statusResult[4].toInt());
+            try{
+                tmpItem.append(val.toObject().value("created").toString());
+            }catch(...){
+                tmpItem.append("");
             }
             spacesInfo.push_back(tmpItem);
         }
@@ -286,6 +353,36 @@ QList<QStringList> LliurexOneDriveWidgetUtils::getFiles(QStringList info, QStrin
         }
     }
 
+    return lastestFiles;
+
+}
+
+QList<QStringList> LliurexOneDriveWidgetUtils::getUploadedFiles(QStringList info){
+
+    QList<QStringList> lastestFiles;
+    info.removeLast();
+
+    if (!info.isEmpty()){
+        for (int i=0;i<info.length();i++){
+            try{
+                QStringList tmpLine=info[i].split("Uploading" );
+                QStringList tmpItem;
+                QStringList tmpTimeInfo=tmpLine[0].split(" ");
+                QStringList tmpNameInfo=tmpLine[1].split(" ... done");
+                tmpItem.append(tmpNameInfo[0].split("LLIUREX_ONEDRIVE_BACKUP/")[1].split("/").last());
+                tmpItem.append(tmpNameInfo[0].split("LLIUREX_ONEDRIVE_BACKUP/")[1]);
+                QString tmpDate;
+                tmpDate=tmpTimeInfo[1];
+                tmpItem.append(formatFileDate(tmpDate));
+                tmpItem.append(tmpTimeInfo[2]);
+                lastestFiles.append(tmpItem);
+            }catch(...){
+
+            }
+        }
+
+    }
+    
     return lastestFiles;
 
 }
