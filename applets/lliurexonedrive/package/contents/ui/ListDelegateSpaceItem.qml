@@ -18,6 +18,7 @@ Components.ItemDelegate {
     property bool isRunningSpace
     property bool localFolderWarning
     property bool updateRequiredWarning
+    property string filesPendingUpload
     readonly property bool isTall: height > Math.round(Kirigami.Units.gridUnit * 2.5)
 
     enabled:true
@@ -157,7 +158,7 @@ Components.ItemDelegate {
         }
     }
 
-    function getStatusText(statusSpace,localFolderWarning,updateRequiredWarning){
+   function getStatusText(statusSpace,localFolderWarning,updateRequiredWarning,filesPendingUpload){
 
         var msg=""
         if (localFolderWarning){
