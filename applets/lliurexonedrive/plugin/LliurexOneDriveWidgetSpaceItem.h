@@ -29,6 +29,9 @@ public:
     bool updateRequiredWarning() const;
     void setUpdateRequiredWarning(const bool &updateRequiredWarning);
 
+    QString filesPendingUpload() const;
+    void setFilesPendingUpload(const QString &filesPendingUpload);
+
     bool operator==(const LliurexOneDriveWidgetSpaceItem &other) const;
     bool operator!=(const LliurexOneDriveWidgetSpaceItem &other) const;
 
@@ -39,6 +42,7 @@ private:
     bool m_isRunning;
     bool m_localFolderWarning;
     bool m_updateRequiredWarning;
+    QString m_filesPendingUpload;
 };
 
 Q_DECLARE_METATYPE(LliurexOneDriveWidgetSpaceItem)
