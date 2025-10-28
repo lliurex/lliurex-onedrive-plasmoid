@@ -40,7 +40,7 @@ Components.ItemDelegate {
             id:fileText
             text:{
                 if (uploadedFileItem.ListView.isCurrentItem){
-                    fileName+"\n"+i18n("Last modification: ")+fileDate+"-"+fileTime
+                    fileName+"\n"+i18n("Uploaded on: ")+fileDate+"-"+fileTime
                 }else{
                     fileName
                 }
