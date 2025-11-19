@@ -64,6 +64,9 @@ PlasmoidItem {
                     case 2:
                         stackLayout.replace(filesPanel)
                         break;
+                    case 3:
+                        stackLayout.replace(uploadedFilesPanel)
+                        break;
                 }
             }
             
@@ -84,6 +87,12 @@ PlasmoidItem {
                 id:filesPanel
                 LatestFiles{
                     id:latestFiles
+                }
+            }
+            Component{
+                id:uploadedFilesPanel
+                UploadedFiles{
+                    id:uploadedFiles
                 }
             }
        

@@ -24,6 +24,9 @@ public:
     QString fileTime() const;
     void setFileTime(const QString &fileTime);
 
+    QString fileId() const;
+    void setFileId(const QString &fileId);
+
 
     bool operator==(const LliurexOneDriveWidgetFileItem &other) const;
     bool operator!=(const LliurexOneDriveWidgetFileItem &other) const;
@@ -33,6 +36,7 @@ private:
     QString m_filePath;
     QString m_fileDate;
     QString m_fileTime;
+    QString m_fileId;
 };
 
 Q_DECLARE_METATYPE(LliurexOneDriveWidgetFileItem)
