@@ -23,7 +23,7 @@ Rectangle{
                 height:35
                 width:35
                 icon.name:"arrow-left.svg"
-                Layout.rightMargin:filesLayout.width/3-35-headFilesText.text.length
+                Layout.rightMargin:filesLayout.width/3-35-headFilesText.text.length  
                 PC3.ToolTip{
                     id:backTP   
                     text:i18n("Back to space view")
@@ -35,7 +35,7 @@ Rectangle{
             } 
             Components.Label{
                 id:headFilesText
-                text:i18n("List of files")
+                text:i18n("List of last files uploaded")
                 font.italic:true
                 font.pointSize:11
                 Layout.fillWidth:true
@@ -52,10 +52,10 @@ Rectangle{
                 }
                 onClicked:{
                     filesTP.hide()
-                    lliurexOneDriveWidget.getLatestFiles()
-                    listView.forceActiveFocus()
-                    if (listView.count > 0){
-                        listView.currentIndex=0
+                    lliurexOneDriveWidget.getLatestUploadedFiles()
+                    uploadedListView.forceActiveFocus()
+                    if (uploadedListView.count > 0){
+                        uploadedListView.currentIndex=0
                     }
 
                 }
@@ -70,7 +70,7 @@ Rectangle{
             implicitWidth:parent.width-10
             implicitHeight:250
             ListView{
-                id:listView
+                id:uploadedListView
                 focus:true
                 model:lliurexOneDriveWidget.filesModel
                 currentIndex: -1
@@ -79,7 +79,7 @@ Rectangle{
                 highlight: Rectangle { color: "#add8e6"; opacity:0.8;border.color:"#53a1c9" }
                 highlightMoveDuration: 0
                 highlightResizeDuration: 0
-                delegate: ListDelegateFileItem {
+                delegate: ListDelegateUploadedFileItem {
                     fileName: model.fileName
                     filePath: model.filePath
                     fileDate: model.fileDate
@@ -90,7 +90,7 @@ Rectangle{
                     anchors.centerIn: parent
                     width: parent.width - (units.largeSpacing * 4)
                     visible: {
-                        if ((listView.count === 0)&&(!lliurexOneDriveWidget.showSearchFiles)){
+                        if ((uploadedListView.count === 0)&&(!lliurexOneDriveWidget.showSearchFiles)){
                             return true
                         }else{
                             return false

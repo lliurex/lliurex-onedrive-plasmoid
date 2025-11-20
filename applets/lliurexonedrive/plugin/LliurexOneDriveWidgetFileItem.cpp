@@ -5,6 +5,9 @@
 LliurexOneDriveWidgetFileItem::LliurexOneDriveWidgetFileItem()
     : m_fileName()
     , m_filePath()
+    , m_fileDate()
+    , m_fileTime()
+    , m_fileId()
 {
 }
 
@@ -48,12 +51,23 @@ void LliurexOneDriveWidgetFileItem::setFileTime(const QString &time)
     m_fileTime = time;
 }
 
+QString LliurexOneDriveWidgetFileItem::fileId() const
+{
+    return m_fileId;
+}
+
+void LliurexOneDriveWidgetFileItem::setFileId(const QString &id)
+{
+    m_fileId = id;
+}
+
 bool LliurexOneDriveWidgetFileItem::operator==(const LliurexOneDriveWidgetFileItem &other) const
 {
     return m_fileName == other.m_fileName
         && m_filePath == other.m_filePath
         && m_fileDate == other.m_fileDate
-        && m_fileTime == other.m_fileTime;
+        && m_fileTime == other.m_fileTime
+        && m_fileId == other.m_fileId;
 }
 
 bool LliurexOneDriveWidgetFileItem::operator!=(const LliurexOneDriveWidgetFileItem &other) const
