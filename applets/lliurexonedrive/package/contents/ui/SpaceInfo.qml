@@ -24,7 +24,7 @@ Rectangle{
 	        PC3.ToolButton {
 	            height:35
 	            width:355
-	            Layout.rightMargin:optionsAccount.width/3 - 50
+	            Layout.rightMargin:optionsAccount.width/3-35-headText.text.length
 	            icon.name:"arrow-left.svg"
 	            PC3.ToolTip{
 	            	id:backTP
@@ -93,11 +93,18 @@ Rectangle{
 	        Components.Label{
 	            id:spaceTypeValue
 	            text:{
-	                if (lliurexOneDriveWidget.spaceType=="onedrive"){
-	                    "OneDrive"
-	                }else{
-	                    "SharePoint"
-	                }
+	            	switch (lliurexOneDriveWidget.spaceType){
+	            		case "onedrive":
+	            			var msg=i18n("OneDrive")
+	            			break;
+	            		case "onedriveBackup":
+	            			var msg=i18n("Onedrive-Backup")
+	            			break;
+	            		case "sharepoint":
+	            			var msg="SharePoint"
+	            			break;
+	            	}
+	            	return msg
 	            }
 	            Layout.fillWidth:true
 	        }
@@ -116,7 +123,7 @@ Rectangle{
 	        Components.Label{
 	            id:oneDriveFolderValue
 	            text:lliurexOneDriveWidget.oneDriveFolder
-	            Layout.preferredWidth:295
+	            Layout.fillWidth:true
 	            elide:Text.ElideMiddle
 	        }
 	        PC3.ToolButton {
@@ -212,6 +219,7 @@ Rectangle{
 	        Layout.fillWidth:true
 	        Layout.leftMargin:5
 	        Layout.rightMargin:5
+	        visible:lliurexOneDriveWidget.spaceType=="onedriveBackup"?false:true
 
 	        Components.Label{
 	            id:latestText
@@ -231,6 +239,36 @@ Rectangle{
 	           		filesTP.hide()
 	                lliurexOneDriveWidget.getLatestFiles()
 	                lliurexOneDriveWidget.manageNavigation(2)
+	            }
+
+	        } 
+	    }
+
+	     RowLayout{
+	        id:latestUploadedFiles
+	        Layout.fillWidth:true
+	        Layout.leftMargin:5
+	        Layout.rightMargin:5
+	        visible:lliurexOneDriveWidget.spaceType=="onedriveBackup"?true:false
+
+	        Components.Label{
+	            id:latestUploadedText
+	            text:i18n("Recently uploaded files")
+	            Layout.fillWidth:true
+	        }
+	       
+	        PC3.ToolButton {
+	            width:35
+	            height:35
+	            icon.name:"arrow-right.svg"
+	            PC3.ToolTip{
+	            	id:uploadedFilesTP
+	                text:i18n("Click to see the list")
+	            }
+	           	onClicked:{
+	           		uploadedFilesTP.hide()
+	                lliurexOneDriveWidget.getLatestUploadedFiles()
+	                lliurexOneDriveWidget.manageNavigation(3)
 	            }
 
 	        } 

@@ -16,6 +16,7 @@ Components.ListItem {
     property bool isRunningSpace
     property bool localFolderWarning
     property bool updateRequiredWarning
+    property string filesPendingUpload
     readonly property bool isTall: height > Math.round(PlasmaCore.Units.gridUnit * 2.5)
 
 	enabled:true
@@ -42,9 +43,9 @@ Components.ListItem {
     		    text:nameSpace
     		    width:{
                     if (spaceItem.ListView.isCurrentItem){
-                        260
+                        listSpaceView.width-(spaceStatusIcon.width*1.6 +spaceRunningIcon.width*1.6+loadSpaceBtn.width*1.6)
                     }else{
-                        310
+                       listSpaceView.width-(spaceStatusIcon.width*1.6 +spaceRunningIcon.width*1.6)
                     }
                 }
     		    elide:Text.ElideMiddle
@@ -58,8 +59,8 @@ Components.ListItem {
     		}
     		Components.Label{
     			id:spaceStatusText
-    			text:getStatusText(statusSpace,localFolderWarning,updateRequiredWarning)
-    			width:260
+    			text:getStatusText(statusSpace,localFolderWarning,updateRequiredWarning,filesPendingUpload)
+    			width:spaceName.width
     			elide:Text.ElideMiddle
     			visible:spaceItem.ListView.isCurrentItem
                 font.italic:true
@@ -137,6 +138,7 @@ Components.ListItem {
                     break;
                 case 2:
                 case 4:
+                case 5:
                     return "/usr/share/icons/breeze/status/16/state-sync.svg"
                     break;
                 default:
@@ -149,7 +151,7 @@ Components.ListItem {
 
     }
 
-    function getStatusText(statusSpace,localFolderWarning,updateRequiredWarning){
+    function getStatusText(statusSpace,localFolderWarning,updateRequiredWarning,filesPendingUpload){
 
         var msg=""
         if (localFolderWarning){
@@ -169,6 +171,9 @@ Components.ListItem {
                     case 4:
                         msg=i18n("Uploading pending changes")
                         break
+                    case 5:
+                        msg=filesPendingUpload + " "+ i18n("files pending to upload")
+                        break;
                     case -1:
                         msg=i18n("OneDrive return an error")
                         break

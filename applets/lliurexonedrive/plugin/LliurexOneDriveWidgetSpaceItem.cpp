@@ -9,6 +9,7 @@ LliurexOneDriveWidgetSpaceItem::LliurexOneDriveWidgetSpaceItem()
     , m_isRunning()
     , m_localFolderWarning()
     , m_updateRequiredWarning()
+    , m_filesPendingUpload()
 {
 }
 
@@ -72,6 +73,16 @@ void LliurexOneDriveWidgetSpaceItem::setUpdateRequiredWarning(const bool &update
     m_updateRequiredWarning = updateRequiredWarning;
 }
 
+QString LliurexOneDriveWidgetSpaceItem::filesPendingUpload() const
+{
+    return m_filesPendingUpload;
+}
+
+void LliurexOneDriveWidgetSpaceItem::setFilesPendingUpload(const QString &filesPendingUpload)
+{
+    m_filesPendingUpload = filesPendingUpload;
+}
+
 bool LliurexOneDriveWidgetSpaceItem::operator==(const LliurexOneDriveWidgetSpaceItem &other) const
 {
     return m_id==other.m_id
@@ -79,7 +90,8 @@ bool LliurexOneDriveWidgetSpaceItem::operator==(const LliurexOneDriveWidgetSpace
         && m_status == other.m_status
         && m_isRunning == other.m_isRunning
         && m_localFolderWarning == other.m_localFolderWarning
-        && m_updateRequiredWarning==other.m_updateRequiredWarning;
+        && m_updateRequiredWarning == other.m_updateRequiredWarning
+        && m_filesPendingUpload == other.m_filesPendingUpload;
 }
 
 bool LliurexOneDriveWidgetSpaceItem::operator!=(const LliurexOneDriveWidgetSpaceItem &other) const

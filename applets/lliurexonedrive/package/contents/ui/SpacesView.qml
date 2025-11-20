@@ -52,6 +52,7 @@ Rectangle{
 	                isRunningSpace: model.isRunning
 	                localFolderWarning: model.localFolderWarning
 	                updateRequiredWarning:model.updateRequiredWarning
+	                filesPendingUpload:model.filesPendingUpload
 	            }
 	            Kirigami.PlaceholderMessage { 
 	                id: emptySpaceHint

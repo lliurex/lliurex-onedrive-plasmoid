@@ -16,7 +16,8 @@ namespace {
         FileNameRole = Qt::UserRole,
         FilePathRole,
         FileDateRole,
-        FileTimeRole
+        FileTimeRole,
+        FileIdRole
     };
 }
 
@@ -27,6 +28,7 @@ QHash<int, QByteArray> LliurexOneDriveWidgetFilesModel::roleNames() const
     roles[FilePathRole] = "filePath";
     roles[FileDateRole] = "fileDate";
     roles[FileTimeRole] = "fileTime";
+    roles[FileIdRole] = "fileId";
 
     return roles;
 }
@@ -44,6 +46,7 @@ QVariant LliurexOneDriveWidgetFilesModel::data(const QModelIndex &index, int rol
         case FilePathRole: return item.filePath();
         case FileDateRole: return item.fileDate();
         case FileTimeRole: return item.fileTime();
+        case FileIdRole: return item.fileId();
        
     }
 
@@ -68,9 +71,9 @@ bool LliurexOneDriveWidgetFilesModel::setData(const QModelIndex &index, const QV
         const LliurexOneDriveWidgetFileItem item = variant.value<LliurexOneDriveWidgetFileItem>();
 
         // This assert makes sure that changing items modify the correct item:
-        // therefore, the unique identifier 'filePath()' is used. If that
+        // therefore, the unique identifier 'fileId()' is used. If that
         // is not the case, the newly inserted row must have an empty filePath().
-        Q_ASSERT(item.filePath() == m_items[row].filePath()
+        Q_ASSERT(item.fileId() == m_items[row].fileId()
             || m_items[row].filePath().isEmpty());
 
         if (m_items[row] != item) {
@@ -119,19 +122,19 @@ void LliurexOneDriveWidgetFilesModel::clear()
 }
 
 namespace {
-    QStringList filePaths(const QVector<LliurexOneDriveWidgetFileItem> &items)
+    QStringList fileIds(const QVector<LliurexOneDriveWidgetFileItem> &items)
     {
         QStringList list;
         for (auto & item : items) {
-            list.append(item.filePath());
+            list.append(item.fileId());
         }
         return list;
     }
 
-    int indexOfFilePath(const QString &filePath, const QVector<LliurexOneDriveWidgetFileItem> &items)
+    int indexOfFileId(const QString &fileId, const QVector<LliurexOneDriveWidgetFileItem> &items)
     {
         for (int i = 0; i < items.size(); ++i) {
-            if (filePath == items[i].filePath()) {
+            if (fileId == items[i].fileId()) {
                 return i;
             }
         }
@@ -141,13 +144,13 @@ namespace {
 
 void LliurexOneDriveWidgetFilesModel::updateItems(const QVector<LliurexOneDriveWidgetFileItem> &items)
 {
-    QStringList unusedFilePaths = filePaths(m_items);
+    QStringList unusedFileIds = fileIds(m_items);
     // merge existing and new file paths
     for (auto & item : items) {
         // remove still used item from unused list
-        unusedFilePaths.removeOne(item.filePath());
+        unusedFileIds.removeOne(item.fileId());
         // insert or modify m_items
-        int row = indexOfFilePath(item.filePath(), m_items);
+        int row = indexOfFileId(item.fileId(), m_items);
         if (row < 0) {
             // new item: append on end
             row = m_items.size();
@@ -158,8 +161,8 @@ void LliurexOneDriveWidgetFilesModel::updateItems(const QVector<LliurexOneDriveW
 
     // remove mount points, that do not exist anymore
 
-    for (const auto & filePath : unusedFilePaths) {
-        const int row = indexOfFilePath(filePath, m_items);
+    for (const auto & fileId : unusedFileIds) {
+        const int row = indexOfFileId(fileId, m_items);
         Q_ASSERT(row >= 0);
         removeRow(row);
     
