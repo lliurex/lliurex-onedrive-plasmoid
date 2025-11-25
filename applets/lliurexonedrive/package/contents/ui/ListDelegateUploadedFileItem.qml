@@ -36,27 +36,28 @@ Components.ItemDelegate {
                 uploadedListView.currentIndex = index
             }
         }
-        Components.Label{
-            id:fileText
-            text:{
-                if (uploadedFileItem.ListView.isCurrentItem){
-                    fileName+"\n"+i18n("Uploaded on: ")+fileDate+"-"+fileTime
-                }else{
-                    fileName
-                }
-            }
-            font.bold:{
-                if (uploadedFileItem.ListView.isCurrentItem){
-                    true
-                }else{
-                    false
-                }
-            }	
-            width:uploadedListView.width-50
-            anchors.left:parent.left
+        Column{
+            id:fileColumn
             anchors.leftMargin:10
             anchors.verticalCenter: parent.verticalCenter
-        }
+            anchors.left:parent.left
+            width:label.width-50
+            
+            Components.Label{
+                id:fileText
+                text:fileName
+                font.bold:uploadedFileItem.ListView.isCurrentItem?true:false
+                width:fileColumn.width-10
+                elide:Text.ElideMiddle
+            }
 
+            Components.Label{
+                id:fileData
+                text:i18n("Uploaded on: ")+fileDate+"-"+fileTime
+                visible:uploadedFileItem.ListView.isCurrentItem?true:false
+                font.bold:true
+                width: fileText.width
+            }
+        }
     }     
 }
