@@ -31,26 +31,28 @@ Components.ListItem {
     Item{
         id:label
         height:30
-        Components.Label{
-            id:fileText
-            text:{
-                if (uploadedFileItem.ListView.isCurrentItem){
-                    filePath+"\n"+i18n("Uploaded on: ")+fileDate+"-"+fileTime
-                }else{
-                    filePath
-                }
-            }
-            font.bold:{
-                if (uploadedFileItem.ListView.isCurrentItem){
-                    true
-                }else{
-                    false
-                }
-
-            } 
+        Column{
+            id:labelRow
             width:uploadedListView.width-50
-            elide:Text.ElideMiddle  
-            anchors.verticalCenter: parent.verticalCenter
+            anchors.verticalCenter:parent.verticalCenter
+            anchors.leftMargin:10
+
+            Components.Label{
+                id:fileText
+                text:fileName
+                font.bold:uploadedFileItem.ListView.isCurrentItem?true:false 
+                width:labelRow.width-10
+                elide:Text.ElideMiddle  
+
+            }
+
+            Components.Label{
+                id:fileData
+                text: i18n("Uploaded on: ")+fileDate+"-"+fileTime
+                font.bold:true
+                visible:uploadedFileItem.ListView.isCurrentItem?true:false
+                width:fileText.width 
+            }
         }
         
    }     

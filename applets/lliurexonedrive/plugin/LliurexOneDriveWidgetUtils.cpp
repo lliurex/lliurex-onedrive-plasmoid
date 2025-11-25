@@ -311,17 +311,17 @@ QList<QStringList> LliurexOneDriveWidgetUtils::getFiles(QStringList info, QStrin
 
     QList<QStringList> lastestFiles;
 
-    QString reference=spaceLocalFolder;
+    QString reference=spaceLocalFolder+"/";
 
     info.removeLast();
     if (!info.isEmpty()){
         for (int i=0;i<10;i++){
             if (i<info.length()){
-                QStringList tmpLine=info[i].split(reference)[1].split("/");
+                QString tmpLine=info[i].split(reference)[1];
                 int tmpRef=tmpLine.length()-1;
                 QStringList tmpItem;
-                if (tmpLine[tmpRef]!=".directory"){
-                    tmpItem.append(tmpLine[tmpRef]);
+                if (!tmpLine.contains(".directory")){
+                    tmpItem.append(tmpLine);
                     tmpItem.append(info[i].split("\t")[2]);
                     QStringList tmpDate;
                     tmpDate=info[i].split("\t")[0].split("+");
@@ -337,10 +337,9 @@ QList<QStringList> LliurexOneDriveWidgetUtils::getFiles(QStringList info, QStrin
         if ((lastestFiles.length()<10) && (info.length()>10)){
             int j=10;
             if (j<info.length()){
-                QStringList tmpLine=info[j].split(reference)[1].split("/");
-                int tmpRef=tmpLine.length()-1;
+                QString tmpLine=info[j].split(reference)[1];
                 QStringList tmpItem;
-                tmpItem.append(tmpLine[tmpRef]);
+                tmpItem.append(tmpLine);
                 tmpItem.append(info[j].split("\t")[2]);
                 QStringList tmpDate;
                 tmpDate=info[j].split("\t")[0].split("+");
@@ -368,7 +367,7 @@ QList<QStringList> LliurexOneDriveWidgetUtils::getUploadedFiles(QStringList info
                 QStringList tmpItem;
                 QStringList tmpTimeInfo=tmpLine[0].split(" ");
                 QStringList tmpNameInfo=tmpLine[1].split(" ... done");
-                tmpItem.append(tmpNameInfo[0].split("LLIUREX_ONEDRIVE_BACKUP/")[1].split("/").last());
+                tmpItem.append(tmpNameInfo[0].split("LLIUREX_ONEDRIVE_BACKUP/")[1]);
                 tmpItem.append(tmpNameInfo[0].split("LLIUREX_ONEDRIVE_BACKUP/")[1]);
                 QString tmpDate;
                 tmpDate=tmpTimeInfo[1];
