@@ -30,26 +30,26 @@ Components.ListItem {
 
     Item{
     	id:label
-    	height:30
-        Components.Label{
-            id:fileText
-            text:{
-            	if (fileItem.ListView.isCurrentItem){
-            		fileName+"\n"+i18n("Last modification: ")+fileDate+"-"+fileTime
-            	}else{
-            		fileName
-            	}
-            }
-            font.bold:{
-            	if (fileItem.ListView.isCurrentItem){
-            		true
-            	}else{
-            		false
-            	}
-
-            }	
-            width:listView.width-(searchBtn.width*1.6)
+    	height:40
+        Column{
+            id: labelRow
+            width:listView.width-(searchBtn.width*1.6) 
             anchors.verticalCenter: parent.verticalCenter
+            Components.Label{
+                id:fileText
+                text:fileName
+                font.bold:fileItem.ListView.isCurrentItem?true:false
+                width:labelRow.width
+                elide:Text.ElideMiddle
+              
+            }
+            Components.Label{
+                id:fileData
+                text:i18n("Last modification: ")+fileDate+"-"+fileTime
+                font.bold:true
+                visible: fileItem.ListView.isCurrentItem?true:false
+               
+            }
         }
         PC3.ToolButton {
         	id:searchBtn
@@ -57,7 +57,7 @@ Components.ListItem {
         	height:35
                       
             anchors{
-                left: fileText.right
+                left: labelRow.right
 	            top: fileText.isTall? parent.top : undefined
 	            verticalCenter: parent.verticalCenter
 	            leftMargin:10
