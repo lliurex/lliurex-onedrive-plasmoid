@@ -58,13 +58,7 @@ Components.ItemDelegate {
                     }
                 }
                 elide:Text.ElideMiddle
-                font.bold:{
-                    if (spaceItem.ListView.isCurrentItem){
-                        true
-                    }else{
-                        false
-                    }
-                }	
+                font.bold:spaceItem.ListView.isCurrentItem?true:false
             }
             Components.Label{
                 id:spaceStatusText
@@ -73,14 +67,7 @@ Components.ItemDelegate {
                 width:spaceName.width
                 elide:Text.ElideMiddle
                 visible:spaceItem.ListView.isCurrentItem
-                font.italic:true
-                font.bold:{
-                    if (spaceItem.ListView.isCurrentItem){
-                        true
-                    }else{
-                        false
-                    }
-                }
+                font.italic:spaceItem.ListView.isCurrentItem?true:false
             }
         }
 

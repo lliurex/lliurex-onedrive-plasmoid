@@ -36,26 +36,28 @@ Components.ItemDelegate {
                 listView.currentIndex = index
             }
         }
-        Components.Label{
-            id:fileText
-            text:{
-                if (fileItem.ListView.isCurrentItem){
-                    fileName+"\n"+i18n("Last modification: ")+fileDate+"-"+fileTime
-                }else{
-                    fileName
-                }
-            }
-            font.bold:{
-                if (fileItem.ListView.isCurrentItem){
-                    true
-                }else{
-                    false
-                }
-            }	
-            width:listView.width-(searchBtn.width*1.6+10)
-            anchors.left:parent.left
+        Column{
+            id:fileRow
             anchors.leftMargin:10
             anchors.verticalCenter: parent.verticalCenter
+            anchors.left:parent.left
+            width:label.width-(searchBtn.width*1.6+10)
+
+            Components.Label{
+                id:fileText
+                text:fileName
+                font.bold:fileItem.ListView.isCurrentItem?true:false
+                width:fileRow.width-10
+                elide:Text.ElideMiddle
+            }
+            Components.Label{
+                id:fileData
+                text:i18n("Last modification: ")+fileDate+"-"+fileTime
+                visible:fileItem.ListView.isCurrentItem?true:false
+                font.bold:true
+                width:fileText.width
+            }
+              
         }
 
         PC3.ToolButton {
@@ -63,7 +65,7 @@ Components.ItemDelegate {
             width:35
             height:35
             anchors{
-                left: fileText.right
+                left: fileRow.right
                 top: fileText.isTall? parent.top : undefined
                 verticalCenter: parent.verticalCenter
                 leftMargin:10
