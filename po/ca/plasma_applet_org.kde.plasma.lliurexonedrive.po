@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lliurexonedrive\n"
 "Report-Msgid-Bugs-To: http://lliurex.net\n"
-"POT-Creation-Date: 2025-09-05 12:51+0200\n"
-"PO-Revision-Date: 2025-09-05 12:51+0200\n"
+"POT-Creation-Date: 2025-12-01 12:44+0100\n"
+"PO-Revision-Date: 2025-12-01 12:44+0100\n"
 "Last-Translator: lliurex <lliurex@gva.es>\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -48,7 +48,7 @@ msgstr ""
 msgid "Searching information. Wait a moment..."
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateFileItem.qml:38
+#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateFileItem.qml:48
 #, kde-format
 msgid "Last modification: "
 msgstr ""
@@ -134,17 +134,16 @@ msgstr ""
 msgid "Information not available"
 msgstr ""
 
-#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateUploadedFileItem.qml:38
+#: ../applets/lliurexonedrive/package/contents/ui/ListDelegateUploadedFileItem.qml:51
 #, kde-format
 msgid "Uploaded on: "
 msgstr ""
 
 #: ../applets/lliurexonedrive/package/contents/ui/main.qml:41
 #: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:148
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:171
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:184
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:318
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:377
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:161
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:295
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:354
 #, kde-format
 msgid "Open Lliurex OneDrive"
 msgstr ""
@@ -266,14 +265,13 @@ msgid "Click to see log file"
 msgstr ""
 
 #: ../applets/lliurexonedrive/package/contents/ui/SpacesView.qml:24
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:361
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:338
 #, kde-format
-msgid ""
-"The available space in HDD is less than 5 GB. No more files will be synced"
+msgid "The available space in HDD is less than 5 GB. No more files will be synced"
 msgstr ""
 
 #: ../applets/lliurexonedrive/package/contents/ui/SpacesView.qml:24
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:346
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:323
 #, kde-format
 msgid "The available space in HDD is less than 10 GB"
 msgstr ""
@@ -289,59 +287,46 @@ msgid "List of last files uploaded"
 msgstr ""
 
 #: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:113
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:131
 #, kde-format
 msgid "Lliurex OneDrive"
 msgstr ""
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:133
-#, kde-format
-msgid ""
-"Old OneDrive configuration detected. Access LliureX-OneDrive to run the "
-"migration process"
-msgstr ""
-
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:146
-#, kde-format
-msgid "Old OneDrive configuration detected.It is necessary to migrate"
-msgstr ""
-
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:167
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:144
 #, kde-format
 msgid "Detected problems with local folder of one or more spaces"
 msgstr ""
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:179
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:156
 #, kde-format
 msgid "New version of OneDrive client detected. Your attention is required"
 msgstr ""
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:204
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:181
 #, kde-format
 msgid "Starting the synchronization"
 msgstr ""
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:209
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:186
 #, kde-format
 msgid "Synchronization is stopped"
 msgstr ""
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:264
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:241
 #, kde-format
 msgid "All remote changes are synchronized"
 msgstr ""
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:275
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:252
 #, kde-format
 msgid "One or more spaces have changes pending of synchronization"
 msgstr ""
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:286
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:263
 #, kde-format
 msgid "Unable to connect with Microsoft OneDrive"
 msgstr ""
 
-#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:290
+#: ../applets/lliurexonedrive/plugin/LliurexOneDriveWidget.cpp:267
 #, kde-format
 msgid "OneDrive has reported an error in one or more spaces"
 msgstr ""
