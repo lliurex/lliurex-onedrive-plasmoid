@@ -148,7 +148,6 @@ private:
     void checkIsRunning();
     void checkStatus();
     void cleanSpaceInfoVars();
-    void showMigrationNotification();
     void checkHddFreeSpaceStatus();
     void getLogSize(QString configPath);
 
@@ -196,7 +195,6 @@ private:
     bool m_showSearchFiles=false;
     QFile recentFile;
     QFile OLD_TARGET_FILE;
-    int lastMigrationCheck=350;
     int lastUpdateCheck=350;
     bool m_clickedSyncBtn=false;
     bool updateGlobalStatus=false;
