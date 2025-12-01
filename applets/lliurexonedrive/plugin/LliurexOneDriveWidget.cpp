@@ -56,101 +56,77 @@ void LliurexOneDriveWidget::worker(){
     updateGlobalStatus=false;
 
     if (!isWorking){
-        if (!LliurexOneDriveWidget::OLD_TARGET_FILE.exists()){
-            if (LliurexOneDriveWidget::TARGET_FILE.exists() ) {
-                isWorking=true;
-                QString onedriveConfigPath=userHome+"/.config/lliurex-onedrive-config/onedriveConfig.json";
-                oneDriveSpacesConfig=m_utils->getSpacesInfo(onedriveConfigPath);
-                if (oneDriveSpacesConfig.length()>0){
-                    QVector<LliurexOneDriveWidgetSpaceItem> items;
-                    for (QVariantList::iterator j=oneDriveSpacesConfig.begin();j!=oneDriveSpacesConfig.end();j++){
-                        QVariantList tmpList=(*j).toList();
-                        LliurexOneDriveWidgetSpaceItem item;
-                        item.setId(tmpList[0].toString());
-                        item.setName(tmpList[5].toString());
-                        item.setStatus(tmpList[8].toString());
-                        item.setIsRunning(tmpList[10].toBool());
-                        item.setLocalFolderWarning(tmpList[11].toBool());
-                        item.setUpdateRequiredWarning(tmpList[12].toBool());
-                        item.setFilesPendingUpload(tmpList[13].toString());
-                        items.append(item);
-                        if ((m_currentIndex!=0)&&(spaceId!="")){
-                            if (spaceId==tmpList[0].toString()){
-                                spaceIdMatch=true;
-                                setFreeSpace(tmpList[9].toString());
-                                setSyncStatus(tmpList[10].toBool());
-                                getLogSize(tmpList[6].toString());
+        if (LliurexOneDriveWidget::TARGET_FILE.exists() ) {
+            isWorking=true;
+            QString onedriveConfigPath=userHome+"/.config/lliurex-onedrive-config/onedriveConfig.json";
+            oneDriveSpacesConfig=m_utils->getSpacesInfo(onedriveConfigPath);
+            if (oneDriveSpacesConfig.length()>0){
+                QVector<LliurexOneDriveWidgetSpaceItem> items;
+                for (QVariantList::iterator j=oneDriveSpacesConfig.begin();j!=oneDriveSpacesConfig.end();j++){
+                    QVariantList tmpList=(*j).toList();
+                    LliurexOneDriveWidgetSpaceItem item;
+                    item.setId(tmpList[0].toString());
+                    item.setName(tmpList[5].toString());
+                    item.setStatus(tmpList[8].toString());
+                    item.setIsRunning(tmpList[10].toBool());
+                    item.setLocalFolderWarning(tmpList[11].toBool());
+                    item.setUpdateRequiredWarning(tmpList[12].toBool());
+                    item.setFilesPendingUpload(tmpList[13].toString());
+                    items.append(item);
+                    if ((m_currentIndex!=0)&&(spaceId!="")){
+                        if (spaceId==tmpList[0].toString()){
+                            spaceIdMatch=true;
+                            setFreeSpace(tmpList[9].toString());
+                            setSyncStatus(tmpList[10].toBool());
+                            getLogSize(tmpList[6].toString());
 
-                                if (tmpList[11].toBool() || tmpList[12].toBool()){
+                            if (tmpList[11].toBool() || tmpList[12].toBool()){
+                                setLliurexOneDriveOpen(true);
+                            }else{
+                                if (isLliurexOneDriveOpen){
                                     setLliurexOneDriveOpen(true);
                                 }else{
-                                    if (isLliurexOneDriveOpen){
-                                        setLliurexOneDriveOpen(true);
-                                    }else{
-                                        setLliurexOneDriveOpen(false);
+                                    setLliurexOneDriveOpen(false);
 
-                                    }
                                 }
-                                
                             }
-
+                            
                         }
-                    }
-                    if (oneDriveSpacesConfig!=oneDriveSpacesConfigPrev){
-                        m_spacesModel->clear();
-                        m_spacesModel->updateItems(items);
-                        oneDriveSpacesConfigPrev=oneDriveSpacesConfig;
-                        updateGlobalStatus=true;
-                    }
-                    isPassiveStatus=false;
 
-                }else{
+                    }
+                }
+                if (oneDriveSpacesConfig!=oneDriveSpacesConfigPrev){
                     m_spacesModel->clear();
-                    isPassiveStatus=true;
+                    m_spacesModel->updateItems(items);
+                    oneDriveSpacesConfigPrev=oneDriveSpacesConfig;
+                    updateGlobalStatus=true;
                 }
+                isPassiveStatus=false;
 
-            }
-            if (!isPassiveStatus){
-                const QString tooltip(i18n("Lliurex OneDrive"));
-                setToolTip(tooltip);
-                checkIfStartIsLocked();
-                setStatus(ActiveStatus);
-                if ((spaceId!="")&&(!spaceIdMatch)){
-                    manageNavigation(0);
-                }
             }else{
-                setStatus(PassiveStatus);
-                previousError=false;
-                previousStatusError.clear();
-                warning=false;
-                isWorking=false;
-                oneDriveSpacesConfigPrev.clear();
+                m_spacesModel->clear();
+                isPassiveStatus=true;
+            }
+
+        }
+        if (!isPassiveStatus){
+            const QString tooltip(i18n("Lliurex OneDrive"));
+            setToolTip(tooltip);
+            checkIfStartIsLocked();
+            setStatus(ActiveStatus);
+            if ((spaceId!="")&&(!spaceIdMatch)){
                 manageNavigation(0);
             }
         }else{
-            setStatus(ActiveStatus);
-            const QString tooltip(i18n("Lliurex OneDrive"));
-            setToolTip(tooltip);
-            const QString subtooltip=i18n("Old OneDrive configuration detected. Access LliureX-OneDrive to run the migration process");
-            updateWidget(subtooltip,"onedrive-error");
-            showMigrationNotification();
+            setStatus(PassiveStatus);
+            previousError=false;
+            previousStatusError.clear();
+            warning=false;
             isWorking=false;
-
+            oneDriveSpacesConfigPrev.clear();
+            manageNavigation(0);
         }
-    }
-}
-
-void LliurexOneDriveWidget::showMigrationNotification(){
-
-    lastMigrationCheck=lastMigrationCheck+5;
-    if (lastMigrationCheck>360){
-        QString msg=i18n("Old OneDrive configuration detected.It is necessary to migrate");
-        m_errorNotification = KNotification::event(QStringLiteral("MigrationWarning"), msg, {}, "onedrive-widget", nullptr, KNotification::CloseOnTimeout , QStringLiteral("llxonedrive"));
-        QString name = i18n("Open Lliurex OneDrive");
-        m_errorNotification->setDefaultAction(name);
-        m_errorNotification->setActions({name});
-        connect(m_errorNotification, QOverload<unsigned int>::of(&KNotification::activated), this, &LliurexOneDriveWidget::launchOneDrive);
-        lastMigrationCheck=0;
+       
     }
 }
 

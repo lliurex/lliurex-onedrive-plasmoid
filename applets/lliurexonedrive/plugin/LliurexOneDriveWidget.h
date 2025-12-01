@@ -145,7 +145,6 @@ private:
     void checkIsRunning();
     void checkStatus();
     void cleanSpaceInfoVars();
-    void showMigrationNotification();
     void checkHddFreeSpaceStatus();
     void getLogSize(QString configPath);
 
