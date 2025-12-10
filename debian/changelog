@@ -1,3 +1,9 @@
+plasma-widget-lliurex-onedrive (2.5.5) jammy; urgency=medium
+
+  * Added changes to support backup mode
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Wed, 10 Dec 2025 08:33:28 +0100
+
 plasma-widget-lliurex-onedrive (2.5.4) jammy; urgency=medium
 
   * Changed to detect new client version
