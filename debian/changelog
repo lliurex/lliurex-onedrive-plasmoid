@@ -1,3 +1,9 @@
+plasma-widget-lliurex-onedrive (3.5.5) noble; urgency=medium
+
+  * Supported backup mode
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Wed, 10 Dec 2025 08:35:00 +0100
+
 plasma-widget-lliurex-onedrive (3.5.4) noble; urgency=medium
 
   * Initial release for noble
