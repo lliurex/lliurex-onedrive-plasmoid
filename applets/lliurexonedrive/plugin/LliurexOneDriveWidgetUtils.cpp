@@ -233,7 +233,7 @@ QVariantList LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPat
             }
             try{
                 tmpItem.append(statusResult[4].toInt());
-            }catch{
+            }catch(...){
                 tmpItem.append(0);
             }
             try{
