@@ -76,7 +76,11 @@ void LliurexOneDriveWidget::worker(){
                     if ((m_currentIndex!=0)&&(spaceId!="")){
                         if (spaceId==tmpList[0].toString()){
                             spaceIdMatch=true;
-                            setFreeSpace(tmpList[9].toString());
+                            try{
+                                setFreeSpace(tmpList[9].toString());
+                            }catch(std::exception& e){
+                                setFreeSpace("");
+                            }
                             setSyncStatus(tmpList[10].toBool());
                             getLogSize(tmpList[6].toString());
 
