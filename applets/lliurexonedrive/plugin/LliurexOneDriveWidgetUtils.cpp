@@ -231,7 +231,11 @@ QVariantList LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPat
             if (updateRequired){
                 updateRequiredCount+=1;
             }
-            tmpItem.append(statusResult[4].toInt());
+            try{
+                tmpItem.append(statusResult[4].toInt());
+            }catch{
+                tmpItem.append(0);
+            }
             try{
                 tmpItem.append(val.toObject().value("created").toString());
             }catch(...){
