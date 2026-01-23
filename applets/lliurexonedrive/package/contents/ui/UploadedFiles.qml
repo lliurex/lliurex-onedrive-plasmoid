@@ -29,7 +29,7 @@ Rectangle{
                     text:i18n("Back to space view")
                 }
                 onClicked:{
-                    id:backTP.hide()
+                    backTP.hide()
                     lliurexOneDriveWidget.manageNavigation(1)
                 } 
             } 
