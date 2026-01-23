@@ -1,3 +1,9 @@
+plasma-widget-lliurex-onedrive (2.5.5.3) jammy; urgency=medium
+
+  * Fixed bug
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Fri, 23 Jan 2026 10:56:02 +0100
+
 plasma-widget-lliurex-onedrive (2.5.5.2) jammy; urgency=medium
 
   * Fixed bug
