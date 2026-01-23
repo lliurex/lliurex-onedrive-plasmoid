@@ -1,3 +1,9 @@
+plasma-widget-lliurex-onedrive (3.5.5.1) noble; urgency=medium
+
+  * Fixed order to hide button
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Fri, 23 Jan 2026 10:47:58 +0100
+
 plasma-widget-lliurex-onedrive (3.5.5) noble; urgency=medium
 
   * Supported backup mode
