@@ -86,7 +86,7 @@ Rectangle{
                 Kirigami.PlaceholderMessage { 
                     id: emptyHint
                     anchors.centerIn: parent
-                    width: parent.width - (units.largeSpacing * 4)
+                    width: parent.width - (Kirigami.Units.largeSpacing * 4)
                     visible: {
                         if ((uploadedListView.count === 0)&&(!lliurexOneDriveWidget.showSearchFiles)){
                             return true
@@ -99,7 +99,7 @@ Rectangle{
                 Kirigami.PlaceholderMessage {
                     id: showHint
                     anchors.centerIn: parent
-                    width: parent.width - (units.largeSpacing * 4)
+                    width: parent.width - (Kirigami.Units.largeSpacing * 4)
                     visible: lliurexOneDriveWidget.showSearchFiles
                     text: i18n("Searching information. Wait a moment...")
                 }

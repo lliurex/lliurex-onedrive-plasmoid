@@ -86,7 +86,7 @@ Rectangle{
                 Kirigami.PlaceholderMessage {
                     id: emptyHint
                     anchors.centerIn: parent
-                    width: parent.width - (units.largeSpacing * 4)
+                    width: parent.width - (Kirigami.Units.largeSpacing * 4)
                     visible: {
                         if ((listView.count === 0)&&(!lliurexOneDriveWidget.showSearchFiles)){
                             return true
