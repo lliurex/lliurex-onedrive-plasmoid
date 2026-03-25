@@ -1,5 +1,3 @@
-
-#include <iostream>
 #include "LliurexOneDriveWidget.h"
 #include "LliurexOneDriveWidgetFileItem.h"
 #include "LliurexOneDriveWidgetFilesModel.h"
@@ -8,43 +6,44 @@
 #include "LliurexOneDriveWidgetUtils.h"
 
 #include <KLocalizedString>
-#include <KFormat>
 #include <KNotification>
 #include <KIO/CommandLauncherJob>
 #include <QTimer>
-#include <QStandardPaths>
 #include <QDebug>
 #include <QFile>
-#include <QTextStream>
+#include <QProcess>
+#include <QtConcurrent>
 
 
 LliurexOneDriveWidget::LliurexOneDriveWidget(QObject *parent)
     : QObject(parent)
-    ,m_timer(new QTimer(this))
     ,m_utils(new LliurexOneDriveWidgetUtils(this))
     ,m_spacesModel(new LliurexOneDriveWidgetSpacesModel(this))
-    ,m_isLliurexOneDriveOpen(new QProcess(this))
-    ,m_getLatestFiles(new QProcess(this))
-    ,m_getLatestUploadedFiles(new QProcess(this))
     ,m_filesModel(new LliurexOneDriveWidgetFilesModel(this))
+    ,m_timer(new QTimer(this))
+    ,m_isLliurexOneDriveOpen(new QProcess(this))
    
 {
     
     userHome=m_utils->getUserHome();
-    TARGET_FILE.setFileName(userHome+"/.config/lliurex-onedrive-config/onedriveConfig.json");
-    OLD_TARGET_FILE.setFileName(userHome+"/.config/onedrive/refresh_token");
+    TARGET_FILE.setFileName(userHome+QStringLiteral("/.config/lliurex-onedrive-config/onedriveConfig.json"));
+    OLD_TARGET_FILE.setFileName(userHome+QStringLiteral("/.config/onedrive/refresh_token"));
 
-    m_utils->cleanCache();
-    //initPlasmoid();
-
+    qRegisterMetaType<LliurexOneDriveWidgetSpacesModel*>("LliurexOneDriveWidgetSpacesModel*");
+    qRegisterMetaType<LliurexOneDriveWidgetFilesModel*>("LliurexOneDriveWidgetFilesModel*");
+    qRegisterMetaType<QMap<QString, QVariantMap>>("QMap<QString, QVariantMap>");
+    qRegisterMetaType<QVector<LliurexOneDriveWidgetSpaceItem>>("QVector<LliurexOneDriveWidgetSpaceItem>");
+    qRegisterMetaType<QList<int>>("QList<int>");
+    qRegisterMetaType<SpacesUpdateData>("SpacesUpdateData");
+    qRegisterMetaType<QVector<LliurexOneDriveWidgetFileItem>>("QVector<LliurexOneDriveWidgetFileItem>");
+    
     connect(m_timer, &QTimer::timeout, this, &LliurexOneDriveWidget::worker);
+    connect(m_utils, &LliurexOneDriveWidgetUtils::getSpacesInfoFinished,this,&LliurexOneDriveWidget::handleGetSpacesInfoFinished);
     connect(m_isLliurexOneDriveOpen, (void (QProcess::*)(int, QProcess::ExitStatus))&QProcess::finished,
             this, &LliurexOneDriveWidget::isLliurexOneDriveOpenProcessFinished);
-    connect(m_getLatestFiles, (void (QProcess::*)(int, QProcess::ExitStatus))&QProcess::finished,
-            this, &LliurexOneDriveWidget::getLatestFilesFinished);
-    connect(m_getLatestUploadedFiles, (void (QProcess::*)(int, QProcess::ExitStatus))&QProcess::finished,
-            this, &LliurexOneDriveWidget::getLatestUploadedFilesFinished);
-
+    connect(&m_watcher, &QFutureWatcherBase::finished, this, &LliurexOneDriveWidget::getLatestFilesFinished);
+    connect(m_utils,&LliurexOneDriveWidgetUtils::fetchUploadedFilesFinished,this,&LliurexOneDriveWidget::handleUploadedFilesFinished);
+  
     m_timer->start(5000);
     worker();
 }    
@@ -59,258 +58,212 @@ void LliurexOneDriveWidget::worker(){
         if (LliurexOneDriveWidget::TARGET_FILE.exists() ) {
             isWorking=true;
             QString onedriveConfigPath=userHome+"/.config/lliurex-onedrive-config/onedriveConfig.json";
-            oneDriveSpacesConfig=m_utils->getSpacesInfo(onedriveConfigPath);
-            if (oneDriveSpacesConfig.length()>0){
-                QVector<LliurexOneDriveWidgetSpaceItem> items;
-                for (QVariantList::iterator j=oneDriveSpacesConfig.begin();j!=oneDriveSpacesConfig.end();j++){
-                    QVariantList tmpList=(*j).toList();
-                    LliurexOneDriveWidgetSpaceItem item;
-                    item.setId(tmpList[0].toString());
-                    item.setName(tmpList[5].toString());
-                    item.setStatus(tmpList[8].toString());
-                    item.setIsRunning(tmpList[10].toBool());
-                    item.setLocalFolderWarning(tmpList[11].toBool());
-                    item.setUpdateRequiredWarning(tmpList[12].toBool());
-                    item.setFilesPendingUpload(tmpList[13].toString());
-                    items.append(item);
-                    if ((m_currentIndex!=0)&&(spaceId!="")){
-                        if (spaceId==tmpList[0].toString()){
-                            spaceIdMatch=true;
-                            try{
-                                setFreeSpace(tmpList[9].toString());
-                            }catch(std::exception& e){
-                                setFreeSpace("");
-                            }
-                            setSyncStatus(tmpList[10].toBool());
-                            getLogSize(tmpList[6].toString());
-
-                            if (tmpList[11].toBool() || tmpList[12].toBool()){
-                                setLliurexOneDriveOpen(true);
-                            }else{
-                                if (isLliurexOneDriveOpen){
-                                    setLliurexOneDriveOpen(true);
-                                }else{
-                                    setLliurexOneDriveOpen(false);
-
-                                }
-                            }
-                            
-                        }
-
-                    }
-                }
-                if (oneDriveSpacesConfig!=oneDriveSpacesConfigPrev){
-                    m_spacesModel->clear();
-                    m_spacesModel->updateItems(items);
-                    oneDriveSpacesConfigPrev=oneDriveSpacesConfig;
-                    updateGlobalStatus=true;
-                }
-                isPassiveStatus=false;
-
-            }else{
-                m_spacesModel->clear();
-                isPassiveStatus=true;
-            }
-
-        }
-        if (!isPassiveStatus){
-            const QString tooltip(i18n("Lliurex OneDrive"));
-            setToolTip(tooltip);
-            checkIfStartIsLocked();
-            setStatus(ActiveStatus);
-            if ((spaceId!="")&&(!spaceIdMatch)){
-                manageNavigation(0);
-            }
+            m_utils->getSpacesInfo(onedriveConfigPath);
+           
         }else{
             setStatus(PassiveStatus);
             previousError=false;
             previousStatusError.clear();
             warning=false;
             isWorking=false;
-            oneDriveSpacesConfigPrev.clear();
+            oneDriveSpacesConfig.clear();
             manageNavigation(0);
         }
-       
+        
     }
 }
 
-void LliurexOneDriveWidget::checkIfStartIsLocked(){
+void LliurexOneDriveWidget::handleGetSpacesInfoFinished(const SpacesUpdateData &data) 
+{
 
-    QString subtooltip="";
+    isLocalFolderWarning = data.folderWarning;
+    areSpacesSyncRunning = data.isRunning;
+    isUpdateRequiredWarning = data.updateRequired;
+    globalStatus = data.status;
+    statusErrorChanged = false;
+
+    if (previousStatusError != data.statusErrorCodes) {
+        previousStatusError = data.statusErrorCodes;
+        statusErrorChanged = !previousStatusError.isEmpty();
+    }
+
+    if (data.info.isEmpty()) {
+        m_spacesModel->clear();
+        setStatus(PassiveStatus);
+        previousError = false;
+        previousStatusError.clear();
+        warning = false;
+        isWorking = false;
+        oneDriveSpacesConfig.clear();
+        manageNavigation(0);
+        return;
+    }
+
+    if (oneDriveSpacesConfig != data.info){
+        oneDriveSpacesConfig = data.info;
+        m_spacesModel->clear();
+        m_spacesModel->updateItems(data.model);
+        updateGlobalStatus = true;
+    }
+
+    bool spaceIdMatch = false;
+
+    if (m_currentIndex != 0 && !spaceId.isEmpty()) {
+        auto it = oneDriveSpacesConfig.find(spaceId);
+        if (it != oneDriveSpacesConfig.end()) {
+            spaceIdMatch = true;
+            const QVariantMap &spaceInfo = it.value();
+
+            setFreeSpace(spaceInfo.value("freeSpace").toString());
+            setSyncStatus(spaceInfo.value("isRunning").toBool());
+            getLogSize(spaceInfo.value("configPath").toString());
+
+            bool shouldBeOpen = spaceInfo.value("folderWarning").toBool() || 
+                                spaceInfo.value("updateReq").toBool() || 
+                                isLliurexOneDriveOpen;
+            setLliurexOneDriveOpen(shouldBeOpen);
+        }
+    }
+
+    setToolTip(i18n("Lliurex OneDrive"));
+    checkIfStartIsLocked();
+    setStatus(ActiveStatus);
+
+    if (!spaceId.isEmpty() && !spaceIdMatch) {
+        manageNavigation(0);
+    }
+}
+
+void LliurexOneDriveWidget::sendNotification(const QString &id, const QString &msg) {
+    
+    m_errorNotification = KNotification::event(id, msg, {}, "onedrive-widget", nullptr, 
+                                              KNotification::CloseOnTimeout, QStringLiteral("llxonedrive"));
+    QString name = i18n("Open Lliurex OneDrive");
+    m_errorNotification->setDefaultAction(name);
+    m_errorNotification->setActions({name});
+    connect(m_errorNotification, QOverload<unsigned int>::of(&KNotification::activated), this, &LliurexOneDriveWidget::launchOneDrive);
+}
+
+void LliurexOneDriveWidget::checkIfStartIsLocked() {
     checkIsLliurexOneDriveOpen();
     checkIsRunning();
 
-    if (m_utils->isLocalFolderWarning || m_utils->isUpdateRequiredWarning){
-        if (m_utils->isLocalFolderWarning){
-            warning=false;
-            previousError=false;
-            checkExecuted=false;
-            subtooltip=i18n("Detected problems with local folder of one or more spaces");
-            updateWidget(subtooltip,"onedrive-error");
-            if (showLocalFolderWarning){
-                m_errorNotification = KNotification::event(QStringLiteral("ErrorFolder"), subtooltip, {}, "onedrive-widget", nullptr, KNotification::CloseOnTimeout , QStringLiteral("llxonedrive"));
-                QString name = i18n("Open Lliurex OneDrive");
-                m_errorNotification->setDefaultAction(name);
-                m_errorNotification->setActions({name});
-                connect(m_errorNotification, QOverload<unsigned int>::of(&KNotification::activated), this, &LliurexOneDriveWidget::launchOneDrive);
-            }
-            showLocalFolderWarning=false;
+    if (isLocalFolderWarning) {
+        warning = previousError = checkExecuted = isWorking = false;
+        QString subtooltip = i18n("Detected problems with local folder of one or more spaces");
+        updateWidget(subtooltip, "onedrive-error");
+
+        if (showLocalFolderWarning) {
+            sendNotification(QStringLiteral("ErrorFolder"), subtooltip);
+            showLocalFolderWarning = false;
         }
-        if (m_utils->isUpdateRequiredWarning){
-            subtooltip=i18n("New version of OneDrive client detected. Your attention is required");
-            updateWidget(subtooltip,"onedrive-waiting");
-            lastUpdateCheck=lastUpdateCheck+5;
-            if (lastUpdateCheck>360){
-                m_errorNotification = KNotification::event(QStringLiteral("UpdateWarning"), subtooltip, {}, "onedrive-widget", nullptr, KNotification::CloseOnTimeout , QStringLiteral("llxonedrive"));
-                QString name = i18n("Open Lliurex OneDrive");
-                m_errorNotification->setDefaultAction(name);
-                m_errorNotification->setActions({name});
-                connect(m_errorNotification, QOverload<unsigned int>::of(&KNotification::activated), this, &LliurexOneDriveWidget::launchOneDrive);
-                lastUpdateCheck=0;
-            }
-        }
-        isWorking=false;
-    }else{
-        showLocalFolderWarning=true;
-        isWorking=false;
+        return;
     }
 
+    if (isUpdateRequiredWarning) {
+        QString subtooltip = i18n("New version of OneDrive client detected. Your attention is required");
+        updateWidget(subtooltip, "onedrive-waiting");
+        isWorking = false;
+        
+        lastUpdateCheck += 5;
+        if (lastUpdateCheck > 360) {
+            sendNotification(QStringLiteral("UpdateWarning"), subtooltip);
+            lastUpdateCheck = 0;
+        }
+        return;
+    }
+
+    showLocalFolderWarning = true;
+    isWorking = false;
 }
 
-void LliurexOneDriveWidget::checkIsRunning(){
-
-    if (!m_utils->isLocalFolderWarning){
-        if (m_utils->areSpacesSyncRunning){
-            if ((!previousError) & (!warning) & (!checkExecuted)){
-                QString subtooltip(i18n("Starting the synchronization"));
-                updateWidget(subtooltip,"onedrive-starting");
-            }
-            checkStatus();
-        }else{
-            QString subtooltip(i18n("Synchronization is stopped"));
-            updateWidget(subtooltip,"onedrive-pause");
-            previousError=false;
-            previousStatusError.clear();
-            warning=false;
-            checkExecuted=false;
-            isWorking=false;
-        }              
-    }else{
-        isWorking=false;
+void LliurexOneDriveWidget::checkIsRunning() {
+    if (isLocalFolderWarning) {
+        isWorking = false;
+        return;
     }
+
+    if (!areSpacesSyncRunning) {
+        updateWidget(i18n("Synchronization is stopped"), "onedrive-pause");
+        previousError = warning = checkExecuted = isWorking = false;
+        previousStatusError.clear();
+        return;
+    }
+
+    if (!previousError && !warning && !checkExecuted) {
+        updateWidget(i18n("Starting the synchronization"), "onedrive-starting");
+    }
+    checkStatus();
+}
+
+void LliurexOneDriveWidget::checkStatus() {
+    lastCheck += 5;
+    if (lastCheck <= 90 && !updateGlobalStatus) return;
+
+    bool processError = true;
+    QString subtooltip;
+
+    if (globalStatus == "OK") {
+        subtooltip = i18n("All remote changes are synchronized");
+        updateWidget(subtooltip, "onedrive-running");
+        warning = previousError = false;
+        countRepeatGeneralError = countRepeatError = lastErrorNotification = 0;
+        previousStatusError.clear();
+    } 
+    else if (globalStatus == "Warning") {
+        warning = true;
+        subtooltip = i18n("One or more spaces have changes pending of synchronization");
+        updateWidget(subtooltip, "onedrive-waiting");
+        previousError = false;
+        countRepeatGeneralError = countRepeatError = lastErrorNotification = 0;
+    } 
+    else {
+        warning = false;
+        if (globalStatus == "GeneralError") {
+            countRepeatGeneralError++;
+            countRepeatError = 0;
+            subtooltip = i18n("Unable to connect with Microsoft OneDrive");
+        } else {
+            countRepeatError++;
+            countRepeatGeneralError = 0;
+            subtooltip = i18n("OneDrive has reported an error in one or more spaces");
+        }
+
+        if (countRepeatGeneralError < 2 && countRepeatError < 2) processError = false;
+
+        updateWidget(subtooltip, "onedrive-error");
+
+        if (processError) {
+            bool shouldNotify = !previousError || statusErrorChanged || (++lastErrorNotification > 40);
+            if (shouldNotify) {
+                lastErrorNotification = 0;
+                previousError = true;
+                sendNotification(globalStatus, subtooltip);
+            }
+        }
+    }
+
+    checkHddFreeSpaceStatus();
+    isWorking = false;
+    lastCheck = 0;
+    checkExecuted = true;
 }
 
 void LliurexOneDriveWidget::checkIsLliurexOneDriveOpen(){
 
     if (m_isLliurexOneDriveOpen->state() != QProcess::NotRunning) {
-        m_isLliurexOneDriveOpen->kill();
+        return; 
     }
-    QString cmd="ps -ef | grep '/usr/bin/lliurex-onedrive' | grep -v 'grep'";
-    m_isLliurexOneDriveOpen->start("/bin/sh", QStringList()<< "-c" 
-                       << cmd,QIODevice::ReadOnly);
-  
+
+    m_isLliurexOneDriveOpen->start("pgrep", {"-f", "/usr/bin/lliurex-onedrive"});
+
 }
 
 void LliurexOneDriveWidget::isLliurexOneDriveOpenProcessFinished(int exitCode, QProcess::ExitStatus exitStatus){
 
-    Q_UNUSED(exitCode);
-
-    if (exitStatus!=QProcess::NormalExit){
-        isLliurexOneDriveOpen=true;
-        return;
-    }
-    QString stdout=QString::fromLocal8Bit(m_isLliurexOneDriveOpen->readAllStandardOutput());
-    QStringList pout=stdout.split("\n");
-    
-    if (pout[0].size()>0){
-        isLliurexOneDriveOpen=true;
-    }else{
-        isLliurexOneDriveOpen=false;
-    }
+    isLliurexOneDriveOpen = (exitStatus == QProcess::NormalExit && exitCode == 0);
 
 } 
-
-void LliurexOneDriveWidget::checkStatus(){
-
-    lastCheck=lastCheck+5;
-   
-    if ((lastCheck>90) || (updateGlobalStatus)){
-        bool showErrorNotification=false;
-        QString msgError;
-        bool processError=true;
-
-        QString globalStatus=m_utils->getGlobalStatus();
-
-        if (globalStatus=="OK"){
-            QString subtooltip(i18n("All remote changes are synchronized"));
-            updateWidget(subtooltip,"onedrive-running");
-            warning=false;
-            previousError=false;
-            previousStatusError.clear();
-            countRepeatGeneralError=0;
-            countRepeatError=0;
-            lastErrorNotification=0;
-
-        }else if (globalStatus=="Warning"){
-            warning=true;
-            QString subtooltip(i18n("One or more spaces have changes pending of synchronization"));
-            updateWidget(subtooltip,"onedrive-waiting");
-            previousError=false;
-            previousStatusError.clear();
-            countRepeatGeneralError=0;
-            countRepeatError=0;
-            lastErrorNotification=0;
-        }else{
-            warning=false;
-            if (globalStatus=="GeneralError"){
-                countRepeatGeneralError+=1;
-                msgError=i18n("Unable to connect with Microsoft OneDrive");
-                countRepeatError=0;
-            }else if (globalStatus=="Error"){
-                countRepeatError+=1;
-                msgError=i18n("OneDrive has reported an error in one or more spaces");
-                countRepeatGeneralError=0;
-        
-            }
-            if ((countRepeatGeneralError<2) && (countRepeatError<2)){
-                processError=false;
-            }
-            QString subtooltip(msgError);
-            updateWidget(subtooltip,"onedrive-error");
-            if(processError){
-                if (previousError){
-                    if (previousStatusError!=m_utils->spacesStatusErrorCode){
-                        showErrorNotification=true;
-                        previousStatusError=m_utils->spacesStatusErrorCode;
-                    }else{
-                        lastErrorNotification+=1;
-                        if (lastErrorNotification>40){
-                            showErrorNotification=true;
-                        }    
-                    }
-                }else{
-                    previousError=true;
-                    previousStatusError=m_utils->spacesStatusErrorCode;
-                    showErrorNotification=true;
-                }
-                if (showErrorNotification){
-                    lastErrorNotification=0;
-                    m_errorNotification = KNotification::event(globalStatus, subtooltip, {}, "onedrive-widget", nullptr, KNotification::CloseOnTimeout , QStringLiteral("llxonedrive"));
-                    QString name = i18n("Open Lliurex OneDrive");
-                    m_errorNotification->setDefaultAction(name);
-                    m_errorNotification->setActions({name});
-                    connect(m_errorNotification, QOverload<unsigned int>::of(&KNotification::activated), this, &LliurexOneDriveWidget::launchOneDrive);
-                }
-            }
-  
-        }
-        checkHddFreeSpaceStatus();
-        isWorking=false;
-        lastCheck=0;
-        checkExecuted=true;
-
-    }
-}
 
 void LliurexOneDriveWidget::checkHddFreeSpaceStatus(){
 
@@ -370,19 +323,6 @@ void LliurexOneDriveWidget::checkHddFreeSpaceStatus(){
 
 }
 
-void LliurexOneDriveWidget::updateWidget(QString subtooltip,QString icon){
-
-    setSubToolTip(subtooltip);
-    setIconName(icon);
-}   
-
-
-LliurexOneDriveWidget::TrayStatus LliurexOneDriveWidget::status() const
-{
-    return m_status;
-}
-
-
 void LliurexOneDriveWidget::launchOneDrive(bool seeSpace)
 {
     KIO::CommandLauncherJob *job = nullptr;
@@ -397,6 +337,143 @@ void LliurexOneDriveWidget::launchOneDrive(bool seeSpace)
 
     if (m_errorNotification) { m_errorNotification->close(); }
    
+}
+
+void LliurexOneDriveWidget::openHelp()
+{
+            
+    QString command="xdg-open https://wiki.edu.gva.es/lliurex/tiki-index.php?page=Lliurex-Onedrive";
+    KIO::CommandLauncherJob *job = nullptr;
+    job = new KIO::CommandLauncherJob(command);
+    job->start();
+}
+
+void LliurexOneDriveWidget::goToSpace(QString const &idSpace ){
+
+    cleanSpaceInfoVars();
+    if (oneDriveSpacesConfig.contains(idSpace)){
+        QVariantMap spaceInfo=oneDriveSpacesConfig.value(idSpace);
+        spaceId=idSpace;
+        setSpaceMail(spaceInfo["email"].toString());
+        setSpaceType(spaceInfo["spaceType"].toString());
+        spaceLocalFolder=spaceInfo["localFolder"].toString();
+        setOneDriveFolder(spaceInfo["name"].toString());
+        spaceConfigPath=spaceInfo["configPath"].toString();
+        spaceSystemd=spaceInfo["systemd"].toString();
+        try{
+            spaceCreated=spaceInfo["created"].toString();
+        }catch(...){
+            spaceCreated="";
+        }
+        setFreeSpace(spaceInfo["freeSpace"].toString());
+        setSyncStatus(spaceInfo["isRunning"].toBool());
+        if (spaceInfo["folderWarning"].toBool() || spaceInfo["updateReq"].toBool()){
+            setLliurexOneDriveOpen(true);   
+        }else{
+            if (isLliurexOneDriveOpen){
+                setLliurexOneDriveOpen(true);
+            }else{
+                setLliurexOneDriveOpen(false);
+            }
+        }
+        getLogSize(spaceConfigPath);
+        setClickedSyncBtn(false);
+        manageNavigation(1);
+    }
+}
+   
+void LliurexOneDriveWidget::manageNavigation(int stackIndex){
+
+    setCurrentIndex(stackIndex);
+    if (stackIndex==0){
+        cleanSpaceInfoVars();
+    }
+}
+
+void LliurexOneDriveWidget::openFolder()
+{
+            
+    QString command="xdg-open "+spaceLocalFolder;
+    KIO::CommandLauncherJob *job = nullptr;
+    job = new KIO::CommandLauncherJob(command);
+    job->start();
+}
+
+void LliurexOneDriveWidget::manageSync(){
+
+    QString cmd;
+    setClickedSyncBtn(true);
+    if (m_syncStatus){
+        cmd="systemctl --user stop "+spaceSystemd; 
+    }else{
+        m_utils->restoreSyncListFile(spaceConfigPath);
+        cmd="systemctl --user start "+spaceSystemd;
+    }
+    
+    KIO::CommandLauncherJob *job = nullptr;
+    job = new KIO::CommandLauncherJob(cmd);
+    job->start();
+
+}
+
+void LliurexOneDriveWidget::getLatestFiles() {
+
+    if (m_watcher.isRunning()) return;
+
+    m_filesModel->clear();
+    setShowSearchFiles(true);
+    QFuture<QVector<LliurexOneDriveWidgetFileItem>> future = QtConcurrent::run(
+        LliurexOneDriveWidgetUtils::getFiles, 
+        spaceLocalFolder, 
+        10
+    );
+    m_watcher.setFuture(future);
+}
+
+void LliurexOneDriveWidget::getLatestFilesFinished() {
+
+    QVector<LliurexOneDriveWidgetFileItem> items = m_watcher.result();
+    
+    if (!items.isEmpty()) {
+        m_filesModel->updateItems(items);
+    } else {
+        m_filesModel->clear();
+    }
+    
+    setShowSearchFiles(false);
+}
+
+void LliurexOneDriveWidget::getLatestUploadedFiles() {
+
+    m_filesModel->clear();
+    setShowSearchFiles(true);
+    m_utils->fetchUploadedFiles(spaceSystemd,spaceCreated);
+}
+
+void LliurexOneDriveWidget::handleUploadedFilesFinished(const QVector<LliurexOneDriveWidgetFileItem> &items){
+
+    m_filesModel->updateItems(items);
+    setShowSearchFiles(false);
+}
+
+void LliurexOneDriveWidget::goToFile(const QString &filePath)
+{
+            
+    QString command="dolphin --select '"+filePath+"'";
+    KIO::CommandLauncherJob *job = nullptr;
+    job = new KIO::CommandLauncherJob(command);
+    job->start();
+}
+
+void LliurexOneDriveWidget::updateWidget(QString subtooltip,QString icon){
+
+    setSubToolTip(subtooltip);
+    setIconName(icon);
+}   
+
+LliurexOneDriveWidget::TrayStatus LliurexOneDriveWidget::status() const
+{
+    return m_status;
 }
 
 void LliurexOneDriveWidget::setStatus(LliurexOneDriveWidget::TrayStatus status)
@@ -446,90 +523,9 @@ void LliurexOneDriveWidget::setSubToolTip(const QString &subToolTip)
     }
 }
 
-void LliurexOneDriveWidget::openHelp()
-{
-            
-    QString command="xdg-open https://wiki.edu.gva.es/lliurex/tiki-index.php?page=Lliurex-Onedrive";
-    KIO::CommandLauncherJob *job = nullptr;
-    job = new KIO::CommandLauncherJob(command);
-    job->start();
-}
-
 LliurexOneDriveWidgetSpacesModel *LliurexOneDriveWidget::spacesModel() const
 {
     return m_spacesModel;
-}
-
-void LliurexOneDriveWidget::goToSpace(QString const &idSpace ){
-
-    cleanSpaceInfoVars();
-    for (QVariantList::iterator j=oneDriveSpacesConfig.begin();j!=oneDriveSpacesConfig.end();j++){
-        QVariantList tmpList=(*j).toList();
-        if (idSpace==tmpList[0].toString()){
-            spaceId=idSpace;
-            setSpaceMail(tmpList[1].toString());
-            setSpaceType(tmpList[3].toString());
-            spaceLocalFolder=tmpList[4].toString();
-            setOneDriveFolder(tmpList[5].toString());
-            spaceConfigPath=tmpList[6].toString();
-            spaceSystemd=tmpList[7].toString();
-            try{
-                spaceCreated=tmpList[14].toString();
-            }catch(...){
-                spaceCreated="";
-            }
-            setFreeSpace(tmpList[9].toString());
-            setSyncStatus(tmpList[10].toBool());
-            if (tmpList[11].toBool() || tmpList[12].toBool()){
-                setLliurexOneDriveOpen(true);   
-            }else{
-                if (isLliurexOneDriveOpen){
-                    setLliurexOneDriveOpen(true);
-                }else{
-                    setLliurexOneDriveOpen(false);
-                }
-            }
-            getLogSize(spaceConfigPath);
-            setClickedSyncBtn(false);
-            manageNavigation(1);
-            break;
-        }
-    }
-   
-}
-
-void LliurexOneDriveWidget::manageNavigation(int stackIndex){
-
-    setCurrentIndex(stackIndex);
-    if (stackIndex==0){
-        cleanSpaceInfoVars();
-    }
-}
-
-void LliurexOneDriveWidget::openFolder()
-{
-            
-    QString command="xdg-open "+spaceLocalFolder;
-    KIO::CommandLauncherJob *job = nullptr;
-    job = new KIO::CommandLauncherJob(command);
-    job->start();
-}
-
-void LliurexOneDriveWidget::manageSync(){
-
-    QString cmd;
-    setClickedSyncBtn(true);
-    if (m_syncStatus){
-        cmd="systemctl --user stop "+spaceSystemd; 
-    }else{
-        m_utils->restoreSyncListFile(spaceConfigPath);
-        cmd="systemctl --user start "+spaceSystemd;
-    }
-    
-    KIO::CommandLauncherJob *job = nullptr;
-    job = new KIO::CommandLauncherJob(cmd);
-    job->start();
-
 }
 
 void LliurexOneDriveWidget::cleanSpaceInfoVars(){
@@ -541,121 +537,28 @@ void LliurexOneDriveWidget::cleanSpaceInfoVars(){
     spaceCreated="";
 }
 
-void LliurexOneDriveWidget::getLatestFiles(){
+void LliurexOneDriveWidget::getLogSize(QString configPath)
+{
 
-    if (m_getLatestFiles->state() != QProcess::NotRunning) {
-        m_getLatestFiles->kill();
-    }
-    m_filesModel->clear();
-    setShowSearchFiles(true);
-    QString cmd="find "+spaceLocalFolder+" -type f -mmin +1 -printf '%T+\t%s\t%p\n' 2>/dev/null | sort -r | more";
-    m_getLatestFiles->start("/bin/sh", QStringList()<< "-c" 
-                       << cmd,QIODevice::ReadOnly);
+     QString user=userHome.split("/")[2];
+     logFilePath=configPath+"/log/"+user+".onedrive.log";
+     QString logSize=m_utils->getLogFileSize(logFilePath);
+     setLogFileSize(logSize);
+
 }
 
-void LliurexOneDriveWidget::getLatestFilesFinished(int exitCode, QProcess::ExitStatus exitStatus){
-
-    Q_UNUSED(exitCode);
-    QList<QStringList> latestFiles;
-    QStringList searchFilesPout;
-
-    if (exitStatus!=QProcess::NormalExit){
-        m_filesModel->clear();
-        setShowSearchFiles(false);     
-        return;
-    }
-
-    QString stdout=QString::fromLocal8Bit(m_getLatestFiles->readAllStandardOutput());
-    
-    if (stdout!=""){
-        searchFilesPout=stdout.split("\n");
-        if (searchFilesPout.size()>0){
-            QVector<LliurexOneDriveWidgetFileItem> items;
-            latestFiles=m_utils->getFiles(searchFilesPout,spaceLocalFolder);
-            
-            for (int i=0;i<latestFiles.length();i++){
-                LliurexOneDriveWidgetFileItem item;
-                item.setFileName(latestFiles[i][0]);
-                item.setFilePath(latestFiles[i][1]);
-                item.setFileDate(latestFiles[i][2]);
-                item.setFileTime(latestFiles[i][3]);
-                item.setFileId(latestFiles[i][1]+"_"+latestFiles[i][2]+"_"+latestFiles[i][3]);
-                items.append(item);
-                
-            }
-            m_filesModel->updateItems(items);
-
-        }else{
-            m_filesModel->clear();
-
-        }
-    }else{
-        m_filesModel->clear();
-    }
-    setShowSearchFiles(false);
-}
-
-void LliurexOneDriveWidget::getLatestUploadedFiles(){
-
-    if (m_getLatestUploadedFiles->state() != QProcess::NotRunning) {
-        m_getLatestUploadedFiles->kill();
-    }
-    m_filesModel->clear();
-    setShowSearchFiles(true);
-    QString cmd="journalctl --user-unit="+spaceSystemd+" -r -o short-full --since '"+spaceCreated+"' | grep 'Uploading' | grep '...done' | head -30";
-    m_getLatestUploadedFiles->start("/bin/sh", QStringList()<< "-c" 
-                       << cmd,QIODevice::ReadOnly);
-}
-
-void LliurexOneDriveWidget::getLatestUploadedFilesFinished(int exitCode, QProcess::ExitStatus exitStatus){
-
-    Q_UNUSED(exitCode);
-    QList<QStringList> latestFiles;
-    QStringList searchFilesPout;
-
-    if (exitStatus!=QProcess::NormalExit){
-        m_filesModel->clear();
-        setShowSearchFiles(false);     
-        return;
-    }
-
-    QString stdout=QString::fromLocal8Bit(m_getLatestUploadedFiles->readAllStandardOutput());
-
-    if (stdout!=""){
-        searchFilesPout=stdout.split("\n");
-        if (searchFilesPout.size()>0){
-            QVector<LliurexOneDriveWidgetFileItem> items;
-            latestFiles=m_utils->getUploadedFiles(searchFilesPout);
-            for (int i=0;i<latestFiles.length();i++){
-                LliurexOneDriveWidgetFileItem item;
-                item.setFileName(latestFiles[i][0]);
-                item.setFilePath(latestFiles[i][1]);
-                item.setFileDate(latestFiles[i][2]);
-                item.setFileTime(latestFiles[i][3]);
-                item.setFileId(latestFiles[i][1]+"_"+latestFiles[i][2]+"_"+latestFiles[i][3]);
-                items.append(item);
-                
-            }
-            m_filesModel->updateItems(items);
-
-        }else{
-            m_filesModel->clear();
-
-        }
-    }else{
-        m_filesModel->clear();
-    }
-    setShowSearchFiles(false);
-}
-
-void LliurexOneDriveWidget::goToFile(const QString &filePath)
+void LliurexOneDriveWidget::openLogFile()
 {
             
-    QString command="dolphin --select '"+filePath+"'";
-    KIO::CommandLauncherJob *job = nullptr;
-    job = new KIO::CommandLauncherJob(command);
-    job->start();
+    recentFile.setFileName(logFilePath);
+    if (recentFile.exists()){
+        QString command="xdg-open "+logFilePath;
+        KIO::CommandLauncherJob *job = nullptr;
+        job = new KIO::CommandLauncherJob(command);
+        job->start();
+    }
 }
+
 
 bool LliurexOneDriveWidget::checkIfFileExists(const QString &filePath)
 {
@@ -773,7 +676,6 @@ void LliurexOneDriveWidget::setClickedSyncBtn(bool clickedSyncBtn)
     }
 }
 
-
 bool LliurexOneDriveWidget::lliurexOneDriveOpen()
 {
     return m_lliurexOneDriveOpen;
@@ -786,7 +688,6 @@ void LliurexOneDriveWidget::setLliurexOneDriveOpen(bool lliurexOneDriveOpen)
         emit lliurexOneDriveOpenChanged();
     }
 }
-
 
 bool LliurexOneDriveWidget::showSearchFiles()
 {
@@ -819,26 +720,6 @@ void LliurexOneDriveWidget::setLogFileSize(const QString &logFileSize)
     }
 }
 
-void LliurexOneDriveWidget::getLogSize(QString configPath)
-{
 
-     QString user=userHome.split("/")[2];
-     logFilePath=configPath+"/log/"+user+".onedrive.log";
-     QString logSize=m_utils->getLogFileSize(logFilePath);
-     setLogFileSize(logSize);
-
-}
-
-void LliurexOneDriveWidget::openLogFile()
-{
-            
-    recentFile.setFileName(logFilePath);
-    if (recentFile.exists()){
-        QString command="xdg-open "+logFilePath;
-        KIO::CommandLauncherJob *job = nullptr;
-        job = new KIO::CommandLauncherJob(command);
-        job->start();
-    }
-}
 
 

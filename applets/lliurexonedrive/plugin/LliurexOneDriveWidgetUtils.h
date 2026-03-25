@@ -4,11 +4,26 @@
 #include <QObject>
 #include <QProcess>
 #include <QFile>
-#include <QJsonArray>
+#include <QVariantMap>
+#include <QVector>
+#include <QList>
 
+#include "LliurexOneDriveWidgetSpaceItem.h"
+#include "LliurexOneDriveWidgetFileItem.h"
 
+class QJsonObject; 
 class QTimer;
 
+struct SpacesUpdateData {
+        QMap<QString, QVariantMap> info;
+        QVector<LliurexOneDriveWidgetSpaceItem> model;
+        QList<int> statusErrorCodes;
+        QString status;
+        bool isRunning;
+        bool folderWarning;
+        bool updateRequired;
+};
+Q_DECLARE_METATYPE(SpacesUpdateData)
 
 class LliurexOneDriveWidgetUtils : public QObject
 {
@@ -17,25 +32,21 @@ class LliurexOneDriveWidgetUtils : public QObject
 
 public:
    
-    LliurexOneDriveWidgetUtils(QObject *parent = nullptr);
+    explicit LliurexOneDriveWidgetUtils(QObject *parent = nullptr);
 
     QString getUserHome();
-    QVariantList getSpacesInfo(QString onedriveConfig);
+    void getSpacesInfo(QString onedriveConfig);
     QList<bool> checkLocalFolder(QString spaceFolderPath);
     QStringList readStatusToken(QString spaceConfigPath);
-    bool checkIfSpaceSyncIsRunning(QString spaceConfigPath);
-    QString getGlobalStatus();
+    bool checkIfSpaceSyncIsRunning(QString spaceConfigPath) ;
     QString checkLocalFreeSpace();
-    QList<QStringList> getFiles(QStringList info,QString spaceLocalFolder);
-    QList<QStringList> getUploadedFiles(QStringList info);
+    static QVector<LliurexOneDriveWidgetFileItem>getFiles(const QString& spaceLocalFolder, int limit);
+    void fetchUploadedFiles(const QString &unit, const QString &since);
     void restoreSyncListFile(QString spaceConfigPath);
     QString getLogFileSize(QString logFilePath);
-    bool checkUpdateRequired(QString spaceConfigPath);
+    bool checkUpdateRequired(QString spaceConfigPath); 
 
-    void cleanCache();
-    
     QString user;
-    QJsonArray onedriveConfig;
     QFile localFolderEmptyToken;
     QFile localFolderRemovedToken;
     QFile spaceStatusToken;
@@ -43,12 +54,9 @@ public:
     QFile freeSpaceWarningToken;
     QFile freeSpaceErrorToken;
     QFile updateRequiredToken;
+    QFile logFile;
+
     int totalSpaces;
-    QList<int> spacesStatusCode;
-    QList<int> spacesStatusErrorCode;
-    bool isLocalFolderWarning=false;
-    bool areSpacesSyncRunning=false;
-    bool isUpdateRequiredWarning=false;
 
     int MICROSOFT_API_ERROR=-1;
     int UNABLE_CONNECT_MICROSOFT_ERROR=-2;
@@ -63,17 +71,31 @@ public:
     int INFORMATION_NOT_AVAILABLE=3;
     int UPLOADING_PENDING_CHANGES=4;
     int UPLOADING_PENDING_CHANGES_BACKUP=5;
+
     QList <int> warningCode={UPLOADING_PENDING_CHANGES,OUT_OF_SYNC_MSG,UPLOADING_PENDING_CHANGES_BACKUP};
     QList <int> errorCode={MICROSOFT_API_ERROR,UNABLE_CONNECT_MICROSOFT_ERROR,ZERO_SPACE_AVAILABLE_ERROR,UNAUTHORIZED_ERROR,SERVICE_UNAVAILABLE,FORBIDDEN_USER};
-    QFile logFile;
-    
+ 
+
+    signals:
+        void getSpacesInfoFinished(const SpacesUpdateData &data);    
+        void fetchUploadedFilesFinished(const QVector<LliurexOneDriveWidgetFileItem> &items);
 private:
 
+    QPair<QString, QList<int>> getGlobalStatus(int totalSpaces, QList<int> spacesStatusCode);
     QString formatFreeSpace(QString freeSpace);
-    QString formatFileDate(QString fileDate);
+    static QString formatFileDate(QString fileDate);
+    
+    QVariantMap processSingleSpace(const QJsonObject &obj); 
+
+    QMap<QString, QVariantMap> oneDriveSpacesConfig;
     QFile syncList;
     QFile syncListHash;
-    QString getInstalledVersion();
+    QProcess *m_process = nullptr;
 
+    static QVector<LliurexOneDriveWidgetFileItem> parseData(const QByteArray &data);
+
+    private slots:
+       
+       void onProcessFinished(int exitCode, QProcess::ExitStatus exitStatus);
 };
-#endif // PLASMA_LLIUREX_UP_INDICATOR_UTILS_H
+#endif // PLASMA_LLIUREX_ONEDRIVE_WIDGET_UTILS_H

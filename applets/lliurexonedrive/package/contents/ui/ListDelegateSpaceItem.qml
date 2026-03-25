@@ -1,15 +1,10 @@
-import QtQuick 2.6
-import QtQuick.Layouts 1.12
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.components 2.0 as Components
+import QtQuick 2.15
 import org.kde.plasma.components 3.0 as PC3
-import org.kde.kquickcontrolsaddons 2.0 as KQuickControlsAddons
+import org.kde.kirigami 2.12 as Kirigami
 
-import org.kde.plasma.private.lliurexonedrive 1.0
-
-Components.ListItem {
+PC3.ItemDelegate {
     id: spaceItem
+
     property string idSpace
     property string nameSpace
     property int statusSpace
@@ -17,114 +12,87 @@ Components.ListItem {
     property bool localFolderWarning
     property bool updateRequiredWarning
     property string filesPendingUpload
-    readonly property bool isTall: height > Math.round(PlasmaCore.Units.gridUnit * 2.5)
 
-	enabled:true
+    width: listSpaceView.width
+    highlighted: hovered || ListView.isCurrentItem
 
-	onContainsMouseChanged: {
-        if (containsMouse) {
+    onHoveredChanged: {
+        if (hovered) {
             listSpaceView.currentIndex = index
+            listSpaceView.forceActiveFocus()
         } else {
             listSpaceView.currentIndex = -1
         }
-        listSpaceView.forceActiveFocus()
-
     }
 
-    Item{
-    	id:label
-    	height:45
-        Column{
-            id:spaceRow
+    contentItem: Item {
+        id: label
+        implicitHeight: 45
+
+        Column {
+            id: spaceRow
+            anchors.left: parent.left
+            anchors.right: spaceStatusIcon.left
+            anchors.rightMargin: 10
             anchors.verticalCenter: parent.verticalCenter
 
-    		Components.Label{
-    		    id:spaceName
-    		    text:nameSpace
-    		    width:{
-                    if (spaceItem.ListView.isCurrentItem){
-                        listSpaceView.width-(spaceStatusIcon.width*1.6 +spaceRunningIcon.width*1.6+loadSpaceBtn.width*1.6)
-                    }else{
-                       listSpaceView.width-(spaceStatusIcon.width*1.6 +spaceRunningIcon.width*1.6)
-                    }
-                }
-    		    elide:Text.ElideMiddle
-                font.bold:{
-                    if (spaceItem.ListView.isCurrentItem){
-                        true
-                    }else{
-                        false
-                    }
-                }	
-    		}
-    		Components.Label{
-    			id:spaceStatusText
-    			text:getStatusText(statusSpace,localFolderWarning,updateRequiredWarning,filesPendingUpload)
-    			width:spaceName.width
-    			elide:Text.ElideMiddle
-    			visible:spaceItem.ListView.isCurrentItem
-                font.italic:true
-                font.bold:{
-                    if (spaceItem.ListView.isCurrentItem){
-                        true
-                    }else{
-                        false
-                    }
-                }
+            PC3.Label {
+                id: spaceName
+                text: nameSpace
+                width: parent.width
+                elide: Text.ElideMiddle
+                font.bold: spaceItem.ListView.isCurrentItem
+            }
+
+            PC3.Label {
+                id: spaceStatusText
+                text: getStatusText(statusSpace, localFolderWarning, updateRequiredWarning, filesPendingUpload)
+                width: parent.width
+                elide: Text.ElideMiddle
+                visible: spaceItem.ListView.isCurrentItem
+                font.italic: true
+                font.pointSize: PC3.Theme.defaultFont.pointSize * 0.9
             }
         }
-        Image {
-            id:spaceStatusIcon
-            source:getStatusIcon(statusSpace,localFolderWarning,updateRequiredWarning)
-            sourceSize.width:32
-            sourceSize.height:32
-            anchors.leftMargin:10
-            anchors.left:spaceRow.right
-            anchors.verticalCenter:parent.verticalCenter
-        }  
-        Image {
-            id:spaceRunningIcon
-            source:{
-                if (isRunningSpace){
-                    "/usr/share/icons/breeze/status/16/media-playback-playing.svg"
-                }else{
-                    "/usr/share/icons/breeze/status/16/media-playback-stopped.svg"
-                }
 
-            }
-            sourceSize.width:32
-            sourceSize.height:32
-            anchors.leftMargin:15
-            anchors.left:spaceStatusIcon.right
-            anchors.verticalCenter:parent.verticalCenter
+        Kirigami.Icon {
+            id: spaceStatusIcon
+            source: getStatusIcon(statusSpace, localFolderWarning, updateRequiredWarning)
+            implicitWidth: 32
+            implicitHeight: 32
+            anchors.right: spaceRunningIcon.left
+            anchors.rightMargin: 15
+            anchors.verticalCenter: parent.verticalCenter
+        }
 
-        }     
+        Kirigami.Icon {
+            id: spaceRunningIcon
+            source: isRunningSpace ? "media-playback-playing" : "media-playback-stopped"
+            implicitWidth: 32
+            implicitHeight: 32
+            anchors.right: loadSpaceBtn.left
+            anchors.rightMargin: 10
+            anchors.verticalCenter: parent.verticalCenter
+        }
+
         PC3.ToolButton {
-        	id:loadSpaceBtn
-        	width:35
-        	height:35
-                      
-            anchors{
-                left: spaceRunningIcon.right
-                top: spaceName.isTall? parent.top : undefined
-	            verticalCenter: parent.verticalCenter
-	            leftMargin:10
-	            rightMargin:10
-	        }
-            icon.name:"configure"
-            visible:spaceItem.ListView.isCurrentItem
-            PC3.ToolTip{
-                id:detailsTP
-                text:i18n("Click to get details of:\n")+nameSpace
+            id: loadSpaceBtn
+            width: 32
+            height: 32
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
+            icon.name: "configure"
+            visible: spaceItem.ListView.isCurrentItem
+
+            PC3.ToolTip {
+                text: i18n("Click to get details of:\n") + nameSpace
             }
-            onClicked:{
-                detailsTP.hide()
+
+            onClicked: {
                 lliurexOneDriveWidget.goToSpace(idSpace)
             }
-
-       }
-   } 
-
+        }
+    }
     function getStatusIcon(statusSpace,localFolderWarning,updateRequiredWarning){
         if (localFolderWarning || updateRequiredWarning){
             return "/usr/share/icons/breeze/status/16/state-warning.svg"

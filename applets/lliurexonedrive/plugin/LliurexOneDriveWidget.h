@@ -4,11 +4,11 @@
 #include <QObject>
 #include <QProcess>
 #include <QPointer>
-#include <KNotification>
-#include <QDir>
+#include <QFutureWatcher>
 #include <QFile>
-#include <KIO/CommandLauncherJob>
+#include <QVariantMap>
 #include "LliurexOneDriveWidgetUtils.h"
+#include "LliurexOneDriveWidgetSpaceItem.h"
 
 class QTimer;
 class KNotification;
@@ -37,6 +37,7 @@ class LliurexOneDriveWidget : public QObject
     Q_PROPERTY(QString hddFreeSpaceStatus READ hddFreeSpaceStatus NOTIFY hddFreeSpaceStatusChanged)
     Q_PROPERTY(bool clickedSyncBtn READ clickedSyncBtn NOTIFY clickedSyncBtnChanged)
     Q_PROPERTY(QString logFileSize READ logFileSize NOTIFY logFileSizeChanged )
+
     Q_ENUMS(TrayStatus)
 
 public:
@@ -91,10 +92,13 @@ public:
 
     bool syncStatus();
     void setSyncStatus(bool);
+
     bool lliurexOneDriveOpen();
     void setLliurexOneDriveOpen(bool);
+
     bool showSearchFiles();
     void setShowSearchFiles(bool);
+
     bool clickedSyncBtn();
     void setClickedSyncBtn(bool);
 
@@ -136,8 +140,66 @@ signals:
 
 private:
 
-    LliurexOneDriveWidgetUtils *m_utils;
+    LliurexOneDriveWidgetUtils *m_utils = nullptr;
     LliurexOneDriveWidgetSpacesModel *m_spacesModel = nullptr;
+    LliurexOneDriveWidgetFilesModel *m_filesModel = nullptr;
+    QTimer *m_timer = nullptr;
+    QProcess *m_isLliurexOneDriveOpen = nullptr;
+    QPointer<KNotification> m_errorNotification;
+
+    QMap<QString, QVariantMap> oneDriveSpacesConfig;
+    QFutureWatcher<QVector<LliurexOneDriveWidgetFileItem>> m_watcher;
+    QList<int> previousStatusError;
+    QFile TARGET_FILE;
+    QFile recentFile;
+    QFile OLD_TARGET_FILE;
+
+    QString userHome;
+    QString m_toolTip;
+    QString m_subToolTip;
+    QString m_iconName = QStringLiteral("onedrive-pause");
+    QString spaceId;
+    QString spaceConfigPath;
+    QString spaceLocalFolder;
+    QString spaceSystemd;
+    QString spaceCreated;
+    QString m_spaceMail;
+    QString m_spaceType;
+    QString m_oneDriveFolder;
+    QString m_freeSpace;
+    QString m_hddFreeSpaceStatus = "HDD_OK";
+    QString logFilePath;
+    QString m_logFileSize;
+    QString globalStatus;
+
+    TrayStatus m_status = PassiveStatus;
+    int m_currentIndex = 0;
+    int lastCheck = 80;
+    int lastHddCheck = 0;
+    int lastErrorNotification = 0;
+    int countRepeatGeneralError = 0;
+    int countRepeatError = 0;
+    int lastMigrationCheck = 350;
+    int lastUpdateCheck = 350;
+
+    bool isWorking = false;
+    bool previousError = false;
+    bool previousHddWarning = false;
+    bool previousHddError = false;
+    bool checkExecuted = false;
+    bool warning = false;
+    bool showLocalFolderWarning = true;
+    bool m_syncStatus = false;
+    bool m_lliurexOneDriveOpen = false;
+    bool isLliurexOneDriveOpen = false;
+    bool m_showSearchFiles = false;
+    bool m_clickedSyncBtn = false;
+    bool updateGlobalStatus = false;
+    bool isLocalFolderWarning = false;
+    bool areSpacesSyncRunning = false;
+    bool isUpdateRequiredWarning = false;
+    bool statusErrorChanged = false;
+
     void plasmoidMode();
     void initPlasmoid();
     void updateWidget(QString subtooltip,QString icon);
@@ -147,64 +209,16 @@ private:
     void cleanSpaceInfoVars();
     void checkHddFreeSpaceStatus();
     void getLogSize(QString configPath);
+    void sendNotification (const QString &id, const QString &msg);
 
-    QTimer *m_timer = nullptr;
-    TrayStatus m_status = PassiveStatus;
-    QString m_iconName = QStringLiteral("onedrive-pause");
-    QString userHome;
-    QString m_toolTip;
-    QString m_subToolTip;
-    QFile TARGET_FILE;
-    bool isWorking=false;
-    int lastCheck=80;
-    int lastHddCheck=0;
-    int lastErrorNotification=0;
-    int countRepeatGeneralError;
-    int countRepeatError;
-    bool previousError=false;
-    bool previousHddWarning=false;
-    bool previousHddError=false;
-    bool checkExecuted=false;
-    bool warning=false;
-    bool showLocalFolderWarning=true;
-    QPointer<KNotification> m_errorNotification;
-    QList <int> previousStatusError;
-    QVariantList oneDriveSpacesConfig;
-    QVariantList oneDriveSpacesConfigPrev;
-    QString spaceId;
-    QString spaceConfigPath;
-    QString spaceLocalFolder;
-    QString spaceSystemd;
-    QString spaceCreated;
-    int m_currentIndex=0;
-    QString m_spaceMail;
-    QString m_spaceType;
-    QString m_oneDriveFolder;
-    QString m_freeSpace;
-    QString m_hddFreeSpaceStatus="HDD_OK";
-    bool m_syncStatus=false;
-    bool m_lliurexOneDriveOpen=false;
-    LliurexOneDriveWidgetFilesModel *m_filesModel = nullptr;
-    QProcess *m_isLliurexOneDriveOpen=nullptr;
-    bool isLliurexOneDriveOpen=false;
-    QProcess *m_getLatestFiles=nullptr;
-    QProcess *m_getLatestUploadedFiles=nullptr;
-    bool m_showSearchFiles=false;
-    QFile recentFile;
-    QFile OLD_TARGET_FILE;
-    int lastMigrationCheck=350;
-    int lastUpdateCheck=350;
-    bool m_clickedSyncBtn=false;
-    bool updateGlobalStatus=false;
-    QString logFilePath;
-    QString m_logFileSize;
-
+    
 private slots:
 
-     void checkIsLliurexOneDriveOpen();
-     void isLliurexOneDriveOpenProcessFinished(int exitCode, QProcess::ExitStatus exitStatus);
-     void getLatestFilesFinished(int exitCode, QProcess::ExitStatus exitStatus);
-     void getLatestUploadedFilesFinished(int exitCode, QProcess::ExitStatus exitStatus);
+    void checkIsLliurexOneDriveOpen();
+    void isLliurexOneDriveOpenProcessFinished(int exitCode, QProcess::ExitStatus exitStatus);
+    void getLatestFilesFinished();
+    void handleGetSpacesInfoFinished(const SpacesUpdateData &data);
+    void handleUploadedFilesFinished(const QVector<LliurexOneDriveWidgetFileItem> &items);
 
 };
 

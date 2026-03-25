@@ -1,43 +1,36 @@
-import QtQuick 2.6
-import QtQuick.Layouts 1.12
+import QtQuick 2.15
 import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.components 2.0 as Components
 import org.kde.plasma.components 3.0 as PC3
-import org.kde.kquickcontrolsaddons 2.0 as KQuickControlsAddons
 
-import org.kde.plasma.private.lliurexonedrive 1.0
-
-Components.ListItem {
+PC3.ItemDelegate {
     id: uploadedFileItem
     property string fileName
     property string filePath
     property string fileDate
     property string fileTime
-    readonly property bool isTall: height > Math.round(PlasmaCore.Units.gridUnit * 2.5)
 
-    enabled:true
+    width: uploadedListView.width
+    highlighted: hovered || ListView.isCurrentItem
 
-    onContainsMouseChanged: {
-        if (containsMouse) {
+    onHoveredChanged: {
+        if (hovered) {
             uploadedListView.currentIndex = index
+            uploadedListView.forceActiveFocus()
         } else {
             uploadedListView.currentIndex = -1
         }
-        uploadedListView.forceActiveFocus()
-
     }
 
-    Item{
+    contentItem: Item {
         id:label
-        height:30
+        implicitHeight:35
         Column{
             id:labelRow
             width:uploadedListView.width-50
             anchors.verticalCenter:parent.verticalCenter
             anchors.leftMargin:10
 
-            Components.Label{
+            PC3.Label{
                 id:fileText
                 text:fileName
                 font.bold:uploadedFileItem.ListView.isCurrentItem?true:false 
@@ -46,10 +39,11 @@ Components.ListItem {
 
             }
 
-            Components.Label{
+            PC3.Label{
                 id:fileData
                 text: i18n("Uploaded on: ")+fileDate+"-"+fileTime
                 font.bold:true
+                font.pointSize: PC3.Theme.defaultFont.pointSize * 0.85
                 visible:uploadedFileItem.ListView.isCurrentItem?true:false
                 width:fileText.width 
             }
