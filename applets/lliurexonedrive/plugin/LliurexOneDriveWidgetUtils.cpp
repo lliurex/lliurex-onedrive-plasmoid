@@ -3,6 +3,7 @@
 #include "LliurexOneDriveWidgetSpaceItem.h"
 #include "LliurexOneDriveWidgetFileItem.h"
 
+#include <QDateTime>
 #include <QLocale>
 #include <QFile>
 #include <QDir>
@@ -42,16 +43,21 @@ void LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPath) {
     QtConcurrent::run(QThreadPool::globalInstance(), [safeThis, onedriveConfigPath]() {
         if (!safeThis) return;
 
-        QFile tmpConfig(onedriveConfigPath);
-        if (!tmpConfig.open(QIODevice::ReadOnly | QIODevice::Text)) return;
-        
-        QJsonDocument doc = QJsonDocument::fromJson(tmpConfig.readAll());
-        tmpConfig.close();
+        QFileInfo fileInfo(onedriveConfigPath);
+        QDateTime lastMod = fileInfo.lastModified();
 
-        QJsonArray onedriveConfig = doc.object().value("spacesList").toArray();
+        if (lastMod > safeThis->m_lastJsonUpdate) {
+            QFile tmpConfig(onedriveConfigPath);
+            if (tmpConfig.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                QJsonDocument doc = QJsonDocument::fromJson(tmpConfig.readAll());
+                safeThis->m_cachedSpacesList = doc.object().value("spacesList").toArray();
+                safeThis->m_lastJsonUpdate = lastMod;
+                tmpConfig.close();
+            }
+        }
         
         QList<SpaceTask> tasks;
-        for (const QJsonValue &val : onedriveConfig) {
+        for (const QJsonValue &val :  safeThis->m_cachedSpacesList) {
             QJsonObject obj = val.toObject();
             QString configPath = obj.value("configPath").toString();
             if (QFile::exists(configPath + "/refresh_token")) {

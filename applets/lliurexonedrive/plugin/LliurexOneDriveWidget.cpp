@@ -65,6 +65,7 @@ void LliurexOneDriveWidget::worker(){
             warning=false;
             isWorking=false;
             oneDriveSpacesConfig.clear();
+            m_utils->m_cachedSpacesList = QJsonArray();
             manageNavigation(0);
         }
         

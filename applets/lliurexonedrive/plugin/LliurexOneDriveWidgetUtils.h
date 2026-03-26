@@ -1,6 +1,8 @@
 #ifndef PLASMA_LLIUREX_ONEDRIVE_WIDGET_UTILS_H
 #define PLASMA_LLIUREX_ONEDRIVE_WIDGET_UTILS_H
 
+#include <QDateTime>
+#include <QJsonArray>
 #include <QObject>
 #include <QProcess>
 #include <QFile>
@@ -47,6 +49,8 @@ public:
     bool checkUpdateRequired(QString spaceConfigPath); 
 
     QString user;
+    QJsonArray m_cachedSpacesList;
+
     QFile localFolderEmptyToken;
     QFile localFolderRemovedToken;
     QFile spaceStatusToken;
@@ -87,6 +91,7 @@ private:
     
     QVariantMap processSingleSpace(const QJsonObject &obj); 
 
+    QDateTime m_lastJsonUpdate;
     QMap<QString, QVariantMap> oneDriveSpacesConfig;
     QFile syncList;
     QFile syncListHash;
