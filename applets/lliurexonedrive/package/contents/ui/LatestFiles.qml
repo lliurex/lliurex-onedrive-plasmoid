@@ -1,12 +1,8 @@
 import QtQuick
 import QtQuick.Layouts
-import QtQml.Models
-import org.kde.plasma.core as PlasmaCore
-import org.kde.plasma.plasmoid
-import org.kde.plasma.components as Components
 import org.kde.plasma.components as PC3
 import org.kde.kirigami as Kirigami
-import org.kde.plasma.private.lliurexonedrive 1.0
+
 
 Rectangle{
 	color:"transparent"
@@ -25,15 +21,15 @@ Rectangle{
                 icon.name:"arrow-left.svg"
                 Layout.rightMargin:filesLayout.width/3-35-headFilesText.text.length
                 PC3.ToolTip{
-                    id:backTP   
+                    id:backTP
                     text:i18n("Back to space view")
                 }
                 onClicked:{
                     backTP.hide()
                     lliurexOneDriveWidget.manageNavigation(1)
-                } 
-            } 
-            Components.Label{
+                }
+            }
+            PC3.Label{
                 id:headFilesText
                 text:i18n("List of files")
                 font.italic:true
@@ -45,11 +41,13 @@ Rectangle{
                 width:35
                 height:35
                 Layout.alignment:Qt.AlignRight
+                Layout.rightMargin:10
                 icon.name:"view-refresh"
                 PC3.ToolTip{
                     id:filesTP
                     text:i18n("Click to refresh list")
                 }
+                enabled:!lliurexOneDriveWidget.showSearchFiles
                 onClicked:{
                     filesTP.hide()
                     lliurexOneDriveWidget.getLatestFiles()
@@ -60,7 +58,7 @@ Rectangle{
 
                 }
 
-            } 
+            }
         }
        PC3.ScrollView {
             Layout.topMargin:10
@@ -68,7 +66,7 @@ Rectangle{
             Layout.leftMargin:5
             Layout.rightMargin:5
             implicitWidth:parent.width-10
-            implicitHeight:290
+            implicitHeight:250
             ListView{
                 id:listView
                 focus:true
@@ -85,7 +83,7 @@ Rectangle{
                     fileDate: model.fileDate
                     fileTime: model.fileTime
                 }
-                Kirigami.PlaceholderMessage { 
+                Kirigami.PlaceholderMessage {
                     id: emptyHint
                     anchors.centerIn: parent
                     width: parent.width - (Kirigami.Units.largeSpacing * 4)
@@ -94,8 +92,8 @@ Rectangle{
                             return true
                         }else{
                             return false
-                        } 
-                    }    
+                        }
+                    }
                     text: i18n("Information is not available")
                 }
                 Kirigami.PlaceholderMessage {
@@ -105,7 +103,7 @@ Rectangle{
                     visible: lliurexOneDriveWidget.showSearchFiles
                     text: i18n("Searching information. Wait a moment...")
                 }
-               
+
             }
         }
     }

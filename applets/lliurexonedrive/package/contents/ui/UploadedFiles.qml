@@ -1,12 +1,8 @@
 import QtQuick
 import QtQuick.Layouts
-import QtQml.Models
-import org.kde.plasma.core as PlasmaCore
-import org.kde.plasma.plasmoid
-import org.kde.plasma.components as Components
 import org.kde.plasma.components as PC3
 import org.kde.kirigami as Kirigami
-import org.kde.plasma.private.lliurexonedrive 1.0
+
 
 Rectangle{
 	color:"transparent"
@@ -23,7 +19,7 @@ Rectangle{
                 height:35
                 width:35
                 icon.name:"arrow-left.svg"
-                Layout.rightMargin:filesLayout.width/3-35-headFilesText.text.length
+                Layout.rightMargin:filesLayout.width/3-35-headFilesText.text.length  
                 PC3.ToolTip{
                     id:backTP   
                     text:i18n("Back to space view")
@@ -33,7 +29,7 @@ Rectangle{
                     lliurexOneDriveWidget.manageNavigation(1)
                 } 
             } 
-            Components.Label{
+            PC3.Label{
                 id:headFilesText
                 text:i18n("List of last files uploaded")
                 font.italic:true
@@ -45,11 +41,13 @@ Rectangle{
                 width:35
                 height:35
                 Layout.alignment:Qt.AlignRight
+                Layout.rightMargin:10
                 icon.name:"view-refresh"
                 PC3.ToolTip{
                     id:filesTP
                     text:i18n("Click to refresh list")
                 }
+                enabled:!lliurexOneDriveWidget.showSearchFiles
                 onClicked:{
                     filesTP.hide()
                     lliurexOneDriveWidget.getLatestUploadedFiles()
@@ -68,7 +66,7 @@ Rectangle{
             Layout.leftMargin:5
             Layout.rightMargin:5
             implicitWidth:parent.width-10
-            implicitHeight:290
+            implicitHeight:250
             ListView{
                 id:uploadedListView
                 focus:true

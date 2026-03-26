@@ -1,17 +1,10 @@
 import QtQuick
-import QtQuick.Controls
-import QtQuick.Layouts
-import org.kde.plasma.core as PlasmaCore
-import org.kde.plasma.plasmoid
-import org.kde.plasma.components as Components
 import org.kde.plasma.components as PC3
-import org.kde.kquickcontrolsaddons as KQuickControlsAddons
 import org.kde.kirigami as Kirigami
 
-import org.kde.plasma.private.lliurexonedrive 1.0
-
-Components.ItemDelegate {
+PC3.ItemDelegate {
     id: spaceItem
+
     property string idSpace
     property string nameSpace
     property int statusSpace
@@ -19,109 +12,84 @@ Components.ItemDelegate {
     property bool localFolderWarning
     property bool updateRequiredWarning
     property string filesPendingUpload
-    readonly property bool isTall: height > Math.round(Kirigami.Units.gridUnit * 2.5)
 
-    enabled:true
-    height:60
-    width:parent?parent.width:310
+    width: listSpaceView.width
+    highlighted: hovered || ListView.isCurrentItem
 
-    Item{
-        id:label
-        height:45
-        width:310
-        anchors.fill:parent
-        MouseArea {
-            id: mouseAreaOption
-            anchors.fill: parent
-            hoverEnabled:true
-            propagateComposedEvents:true
+    onHoveredChanged: {
+        if (hovered) {
+            listSpaceView.currentIndex = index
+        } 
+    }
 
-            onEntered: {
-                listSpaceView.currentIndex = index
-            }
-        }
+    contentItem: Item {
+        id: label
+        implicitHeight: 45
 
-        Column{
-            id:spaceRow
+        Column {
+            id: spaceRow
+            anchors.left: parent.left
+            anchors.right: spaceStatusIcon.left
+            anchors.rightMargin: 10
             anchors.verticalCenter: parent.verticalCenter
-            anchors.left:parent.left
-            anchors.leftMargin:10
 
-            Components.Label{
-                id:spaceName
-                text:nameSpace
-                width:{
-                    if (spaceItem.ListView.isCurrentItem){
-                        listSpaceView.width-(spaceStatusIcon.width*1.6 +spaceRunningIcon.width*1.6+loadSpaceBtn.width*1.6)
-                    }else{
-                       listSpaceView.width-(spaceStatusIcon.width*1.6 +spaceRunningIcon.width*1.6)
-                    }
-                }
-                elide:Text.ElideMiddle
-                font.bold:spaceItem.ListView.isCurrentItem?true:false
+            PC3.Label {
+                id: spaceName
+                text: nameSpace
+                width: parent.width
+                elide: Text.ElideMiddle
+                font.bold: spaceItem.ListView.isCurrentItem
             }
-            Components.Label{
-                id:spaceStatusText
-                text:getStatusText
-                (statusSpace,localFolderWarning,updateRequiredWarning)
-                width:spaceName.width
-                elide:Text.ElideMiddle
-                visible:spaceItem.ListView.isCurrentItem
-                font.italic:spaceItem.ListView.isCurrentItem?true:false
+
+            PC3.Label {
+                id: spaceStatusText
+                text: getStatusText(statusSpace, localFolderWarning, updateRequiredWarning, filesPendingUpload)
+                width: parent.width
+                elide: Text.ElideMiddle
+                visible: spaceItem.ListView.isCurrentItem
+                font.italic: true
             }
         }
 
-        Image {
-            id:spaceStatusIcon
-            source:getStatusIcon(statusSpace,localFolderWarning,updateRequiredWarning)
-            sourceSize.width:32
-            sourceSize.height:32
-            anchors.leftMargin:10
-            anchors.left:spaceRow.right
-            anchors.verticalCenter:parent.verticalCenter
+        Kirigami.Icon {
+            id: spaceStatusIcon
+            source: getStatusIcon(statusSpace, localFolderWarning, updateRequiredWarning)
+            implicitWidth: 32
+            implicitHeight: 32
+            anchors.right: spaceRunningIcon.left
+            anchors.rightMargin: 15
+            anchors.verticalCenter: parent.verticalCenter
         }
 
-        Image {
-            id:spaceRunningIcon
-            source:{
-                if (isRunningSpace){
-                    "/usr/share/icons/breeze/status/16/media-playback-playing.svg"
-                }else{
-                    "/usr/share/icons/breeze/status/16/media-playback-stopped.svg"
-                }
-            }
-            sourceSize.width:32
-            sourceSize.height:32
-            anchors.leftMargin:15
-            anchors.left:spaceStatusIcon.right
-            anchors.verticalCenter:parent.verticalCenter
+        Kirigami.Icon {
+            id: spaceRunningIcon
+            source: isRunningSpace ? "media-playback-playing" : "media-playback-stopped"
+            implicitWidth: 32
+            implicitHeight: 32
+            anchors.right: loadSpaceBtn.left
+            anchors.rightMargin: 10
+            anchors.verticalCenter: parent.verticalCenter
         }
+
         PC3.ToolButton {
-            id:loadSpaceBtn
-            width:35
-            height:35
+            id: loadSpaceBtn
+            width: 32
+            height: 32
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
+            icon.name: "configure"
+            visible: spaceItem.ListView.isCurrentItem
 
-            anchors{
-                left: spaceRunningIcon.right
-                top: spaceName.isTall? parent.top : undefined
-                verticalCenter: parent.verticalCenter
-                leftMargin:10
-                rightMargin:10
+            PC3.ToolTip {
+                text: i18n("Click to get details of:\n") + nameSpace
             }
-            icon.name:"configure"
-            visible:spaceItem.ListView.isCurrentItem
-            PC3.ToolTip{
-                id:detailsTP
-                text:i18n("Click to get details of:\n")+nameSpace
-            }
-            onClicked:{
-                detailsTP.hide()
+
+            onClicked: {
                 lliurexOneDriveWidget.goToSpace(idSpace)
             }
-       }
-   }
-
-   function getStatusIcon(statusSpace,localFolderWarning,updateRequiredWarning){
+        }
+    }
+    function getStatusIcon(statusSpace,localFolderWarning,updateRequiredWarning){
         if (localFolderWarning || updateRequiredWarning){
             return "/usr/share/icons/breeze/status/16/state-warning.svg"
         }else{
@@ -141,11 +109,13 @@ Components.ItemDelegate {
                     return "/usr/share/icons/breeze/status/16/state-warning.svg"
                     break
             }
-      
+               
+     
         }
+
     }
 
-   function getStatusText(statusSpace,localFolderWarning,updateRequiredWarning,filesPendingUpload){
+    function getStatusText(statusSpace,localFolderWarning,updateRequiredWarning,filesPendingUpload){
 
         var msg=""
         if (localFolderWarning){
@@ -195,5 +165,6 @@ Components.ItemDelegate {
         return msg
 
     }
-
+    
+    
 }
