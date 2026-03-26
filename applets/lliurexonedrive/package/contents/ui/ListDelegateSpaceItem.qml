@@ -19,10 +19,7 @@ PC3.ItemDelegate {
     onHoveredChanged: {
         if (hovered) {
             listSpaceView.currentIndex = index
-            listSpaceView.forceActiveFocus()
-        } else {
-            listSpaceView.currentIndex = -1
-        }
+        } 
     }
 
     contentItem: Item {
@@ -51,7 +48,6 @@ PC3.ItemDelegate {
                 elide: Text.ElideMiddle
                 visible: spaceItem.ListView.isCurrentItem
                 font.italic: true
-                font.pointSize: PC3.Theme.defaultFont.pointSize * 0.9
             }
         }
 

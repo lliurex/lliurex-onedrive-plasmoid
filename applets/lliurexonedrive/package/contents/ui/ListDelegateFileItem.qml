@@ -16,9 +16,6 @@ PC3.ItemDelegate {
     onHoveredChanged: {
         if (hovered) {
             listView.currentIndex = index
-            listView.forceActiveFocus()
-        } else {
-            listView.currentIndex = -1
         }
     }
 
@@ -45,7 +42,6 @@ PC3.ItemDelegate {
                 id: fileData
                 text: i18n("Last modification: ") + fileDate + "-" + fileTime
                 font.bold: true
-                font.pointSize: PC3.Theme.defaultFont.pointSize * 0.85
                 visible: fileItem.ListView.isCurrentItem
                 width: parent.width
                 elide: Text.ElideRight

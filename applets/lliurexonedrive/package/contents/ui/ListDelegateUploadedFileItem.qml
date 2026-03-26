@@ -15,9 +15,6 @@ PC3.ItemDelegate {
     onHoveredChanged: {
         if (hovered) {
             uploadedListView.currentIndex = index
-            uploadedListView.forceActiveFocus()
-        } else {
-            uploadedListView.currentIndex = -1
         }
     }
 
@@ -43,7 +40,6 @@ PC3.ItemDelegate {
                 id:fileData
                 text: i18n("Uploaded on: ")+fileDate+"-"+fileTime
                 font.bold:true
-                font.pointSize: PC3.Theme.defaultFont.pointSize * 0.85
                 visible:uploadedFileItem.ListView.isCurrentItem?true:false
                 width:fileText.width 
             }

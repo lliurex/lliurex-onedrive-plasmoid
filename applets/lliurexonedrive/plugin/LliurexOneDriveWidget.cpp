@@ -50,8 +50,6 @@ LliurexOneDriveWidget::LliurexOneDriveWidget(QObject *parent)
 
 void LliurexOneDriveWidget::worker(){
 
-    bool isPassiveStatus=true;
-    bool spaceIdMatch=false;
     updateGlobalStatus=false;
 
     if (!isWorking){
@@ -67,6 +65,7 @@ void LliurexOneDriveWidget::worker(){
             warning=false;
             isWorking=false;
             oneDriveSpacesConfig.clear();
+            m_utils->m_cachedSpacesList = QJsonArray();
             manageNavigation(0);
         }
         
@@ -307,11 +306,8 @@ void LliurexOneDriveWidget::checkHddFreeSpaceStatus(){
         }
 
         if (showNotification){
-            m_errorNotification = KNotification::event(hddStatus, subtooltip, {}, "onedrive-widget", nullptr, KNotification::CloseOnTimeout , QStringLiteral("llxonedrive"));
-            QString name = i18n("Open Lliurex OneDrive");
-            m_errorNotification->setDefaultAction(name);
-            m_errorNotification->setActions({name});
-            connect(m_errorNotification, QOverload<unsigned int>::of(&KNotification::activated), this, &LliurexOneDriveWidget::launchOneDrive);
+            sendNotification(hddStatus,subtooltip);
+           
         }
     }else{
         previousHddError=false;
