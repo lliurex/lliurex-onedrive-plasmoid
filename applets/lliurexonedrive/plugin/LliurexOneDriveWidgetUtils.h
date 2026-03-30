@@ -9,6 +9,9 @@
 #include <QVariantMap>
 #include <QVector>
 #include <QList>
+#include <QHash>
+#include <QThreadPool>
+#include <QReadWriteLock>
 
 #include "LliurexOneDriveWidgetSpaceItem.h"
 #include "LliurexOneDriveWidgetFileItem.h"
@@ -33,7 +36,7 @@ class LliurexOneDriveWidgetUtils : public QObject
 
 
 public:
-   
+
     explicit LliurexOneDriveWidgetUtils(QObject *parent = nullptr);
 
     QString getUserHome();
@@ -47,6 +50,13 @@ public:
     void restoreSyncListFile(QString spaceConfigPath);
     QString getLogFileSize(QString logFilePath);
     bool checkUpdateRequired(QString spaceConfigPath); 
+
+    struct CacheEntry {
+        QVariantMap data;
+        QDateTime lastRead;
+    };
+    QHash<QString, CacheEntry> m_statusCache;
+    mutable QReadWriteLock m_cacheLock;
 
     QString user;
     QJsonArray m_cachedSpacesList;
@@ -96,6 +106,7 @@ private:
     QFile syncList;
     QFile syncListHash;
     QProcess *m_process = nullptr;
+    QThreadPool m_ioThreadPool;
 
     static QVector<LliurexOneDriveWidgetFileItem> parseData(const QByteArray &data);
 

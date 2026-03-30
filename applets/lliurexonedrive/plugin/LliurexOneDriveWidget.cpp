@@ -59,14 +59,7 @@ void LliurexOneDriveWidget::worker(){
             m_utils->getSpacesInfo(onedriveConfigPath);
            
         }else{
-            setStatus(PassiveStatus);
-            previousError=false;
-            previousStatusError.clear();
-            warning=false;
-            isWorking=false;
-            oneDriveSpacesConfig.clear();
-            m_utils->m_cachedSpacesList = QJsonArray();
-            manageNavigation(0);
+            disableWidget();
         }
         
     }
@@ -87,14 +80,7 @@ void LliurexOneDriveWidget::handleGetSpacesInfoFinished(const SpacesUpdateData &
     }
 
     if (data.info.isEmpty()) {
-        m_spacesModel->clear();
-        setStatus(PassiveStatus);
-        previousError = false;
-        previousStatusError.clear();
-        warning = false;
-        isWorking = false;
-        oneDriveSpacesConfig.clear();
-        manageNavigation(0);
+        disableWidget();
         return;
     }
 
@@ -410,7 +396,7 @@ void LliurexOneDriveWidget::manageSync(){
         m_utils->restoreSyncListFile(spaceConfigPath);
         cmd="systemctl --user start "+spaceSystemd;
     }
-    
+        
     KIO::CommandLauncherJob *job = nullptr;
     job = new KIO::CommandLauncherJob(cmd);
     job->start();
@@ -570,6 +556,21 @@ bool LliurexOneDriveWidget::checkIfFileExists(const QString &filePath)
     }else{
         return false;
     }
+}
+
+void LliurexOneDriveWidget::disableWidget(){
+
+    m_spacesModel->clear();
+    setStatus(PassiveStatus);
+    previousError = false;
+    previousStatusError.clear();
+    warning = false;
+    isWorking = false;
+    oneDriveSpacesConfig.clear();
+    m_utils->m_cachedSpacesList = QJsonArray();
+    m_utils->m_statusCache.clear();
+    manageNavigation(0);   
+
 }
 
 int LliurexOneDriveWidget::currentIndex()

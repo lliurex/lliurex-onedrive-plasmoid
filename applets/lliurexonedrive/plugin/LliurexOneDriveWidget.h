@@ -201,8 +201,7 @@ private:
     bool isUpdateRequiredWarning = false;
     bool statusErrorChanged = false;
 
-    void plasmoidMode();
-    void initPlasmoid();
+    void disableWidget();
     void updateWidget(QString subtooltip,QString icon);
     void checkIfStartIsLocked();
     void checkIsRunning();
