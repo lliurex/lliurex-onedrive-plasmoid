@@ -81,41 +81,41 @@ void LliurexOneDriveWidget::handleGetSpacesInfoFinished(const SpacesUpdateData &
 
     if (data.info.isEmpty()) {
         disableWidget();
-        return;
-    }
-
-    if (oneDriveSpacesConfig != data.info){
-        oneDriveSpacesConfig = data.info;
-        m_spacesModel->clear();
-        m_spacesModel->updateItems(data.model);
-        updateGlobalStatus = true;
-    }
-
-    bool spaceIdMatch = false;
-
-    if (m_currentIndex != 0 && !spaceId.isEmpty()) {
-        auto it = oneDriveSpacesConfig.find(spaceId);
-        if (it != oneDriveSpacesConfig.end()) {
-            spaceIdMatch = true;
-            const QVariantMap &spaceInfo = it.value();
-
-            setFreeSpace(spaceInfo.value("freeSpace").toString());
-            setSyncStatus(spaceInfo.value("isRunning").toBool());
-            getLogSize(spaceInfo.value("configPath").toString());
-
-            bool shouldBeOpen = spaceInfo.value("folderWarning").toBool() || 
-                                spaceInfo.value("updateReq").toBool() || 
-                                isLliurexOneDriveOpen;
-            setLliurexOneDriveOpen(shouldBeOpen);
+        
+    }else{
+        if (oneDriveSpacesConfig != data.info){
+            oneDriveSpacesConfig = data.info;
+            m_spacesModel->clear();
+            m_spacesModel->updateItems(data.model);
+            updateGlobalStatus = true;
         }
-    }
 
-    setToolTip(i18n("Lliurex OneDrive"));
-    checkIfStartIsLocked();
-    setStatus(ActiveStatus);
+        bool spaceIdMatch = false;
 
-    if (!spaceId.isEmpty() && !spaceIdMatch) {
-        manageNavigation(0);
+        if (m_currentIndex != 0 && !spaceId.isEmpty()) {
+            auto it = oneDriveSpacesConfig.find(spaceId);
+            if (it != oneDriveSpacesConfig.end()) {
+                spaceIdMatch = true;
+                const QVariantMap &spaceInfo = it.value();
+
+                setFreeSpace(spaceInfo.value("freeSpace").toString());
+                setSyncStatus(spaceInfo.value("isRunning").toBool());
+                getLogSize(spaceInfo.value("configPath").toString());
+
+                bool shouldBeOpen = spaceInfo.value("folderWarning").toBool() || 
+                                    spaceInfo.value("updateReq").toBool() || 
+                                    isLliurexOneDriveOpen;
+                setLliurexOneDriveOpen(shouldBeOpen);
+            }
+        }
+
+        setToolTip(i18n("Lliurex OneDrive"));
+        checkIfStartIsLocked();
+        setStatus(ActiveStatus);
+
+        if (!spaceId.isEmpty() && !spaceIdMatch) {
+            manageNavigation(0);
+        }
     }
 }
 

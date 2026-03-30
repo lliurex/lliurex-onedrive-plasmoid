@@ -44,12 +44,12 @@ void LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPath) {
 
         QJsonArray localSpacesList;
         QDateTime lastMod;
-        
+
         {
             QFileInfo fileInfo(onedriveConfigPath);
             lastMod = fileInfo.lastModified();
         }
-        bool needsUpdate;
+        bool needsUpdate=false;
         {
             QReadLocker locker(&safeThis->m_cacheLock);
             if (lastMod > safeThis->m_lastJsonUpdate) {
@@ -75,73 +75,66 @@ void LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPath) {
             }
         } 
 
-        if (localSpacesList.isEmpty() || !safeThis) return;
-
-        QList<SpaceTask> tasks;
-        for (const QJsonValue &val : localSpacesList) {
-            QJsonObject obj = val.toObject();
-            QString configPath = obj.value("configPath").toString();
-            if (configPath.isEmpty()){
-                continue;
-            }
-            if (QFile::exists(configPath + "/refresh_token")) {
-                tasks.append({obj, QVariantMap()});
-            }
-        }
-
-        for (SpaceTask &task : tasks) {
-            if (safeThis) {
-                task.result = safeThis->processSingleSpace(task.inputObj);
-            }
-        }
-
-        if (!safeThis) return; 
-
-        QMap<QString, QVariantMap> spacesInfo;
-        QVector<LliurexOneDriveWidgetSpaceItem> spacesModel;
-        QList<int> spacesStatusCode;
-        int runningCount = 0, warningCount = 0, updateCount = 0;
-
-        for (const SpaceTask &task : tasks) {
-            if (task.result.isEmpty()) continue;
-
-            const QVariantMap &res = task.result;
-
-            QString id = res["id"].toString();
-            int statusInt = res["statusInt"].toInt();
-            bool isRunning = res["isRunning"].toBool();
-            bool folderWarning = res["folderWarning"].toBool();
-            bool updateReq = res["updateReq"].toBool();
-
-            LliurexOneDriveWidgetSpaceItem item;
-            item.setId(id);
-            item.setName(res["name"].toString());
-            item.setStatus(QString::number(statusInt));
-            item.setIsRunning(isRunning);
-            item.setLocalFolderWarning(folderWarning);
-            item.setUpdateRequiredWarning(updateReq);
-            item.setFilesPendingUpload(res["pendingUploads"].toString());
-
-            spacesStatusCode.append(statusInt);
-            if (isRunning) runningCount++;
-            if (folderWarning) warningCount++;
-            if (updateReq) updateCount++;
-
-            spacesInfo.insert(id, res);
-            spacesModel.append(std::move(item));
-        }
-
-        auto [status, errorCodes] = safeThis->getGlobalStatus(tasks.size(), spacesStatusCode);
-        
         SpacesUpdateData updateInfo;
-        updateInfo.info=spacesInfo;
-        updateInfo.model=spacesModel;
-        updateInfo.isRunning=(runningCount > 0);
-        updateInfo.folderWarning = (warningCount > 0);
-        updateInfo.updateRequired = (updateCount > 0);
-        updateInfo.status = status;
-        updateInfo.statusErrorCodes = errorCodes;
-        
+                
+        if (!safeThis) return;
+
+        if (!localSpacesList.isEmpty()){
+
+            QMap<QString, QVariantMap> spacesInfo;
+            QVector<LliurexOneDriveWidgetSpaceItem> spacesModel;
+            QList<int> spacesStatusCode;
+            int runningCount = 0, warningCount = 0, updateCount = 0;
+
+            for (const QJsonValue &val : localSpacesList) {
+                if (!safeThis) return;
+
+                QJsonObject obj = val.toObject();
+                QString configPath = obj.value("configPath").toString();
+
+                if (configPath.isEmpty() || !QFile::exists(configPath +"/refresh_token")) {
+                    continue;
+                }
+
+                QVariantMap res = safeThis->processSingleSpace(obj);
+                if (res.isEmpty()) continue;
+
+                QString id = res["id"].toString();
+                int statusInt = res["statusInt"].toInt();
+                bool isRunning = res["isRunning"].toBool();
+                bool folderWarning = res["folderWarning"].toBool();
+                bool updateReq = res["updateReq"].toBool();
+
+                LliurexOneDriveWidgetSpaceItem item;
+                item.setId(id);
+                item.setName(res["name"].toString());
+                item.setStatus(QString::number(statusInt));
+                item.setIsRunning(isRunning);
+                item.setLocalFolderWarning(folderWarning);
+                item.setUpdateRequiredWarning(updateReq);
+                item.setFilesPendingUpload(res["pendingUploads"].toString());
+
+                spacesStatusCode.append(statusInt);
+                if (isRunning) runningCount++;
+                if (folderWarning) warningCount++;
+                if (updateReq) updateCount++;
+
+                spacesInfo.insert(id, res);
+                spacesModel.append(std::move(item));
+            }
+            if (!safeThis) return;
+
+            auto [status, errorCodes] = safeThis->getGlobalStatus(localSpacesList.size(), spacesStatusCode);
+            
+            updateInfo.info = spacesInfo;
+            updateInfo.model = spacesModel;
+            updateInfo.isRunning = (runningCount > 0);
+            updateInfo.folderWarning = (warningCount > 0);
+            updateInfo.updateRequired = (updateCount > 0);
+            updateInfo.status = status;
+            updateInfo.statusErrorCodes = errorCodes;
+        }
+
         if (safeThis) {
             emit safeThis->getSpacesInfoFinished(updateInfo);
         }
