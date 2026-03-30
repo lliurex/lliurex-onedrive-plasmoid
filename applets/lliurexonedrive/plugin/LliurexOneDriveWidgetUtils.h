@@ -10,7 +10,6 @@
 #include <QVector>
 #include <QList>
 #include <QHash>
-#include <QThreadPool>
 #include <QReadWriteLock>
 
 #include "LliurexOneDriveWidgetSpaceItem.h"
@@ -106,7 +105,6 @@ private:
     QFile syncList;
     QFile syncListHash;
     QProcess *m_process = nullptr;
-    QThreadPool m_ioThreadPool;
 
     static QVector<LliurexOneDriveWidgetFileItem> parseData(const QByteArray &data);
 
