@@ -42,44 +42,70 @@ void LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPath) {
     QtConcurrent::run([safeThis, onedriveConfigPath]() {
         if (!safeThis) return;
 
-        QFileInfo fileInfo(onedriveConfigPath);
-        QDateTime lastMod = fileInfo.lastModified();
+        QJsonArray localSpacesList;
+        QDateTime lastMod;
+        
+        {
+            QFileInfo fileInfo(onedriveConfigPath);
+            lastMod = fileInfo.lastModified();
+        }
+        bool needsUpdate;
+        {
+            QReadLocker locker(&safeThis->m_cacheLock);
+            if (lastMod > safeThis->m_lastJsonUpdate) {
+                needsUpdate = true;
+            } else {
+                localSpacesList = safeThis->m_cachedSpacesList;
+            }
+        }
 
-        if (lastMod > safeThis->m_lastJsonUpdate) {
+        if (needsUpdate && safeThis){
             QFile tmpConfig(onedriveConfigPath);
             if (tmpConfig.open(QIODevice::ReadOnly | QIODevice::Text)) {
                 QJsonDocument doc = QJsonDocument::fromJson(tmpConfig.readAll());
-                safeThis->m_cachedSpacesList = doc.object().value("spacesList").toArray();
-                safeThis->m_lastJsonUpdate = lastMod;
+                QJsonArray newList = doc.object().value("spacesList").toArray();
+                
+                if (safeThis) {
+                    QWriteLocker locker(&safeThis->m_cacheLock);
+                    safeThis->m_cachedSpacesList = newList;
+                    safeThis->m_lastJsonUpdate = lastMod;
+                    localSpacesList = newList;
+                }
                 tmpConfig.close();
             }
-        }
-        
+        } 
+
+        if (localSpacesList.isEmpty() || !safeThis) return;
+
         QList<SpaceTask> tasks;
-        for (const QJsonValue &val :  safeThis->m_cachedSpacesList) {
+        for (const QJsonValue &val : localSpacesList) {
             QJsonObject obj = val.toObject();
             QString configPath = obj.value("configPath").toString();
+            if (configPath.isEmpty()){
+                continue;
+            }
             if (QFile::exists(configPath + "/refresh_token")) {
                 tasks.append({obj, QVariantMap()});
             }
         }
 
-        QtConcurrent::blockingMap(tasks, [safeThis](SpaceTask &task) {
+        for (SpaceTask &task : tasks) {
             if (safeThis) {
                 task.result = safeThis->processSingleSpace(task.inputObj);
             }
-        });
+        }
+
+        if (!safeThis) return; 
 
         QMap<QString, QVariantMap> spacesInfo;
         QVector<LliurexOneDriveWidgetSpaceItem> spacesModel;
-        spacesModel.reserve(tasks.size());
-        
         QList<int> spacesStatusCode;
         int runningCount = 0, warningCount = 0, updateCount = 0;
 
         for (const SpaceTask &task : tasks) {
+            if (task.result.isEmpty()) continue;
+
             const QVariantMap &res = task.result;
-            if (res.isEmpty()) continue;
 
             QString id = res["id"].toString();
             int statusInt = res["statusInt"].toInt();
@@ -115,36 +141,64 @@ void LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPath) {
         updateInfo.updateRequired = (updateCount > 0);
         updateInfo.status = status;
         updateInfo.statusErrorCodes = errorCodes;
-        emit safeThis->getSpacesInfoFinished(updateInfo);
+        
+        if (safeThis) {
+            emit safeThis->getSpacesInfoFinished(updateInfo);
+        }
     });
 }
 
 QVariantMap LliurexOneDriveWidgetUtils::processSingleSpace(const QJsonObject &obj)  {
     
     QVariantMap res;
-    QString configPath = obj.value("configPath").toString();
-    
-    QStringList statusResult = this->readStatusToken(configPath);
+    QString configPath = obj.value("configPath").toString().trimmed();
 
+    if (configPath.isEmpty()){
+        return res;
+    }
+    QString statusFilePath = configPath + "/.run/statusToken";
+    QFileInfo fileInfo(statusFilePath);
+
+    
     bool isRunning = this->checkIfSpaceSyncIsRunning(configPath);
     QList<bool> checkFolder =this->checkLocalFolder(configPath);
     bool updateReq = this->checkUpdateRequired(configPath);
     
-    int statusInt = statusResult.value(1, "0").toInt();
     bool folderWarning = (checkFolder.value(0, false) || checkFolder.value(1, false));
     QString localFolder = obj.value("localFolder").toString();
+    
+    bool statusCached = false;
 
+    {
+        QReadLocker locker(&m_cacheLock); 
+        if (m_statusCache.contains(configPath)) {
+            if (fileInfo.exists() && fileInfo.lastModified() <= m_statusCache[configPath].lastRead) {
+                res = m_statusCache[configPath].data;
+                statusCached = true;
+            }
+        }
+    }
+
+    if (!statusCached) {
+
+        QStringList statusResult = this->readStatusToken(configPath);
+        res["statusInt"] = statusResult.value(1, "0").toInt();
+        res["freeSpace"] = statusResult.value(2, "");
+        res["pendingUploads"] = statusResult.value(4, "0");
+        
+        QWriteLocker locker(&m_cacheLock);
+        m_statusCache[configPath] = { res, fileInfo.lastModified() };
+    }
+    
+   
     res["id"] = obj.value("id").toString();
     res["name"] = QFileInfo(localFolder).baseName();
     res["email"] = obj.value("email").toString();
     res["localFolder"] = localFolder;
     res["configPath"] = configPath;
-    res["statusInt"] = statusInt;
     res["isRunning"] = isRunning;
     res["folderWarning"] = folderWarning;
     res["updateReq"] = updateReq;
-    res["freeSpace"] = statusResult.value(2, "");
-    res["pendingUploads"] = statusResult.value(4, "0");
     res["accountType"] = obj.value("accountType").toString();
     res["spaceType"] = obj.value("spaceType").toString();
     res["systemd"] = obj.value("systemd").toString();
@@ -161,19 +215,29 @@ bool LliurexOneDriveWidgetUtils::checkIfSpaceSyncIsRunning(QString spaceConfigPa
 
 QStringList LliurexOneDriveWidgetUtils::readStatusToken(QString spaceConfigPath) {
 
+    if (spaceConfigPath.isEmpty()){
+        return {"False","3","", " ", "0"};
+
+    }
+
     QStringList result;
 
     QFile tokenFile(spaceConfigPath + "/.run/statusToken");
 
-    if (tokenFile.exists() && tokenFile.open(QIODevice::ReadOnly)) {
-        QTextStream content(&tokenFile);
-        while (!content.atEnd()) {
-            result.append(content.readLine().trimmed());
+    if (tokenFile.exists() && tokenFile.size()> 0){
+        if (tokenFile.open(QIODevice::ReadOnly)) {
+            QTextStream content(&tokenFile);
+            while (!content.atEnd()) {
+                result.append(content.readLine().trimmed());
+            }
+            tokenFile.close();
         }
-        tokenFile.close();
-    } else {
+    } 
+    if (result.size() < 5) {
+        result.clear();
         result << "False" << "3" << "" << " " << "0";
     }
+    
     return result;
 }
 
@@ -419,6 +483,10 @@ bool LliurexOneDriveWidgetUtils::checkUpdateRequired(QString spaceConfigPath) {
 
     QList<bool> result;
     bool updateRequired=false;
+
+    if (spaceConfigPath.isEmpty()){
+        return updateRequired;
+    }
 
     QDir spaceConfigFolder(spaceConfigPath);
     updateRequiredToken.setFileName(spaceConfigPath+"/.run/updateRequiredToken");

@@ -8,12 +8,13 @@
 #include <QFile>
 #include <QVariantMap>
 #include "LliurexOneDriveWidgetUtils.h"
-#include "LliurexOneDriveWidgetSpaceItem.h"
+#include "LliurexOneDriveWidgetFileItem.h"
+#include "LliurexOneDriveWidgetFilesModel.h"
+#include "LliurexOneDriveWidgetSpacesModel.h"
 
 class QTimer;
 class KNotification;
-class LliurexOneDriveWidgetFilesModel;
-class LliurexOneDriveWidgetSpacesModel;
+
 
 class LliurexOneDriveWidget : public QObject
 {
@@ -200,8 +201,7 @@ private:
     bool isUpdateRequiredWarning = false;
     bool statusErrorChanged = false;
 
-    void plasmoidMode();
-    void initPlasmoid();
+    void disableWidget();
     void updateWidget(QString subtooltip,QString icon);
     void checkIfStartIsLocked();
     void checkIsRunning();
