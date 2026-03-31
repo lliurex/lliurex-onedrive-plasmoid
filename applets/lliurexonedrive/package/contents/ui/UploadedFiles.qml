@@ -94,7 +94,7 @@ Rectangle{
                             return false
                         } 
                     }    
-                    text: i18n("Information is not available")
+                    text: i18n("Information not available")
                 }
                 Kirigami.PlaceholderMessage {
                     id: showHint
