@@ -1,12 +1,6 @@
-import QtQuick
-import QtQuick.Layouts
-import org.kde.plasma.core as PlasmaCore
-import org.kde.plasma.plasmoid
-import org.kde.plasma.components as Components
-import org.kde.plasma.components as PC3
-import org.kde.plasma.extras as PlasmaExtras
-
-import org.kde.plasma.private.lliurexonedrive 1.0
+import QtQuick 2.15
+import QtQuick.Layouts 1.15
+import org.kde.plasma.components 3.0 as PC3
 
 Rectangle{
 	color:"transparent"
@@ -15,7 +9,7 @@ Rectangle{
 	    id: optionsAccount
 	    rows: 8
 	    flow: GridLayout.TopToBottom
-	    rowSpacing:10
+	    rowSpacing:12
 	    width:parent.width
 
 	    RowLayout{
@@ -25,7 +19,7 @@ Rectangle{
 	            height:35
 	            width:355
 	            Layout.rightMargin:optionsAccount.width/3-35-headText.text.length
-	            icon.name:"arrow-left.svg"
+	            icon.name:"arrow-left"
 	            PC3.ToolTip{
 	            	id:backTP
 	                text:i18n("Back to main view")
@@ -36,7 +30,7 @@ Rectangle{
 	            }
 	        } 
 
-	        Components.Label{
+	        PC3.Label{
 	            id:headText
 	            text:i18n("Space details")
 	            font.italic:true
@@ -49,7 +43,7 @@ Rectangle{
 	            height:35
 	            width:35
 	            Layout.rightMargin:5
-	            icon.name:"configure.svg"
+	            icon.name:"configure"
 	            PC3.ToolTip{
 	            	id:configureTP
 	                text:i18n("Manage space")
@@ -67,12 +61,12 @@ Rectangle{
 	        Layout.rightMargin:5
 	        Layout.bottomMargin:5
 
-	        Components.Label{
+	        PC3.Label{
 	            id:spaceMail
 	            text:i18n("Email associated:")
 	            Layout.rightMargin:5
 	        }
-	        Components.Label{
+	        PC3.Label{
 	            id:spaceMailVa5lue
 	            text:lliurexOneDriveWidget.spaceMail
 	            Layout.fillWidth:true
@@ -84,13 +78,13 @@ Rectangle{
 	        Layout.leftMargin:5
 	        Layout.rightMargin:5
 
-	        Components.Label{
+	        PC3.Label{
 	            id:spaceType
 	            text:i18n("Type:")
 	            Layout.rightMargin:5
 
 	        }
-	        Components.Label{
+	        PC3.Label{
 	            id:spaceTypeValue
 	            text:{
 	            	switch (lliurexOneDriveWidget.spaceType){
@@ -115,12 +109,12 @@ Rectangle{
 	        Layout.rightMargin:5
 	        Layout.fillWidth:true
 
-	        Components.Label{
+	        PC3.Label{
 	            id:oneDriveFolder
 	            text:i18n("Local folder:")
 	            Layout.rightMargin:5
 	        }
-	        Components.Label{
+	        PC3.Label{
 	            id:oneDriveFolderValue
 	            text:lliurexOneDriveWidget.oneDriveFolder
 	            Layout.fillWidth:true
@@ -129,7 +123,7 @@ Rectangle{
 	        PC3.ToolButton {
 	            width:35
 	            height:35
-	            icon.name:"document-open-folder.svg"
+	            icon.name:"document-open-folder"
 	            PC3.ToolTip{
 	            	id:folderTP
 	                text:i18n("Click to open folder")
@@ -147,12 +141,12 @@ Rectangle{
 	        Layout.leftMargin:5
 	        Layout.rightMargin:5
 
-	        Components.Label{
+	        PC3.Label{
 	            id:freeSpace
 	            text:i18n("Free Space:")
 	            Layout.rightMargin:5
 	        }
-	        Components.Label{
+	        PC3.Label{
 	            id:freeSpaceValue
 	            text:{
 	                if (lliurexOneDriveWidget.freeSpace!=""){
@@ -171,13 +165,13 @@ Rectangle{
 	        Layout.leftMargin:5
 	        Layout.rightMargin:5
 
-	        Components.Label{
+	        PC3.Label{
 	            id:syncText
 	            text:i18n("Synchronization:")
 	            Layout.rightMargin:5
 	        }
 
-	        Components.Label{
+	        PC3.Label{
 	            id:syncStatus
 	            text:{
 	                if (lliurexOneDriveWidget.syncStatus){
@@ -202,7 +196,7 @@ Rectangle{
 	        PC3.ToolButton {
 	            width:35
 	            height:35
-	            icon.name:lliurexOneDriveWidget.syncStatus?"kt-stop.svg":"kt-start.svg"
+	            icon.name:lliurexOneDriveWidget.syncStatus?"kt-stop":"kt-start"
 	            enabled:!lliurexOneDriveWidget.lliurexOneDriveOpen && !lliurexOneDriveWidget.clickedSyncBtn
 	            PC3.ToolTip{
 	            	id:syncTP
@@ -221,7 +215,7 @@ Rectangle{
 	        Layout.rightMargin:5
 	        visible:lliurexOneDriveWidget.spaceType=="onedriveBackup"?false:true
 
-	        Components.Label{
+	        PC3.Label{
 	            id:latestText
 	            text:i18n("Recently modified files")
 	            Layout.fillWidth:true
@@ -230,7 +224,7 @@ Rectangle{
 	        PC3.ToolButton {
 	            width:35
 	            height:35
-	            icon.name:"arrow-right.svg"
+	            icon.name:"arrow-right"
 	            PC3.ToolTip{
 	            	id:filesTP
 	                text:i18n("Click to see the list")
@@ -251,7 +245,7 @@ Rectangle{
 	        Layout.rightMargin:5
 	        visible:lliurexOneDriveWidget.spaceType=="onedriveBackup"?true:false
 
-	        Components.Label{
+	        PC3.Label{
 	            id:latestUploadedText
 	            text:i18n("Recently uploaded files")
 	            Layout.fillWidth:true
@@ -260,7 +254,7 @@ Rectangle{
 	        PC3.ToolButton {
 	            width:35
 	            height:35
-	            icon.name:"arrow-right.svg"
+	            icon.name:"arrow-right"
 	            PC3.ToolTip{
 	            	id:uploadedFilesTP
 	                text:i18n("Click to see the list")
@@ -287,14 +281,14 @@ Rectangle{
 	        	}
 	        }
 
-	        Components.Label{
+	        PC3.Label{
 	            id:logSizeT
 	            text:i18n("Log file size:")
 	            Layout.rightMargin:5
 	            
 	        }
 
-	        Components.Label{
+	        PC3.Label{
 	            id:logSizeValue
 	            text:lliurexOneDriveWidget.logFileSize
 	            Layout.fillWidth:true
@@ -303,7 +297,7 @@ Rectangle{
 	        PC3.ToolButton {
 	            width:35
 	            height:35
-	            icon.name:"document-open-file.svg"
+	            icon.name:"document-open-file"
 	            PC3.ToolTip{
 	            	id:logTP
 	                text:i18n("Click to see log file")

@@ -1,13 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
-import QtQml.Models
-import org.kde.plasma.core as PlasmaCore
-import org.kde.plasma.plasmoid
-import org.kde.plasma.components as Components
 import org.kde.plasma.components as PC3
 import org.kde.kirigami as Kirigami
-
-import org.kde.plasma.private.lliurexonedrive 1.0
 
 Rectangle{
 	color:"transparent"
@@ -16,7 +10,7 @@ Rectangle{
 	    rows: 2
 	    flow: GridLayout.TopToBottom
 	    rowSpacing:10
-	    width:parent.width
+	    anchors.fill:parent
 
 	    Kirigami.InlineMessage {
 	        id: warningMessage

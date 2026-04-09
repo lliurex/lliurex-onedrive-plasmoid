@@ -1,15 +1,12 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls as QQC2
-import QtQml.Models
 import org.kde.plasma.core as PlasmaCore
-import org.kde.plasma.plasmoid 
-import org.kde.plasma.components as Components
-
+import org.kde.plasma.plasmoid
 import org.kde.plasma.extras as PlasmaExtras
 import org.kde.kirigami as Kirigami
 
-import org.kde.plasma.private.lliurexonedrive 1.0
+import org.kde.plasma.private.lliurexonedrive 2.0
 // Item - the most basic plasmoid component, an empty container.
 
 PlasmoidItem {
@@ -50,8 +47,7 @@ PlasmoidItem {
         QQC2.StackView{
             id:stackLayout
             property int currentIndex:lliurexOneDriveWidget.currentIndex
-            width:parent.width
-            height:parent.height
+            anchors.fill: parent
             initialItem:spacesPanel
             onCurrentIndexChanged:{
                 switch (currentIndex){

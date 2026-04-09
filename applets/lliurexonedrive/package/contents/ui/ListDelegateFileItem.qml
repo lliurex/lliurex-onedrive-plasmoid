@@ -1,90 +1,76 @@
 import QtQuick
-import QtQuick.Layouts
-import org.kde.plasma.core as PlasmaCore
-import org.kde.plasma.plasmoid 
-import org.kde.plasma.components as Components
+import org.kde.ksvg as KSvg
 import org.kde.plasma.components as PC3
-import org.kde.kquickcontrolsaddons as KQuickControlsAddons
-import org.kde.kirigami as Kirigami
 
-import org.kde.plasma.private.lliurexonedrive 1.0
-
-Components.ItemDelegate {
+PC3.ItemDelegate {
     id: fileItem
+
     property string fileName
     property string filePath
     property string fileDate
     property string fileTime
-    readonly property bool isTall: height > Math.round(Kirigami.Units.gridUnit * 2.5)
 
-    enabled:true
-    height:50
-    width:parent?parent.width:310
+    width: listView.width
+    highlighted: hovered || ListView.isCurrentItem
 
-    Item{
-        id:label
-        height:30
-        width:310
-        anchors.fill:parent
-        MouseArea {
-            id: mouseAreaOption
-            anchors.fill: parent
-            hoverEnabled:true
-            propagateComposedEvents:true
-
-            onEntered: {
-                listView.currentIndex = index
-            }
+    onHoveredChanged: {
+        if (hovered) {
+            listView.currentIndex = index
         }
-        Column{
-            id:fileRow
-            anchors.leftMargin:10
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.left:parent.left
-            width:label.width-(searchBtn.width*1.6+10)
+    }
 
-            Components.Label{
-                id:fileText
-                text:fileName
-                font.bold:fileItem.ListView.isCurrentItem?true:false
-                width:fileRow.width-10
-                elide:Text.ElideMiddle
+    contentItem: Item {
+        id: label
+        implicitHeight: 35
+
+        Column {
+            id: labelRow
+            anchors {
+                left: parent.left
+                right: searchBtn.left
+                rightMargin: 10
+                verticalCenter: parent.verticalCenter
             }
-            Components.Label{
-                id:fileData
-                text:i18n("Last modification: ")+fileDate+"-"+fileTime
-                visible:fileItem.ListView.isCurrentItem?true:false
-                font.bold:true
-                width:fileText.width
+
+            PC3.Label {
+                id: fileText
+                text: fileName
+                font.bold:fileItem.ListView.isCurrentItem
+                width: parent.width
+                elide: Text.ElideMiddle
             }
-              
+
+            PC3.Label {
+                id: fileData
+                text: i18n("Last modification: %1-%2", fileDate, fileTime)
+                font.bold: true
+                visible: fileItem.ListView.isCurrentItem
+                width: parent.width
+                elide: Text.ElideRight
+            }
         }
 
         PC3.ToolButton {
-            id:searchBtn
-            width:35
-            height:35
-            anchors{
-                left: fileRow.right
-                top: fileText.isTall? parent.top : undefined
-                verticalCenter: parent.verticalCenter
-                leftMargin:10
-                rightMargin:10
+            id: searchBtn
+            width: 35
+            height: 35
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
+
+            icon.name: "document-open-recent"
+            visible: fileItem.ListView.isCurrentItem
+
+            PC3.ToolTip {
+                text: i18n("Click to access the file location")
             }
-            icon.name:"document-open-recent"
-            visible:fileItem.ListView.isCurrentItem
-            PC3.ToolTip{
-                id:searchTP
-                text:i18n("Click to access the file location")
-            }
-            onClicked:{
-                searchTP.hide()
-                if (lliurexOneDriveWidget.checkIfFileExists(filePath)){
+
+            onClicked: {
+                if (lliurexOneDriveWidget.checkIfFileExists(filePath)) {
                     lliurexOneDriveWidget.goToFile(filePath)
-                }else{
-                    btnToolTip.text=i18n("File does not exist. Update the list")
-                }   
-            } 
+                } else {
+                    PC3.ToolTip.show(i18n("File does not exist. Update the list"))
+                }
+            }
         }
-    }     
+    }
 }
