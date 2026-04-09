@@ -1,3 +1,9 @@
+plasma-widget-lliurex-onedrive (3.5.6) noble; urgency=medium
+
+  * Refactorized to improve performance
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 09 Apr 2026 14:11:38 +0200
+
 plasma-widget-lliurex-onedrive (3.5.5.1) noble; urgency=medium
 
   * Fixed order to hide button
