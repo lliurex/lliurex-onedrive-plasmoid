@@ -1,3 +1,9 @@
+plasma-widget-lliurex-onedrive (2.5.6) jammy; urgency=medium
+
+  * Refactorized to improve performance
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.cmo>  Thu, 09 Apr 2026 12:58:50 +0200
+
 plasma-widget-lliurex-onedrive (2.5.5.3) jammy; urgency=medium
 
   * Fixed bug
