@@ -93,7 +93,7 @@ void LliurexOneDriveWidgetUtils::getSpacesInfo(QString onedriveConfigPath) {
                 QJsonObject obj = val.toObject();
                 QString configPath = obj.value("configPath").toString();
 
-                if (configPath.isEmpty() || !QFile::exists(configPath +"/refresh_token")) {
+                if (configPath.isEmpty() || (!QFile::exists(configPath +"/items.sqlite3") && (!QFile::exists(configPath +"/refresh_token")))) {
                     continue;
                 }
 
