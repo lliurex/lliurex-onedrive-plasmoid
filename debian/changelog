@@ -1,3 +1,9 @@
+plasma-widget-lliurex-onedrive (2.5.7) jammy; urgency=medium
+
+  * Fixed behavior when updating spaces authorization
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Tue, 14 Jul 2026 07:56:43 +0200
+
 plasma-widget-lliurex-onedrive (2.5.6) jammy; urgency=medium
 
   * Refactorized to improve performance
